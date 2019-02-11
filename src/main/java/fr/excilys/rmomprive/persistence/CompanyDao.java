@@ -16,6 +16,16 @@ public class CompanyDao implements IDao<Company> {
 	private static final String SELECT_BY_ID_QUERY = "SELECT * FROM company WHERE ID = ?";
 	private static final String SELECT_ALL_QUERY = "SELECT * FROM company";
 	
+	private static final String FIELD_ID = "id";
+	private static final String FIELD_NAME = "name";
+	
+	private Company createFromResultSet(ResultSet resultSet) throws SQLException {
+		int id = resultSet.getInt(FIELD_ID);
+        String name = resultSet.getString(FIELD_NAME);
+        
+        return new Company(id, name);
+	}
+	
 	@Override
 	public Company getById(int objectId) {
 		Company result = null;
@@ -28,9 +38,7 @@ public class CompanyDao implements IDao<Company> {
 			ResultSet resultSet = statement.executeQuery();
 			
 			while (resultSet.next()) {
-            	int id = resultSet.getInt("id");
-                String name = resultSet.getString("name");
-                result = new Company(id, name);
+                result = createFromResultSet(resultSet);
             }
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -51,9 +59,7 @@ public class CompanyDao implements IDao<Company> {
 			ResultSet resultSet = statement.executeQuery(SELECT_ALL_QUERY);
 			
 			while (resultSet.next()) {
-            	int id = resultSet.getInt("id");
-                String name = resultSet.getString("name");
-                result.add(new Company(id, name));
+                result.add(createFromResultSet(resultSet));
             }
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
