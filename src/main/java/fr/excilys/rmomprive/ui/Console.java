@@ -12,6 +12,9 @@ import fr.excilys.rmomprive.model.Computer;
 
 public class Console 
 {
+	/**
+	 * Displays the choices
+	 */
 	private static void displayMenu() {
 		System.out.println("=====");
 		System.out.println("Choose an action");
@@ -26,17 +29,26 @@ public class Console
 		System.out.println("=====");
 	}
 	
+	/**
+	 * Displays the choices and asks the user to select one
+	 * Asks a choice until its value is correct
+	 * @return The value of the choice
+	 */
 	private static int askChoice() {
     	List<Integer> validMenuOptions = Arrays.asList(1, 2, 3, 4, 5, 6, 9);
     	int choice = 0;
     	
+    	// Ask the choice until the user selects a valid choice
     	do {
+    		// Display the menu
     		displayMenu();
     		
+    		// Ask the choice from the user
 			Scanner scanner = new Scanner(System. in);
 			String input = scanner. nextLine();
 			choice = Integer.valueOf(input);
 			
+			// If the choice is not valid
 			if (!validMenuOptions.contains(choice))
 				System.out.println("Invalid choice");
 		} while (!validMenuOptions.contains(choice));
@@ -49,28 +61,35 @@ public class Console
     	int choice = askChoice();
     		
     	switch (choice) {
+    		// List all computers
 			case 1:
 				Collection<Computer> computers = ComputerController.getInstance().getAll();
 	    		System.out.println(computers);
 	    		break;
+	    	// List all companies
     		case 2:
 	    		Collection<Company> companies = CompanyController.getInstance().getAll();
 	    		System.out.println(companies);
 	    		break;
+	    	// Display infos for a computer
 			case 3:
 				System.out.println("Enter a computer id");
 				
+				// Ask the computer id from the user command line
 				Scanner scanner = new Scanner(System. in);
 				String input = scanner. nextLine();
 				int computerId = Integer.valueOf(input);
 				
+				// Retrieve the computer
 				Computer computer = ComputerController.getInstance().getById(computerId);
+				
 				if (computer != null)
 					System.out.println(computer);
 				else
 					System.out.println("This computer does not exist");
 				
 	    		break;
+	    	// Exit the program
     		case 9:
     			System.out.println("Bye");
     			break;
