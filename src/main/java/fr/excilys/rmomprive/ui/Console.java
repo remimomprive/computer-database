@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Scanner;
 
 import fr.excilys.rmomprive.controller.CompanyController;
+import fr.excilys.rmomprive.controller.ComputerController;
 import fr.excilys.rmomprive.model.Company;
+import fr.excilys.rmomprive.model.Computer;
 
 public class Console 
 {
@@ -48,6 +50,10 @@ public class Console
     	int choice = askChoice();
     		
     	switch (choice) {
+			case 1:
+				Collection<Computer> computers = ComputerController.getInstance().getAll();
+	    		System.out.println(computers);
+	    		break;
     		case 2:
 	    		Collection<Company> companies = CompanyController.getInstance().getAll();
 	    		System.out.println(companies);
