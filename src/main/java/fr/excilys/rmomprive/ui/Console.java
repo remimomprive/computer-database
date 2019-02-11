@@ -12,9 +12,19 @@ import fr.excilys.rmomprive.controller.ComputerController;
 import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.model.ComputerBuilder;
+import fr.excilys.rmomprive.util.Dates;
 
 public class Console 
 {
+	/**
+	 * Read a value from console and returns it
+	 * @return The value given by the user
+	 */
+	private static String readValue() {
+		Scanner scanner = new Scanner(System.in);
+		return scanner. nextLine();
+	}
+	
 	/**
 	 * Displays the choices
 	 */
@@ -47,9 +57,7 @@ public class Console
     		displayMenu();
     		
     		// Ask the choice from the user
-			Scanner scanner = new Scanner(System. in);
-			String input = scanner. nextLine();
-			choice = Integer.valueOf(input);
+			choice = Integer.valueOf(readValue());
 			
 			// If the choice is not valid
 			if (!validMenuOptions.contains(choice))
@@ -58,9 +66,8 @@ public class Console
     	
     	return choice;
 	}
-	
-    public static void main(String[] args)
-    {
+
+    public static void main(String[] args) {
     	int choice = askChoice();
     	
     	Scanner scanner;
@@ -85,9 +92,7 @@ public class Console
 				System.out.println("What's the computer id ?");
 				
 				// Ask the computer id from the user command line
-				scanner = new Scanner(System. in);
-				input = scanner. nextLine();
-				computerId = Integer.valueOf(input);
+				computerId = Integer.valueOf(readValue());
 				
 				// Retrieve the computer
 				Computer computer = ComputerController.getInstance().getById(computerId);
@@ -100,8 +105,29 @@ public class Console
     			
 			// Add a computer
 			case 4:
-				System.out.println("What's the computer id ?");
+				System.out.println("What's the computer name ?");
+				String name = readValue();
 				
+				System.out.println("What's the computer introduction date (YYYY-mm-dd HH:mm:ss) ?");
+				String introducedString;
+				do {
+					introducedString = readValue();
+					if (!Dates.isValidTimestamp(introducedString))
+						System.out.println("The timestamp format is not valid");
+				} while (!Dates.isValidTimestamp(introducedString));
+				
+				System.out.println("What's the computer discontinuation date (YYYY-mm-dd HH:mm:ss) ?");
+				String discontinuedString;
+				do {
+					discontinuedString = readValue();
+					if (!Dates.isValidTimestamp(discontinuedString))
+						System.out.println("The timestamp format is not valid");
+				} while (!Dates.isValidTimestamp(discontinuedString));
+				
+				System.out.println("What's the company id ?");
+				String companyIdString = readValue();
+				int companyId = Integer.valueOf(companyIdString);
+
 				ComputerController.getInstance().add(
 					new ComputerBuilder()
 						.setName("name")
@@ -117,9 +143,7 @@ public class Console
 				System.out.println("What's the computer id ?");
 				
 				// Ask the computer id from the user command line
-				scanner = new Scanner(System. in);
-				input = scanner. nextLine();
-				computerId = Integer.valueOf(input);
+				computerId = Integer.valueOf(readValue());
 				
 				if(ComputerController.getInstance().deleteById(computerId)) {
 					System.out.printf("Successfully deleted computer %d", computerId);
