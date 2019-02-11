@@ -35,7 +35,6 @@ public class Console
     		
 			Scanner scanner = new Scanner(System. in);
 			String input = scanner. nextLine();
-			scanner.close();
 			choice = Integer.valueOf(input);
 			
 			if (!validMenuOptions.contains(choice))
@@ -57,6 +56,20 @@ public class Console
     		case 2:
 	    		Collection<Company> companies = CompanyController.getInstance().getAll();
 	    		System.out.println(companies);
+	    		break;
+			case 3:
+				System.out.println("Enter a computer id");
+				
+				Scanner scanner = new Scanner(System. in);
+				String input = scanner. nextLine();
+				int computerId = Integer.valueOf(input);
+				
+				Computer computer = ComputerController.getInstance().getById(computerId);
+				if (computer != null)
+					System.out.println(computer);
+				else
+					System.out.println("This computer does not exist");
+				
 	    		break;
     		case 9:
     			System.out.println("Bye");
