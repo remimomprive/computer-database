@@ -8,5 +8,6 @@ public class Console
     {
         CompanyDao companyDao = new CompanyDao();
         System.out.println(companyDao.getAll());
+        System.out.println(companyDao.getById(1));
     }
 }
