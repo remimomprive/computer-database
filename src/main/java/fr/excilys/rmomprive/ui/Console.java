@@ -59,6 +59,10 @@ public class Console
     public static void main(String[] args)
     {
     	int choice = askChoice();
+    	
+    	Scanner scanner;
+    	String input;
+    	int computerId;
     		
     	switch (choice) {
     		// List all computers
@@ -73,22 +77,38 @@ public class Console
 	    		break;
 	    	// Display infos for a computer
 			case 3:
-				System.out.println("Enter a computer id");
+				System.out.println("What's the computer id ?");
 				
 				// Ask the computer id from the user command line
-				Scanner scanner = new Scanner(System. in);
-				String input = scanner. nextLine();
-				int computerId = Integer.valueOf(input);
+				scanner = new Scanner(System. in);
+				input = scanner. nextLine();
+				computerId = Integer.valueOf(input);
 				
 				// Retrieve the computer
 				Computer computer = ComputerController.getInstance().getById(computerId);
-				
 				if (computer != null)
 					System.out.println(computer);
 				else
 					System.out.println("This computer does not exist");
 				
-	    		break;
+    			break;
+    		// Delete the computer
+			case 6:
+				System.out.println("What's the computer id ?");
+				
+				// Ask the computer id from the user command line
+				scanner = new Scanner(System. in);
+				input = scanner. nextLine();
+				computerId = Integer.valueOf(input);
+				
+				if(ComputerController.getInstance().deleteById(computerId)) {
+					System.out.printf("Successfully deleted computer %d", computerId);
+				}
+				else {
+					System.out.printf("An error happened while trying to delete computer %d", computerId);
+				}
+				
+				break;
 	    	// Exit the program
     		case 9:
     			System.out.println("Bye");

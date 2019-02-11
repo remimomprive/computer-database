@@ -89,5 +89,9 @@ public class CompanyDao implements IDao<Company> {
 	public boolean delete(Company object) {
 		throw new ImpossibleActionException();
 	}
-
+	
+	@Override
+	public boolean deleteById(int id) {
+		throw new ImpossibleActionException();
+	}
 }

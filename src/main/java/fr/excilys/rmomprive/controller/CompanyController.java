@@ -44,6 +44,11 @@ public class CompanyController implements IController<Company> {
 		return this.companyDao.delete(object);
 	}
 	
+	@Override
+	public boolean deleteById(int id) {
+		return this.companyDao.deleteById(id);
+	}
+	
 	public static CompanyController getInstance() {
 		if (instance == null)
 			instance = new CompanyController();

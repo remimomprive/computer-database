@@ -9,4 +9,5 @@ public interface IDao<T> {
 	public Collection<T> addAll(Collection<T> objects);
 	public T update(T object);
 	public boolean delete(T object);
+	public boolean deleteById(int id);
 }

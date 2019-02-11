@@ -44,6 +44,11 @@ public class ComputerController implements IController<Computer> {
 		return this.computerDao.delete(object);
 	}
 	
+	@Override
+	public boolean deleteById(int id) {
+		return this.computerDao.deleteById(id);
+	}
+	
 	public static ComputerController getInstance() {
 		if (instance == null)
 			instance = new ComputerController();
@@ -58,5 +63,4 @@ public class ComputerController implements IController<Computer> {
 	public void setComputerDao(ComputerDao computerDao) {
 		this.computerDao = computerDao;
 	}
-
 }

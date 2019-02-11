@@ -18,6 +18,7 @@ import fr.excilys.rmomprive.model.Computer;
 public class ComputerDao implements IDao<Computer> {
 	private static final String SELECT_BY_ID_QUERY = "SELECT * FROM computer WHERE ID = ?";
 	private static final String SELECT_ALL_QUERY = "SELECT * FROM computer";
+	private static final String DELETE_QUERY = "DELETE FROM computer where id = ?";
 	
 	private static final String FIELD_ID = "id";
 	private static final String FIELD_NAME = "name";
@@ -100,5 +101,19 @@ public class ComputerDao implements IDao<Computer> {
 	public boolean delete(Computer object) {
 		throw new ImpossibleActionException();
 	}
-
+	
+	@Override
+	public boolean deleteById(int id) {
+		Connection connection;
+		try {
+			connection = Database.getConnection();
+			PreparedStatement statement = connection.prepareStatement(DELETE_QUERY);
+			statement.setInt(1, id);
+			
+			return (statement.executeUpdate() != 0);
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 }
