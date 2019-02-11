@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import fr.excilys.rmomprive.exception.ImpossibleActionException;
 import fr.excilys.rmomprive.model.Company;
 
 public class CompanyDao implements IDao<Company> {
@@ -61,6 +62,26 @@ public class CompanyDao implements IDao<Company> {
 		}
 		
 		return result;
+	}
+
+	@Override
+	public Company add(Company object) {
+		throw new ImpossibleActionException();
+	}
+
+	@Override
+	public Collection<Company> addAll(Collection<Company> objects) {
+		throw new ImpossibleActionException();
+	}
+
+	@Override
+	public Company update(Company object) {
+		throw new ImpossibleActionException();
+	}
+
+	@Override
+	public boolean delete(Company object) {
+		throw new ImpossibleActionException();
 	}
 
 }

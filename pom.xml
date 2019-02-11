@@ -39,7 +39,7 @@
 	  <configuration>
 	    <archive>
 	      <manifest>
-	        <mainClass>fr.excilys.rmomprive.app.Console</mainClass>
+	        <mainClass>fr.excilys.rmomprive.ui.Console</mainClass>
 	      </manifest>
 	    </archive>
 	    <descriptorRefs>

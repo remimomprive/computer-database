@@ -1,8 +1,8 @@
-package fr.excilys.rmomprive.persistence;
+package fr.excilys.rmomprive.controller;
 
 import java.util.Collection;
 
-public interface IDao<T> {
+public interface IController<T> {
 	public T getById(int id);
 	public Collection<T> getAll();
 	public T add(T object);
