@@ -5,20 +5,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
-import fr.excilys.rmomprive.controller.CompanyController;
 import fr.excilys.rmomprive.exception.ImpossibleActionException;
-import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.model.Computer;
 
 public class ComputerDao implements IDao<Computer> {
 	private static final String SELECT_BY_ID_QUERY = "SELECT * FROM computer WHERE ID = ?";
 	private static final String SELECT_ALL_QUERY = "SELECT * FROM computer";
 	private static final String DELETE_QUERY = "DELETE FROM computer where id = ?";
+	private static final String INSERT_QUERY = "INSERT INTO computer(name, introduced, discontinued, company_id) VALUES(?, ?, ?, ?)";
 	
 	private static final String FIELD_ID = "id";
 	private static final String FIELD_NAME = "name";
@@ -29,13 +28,13 @@ public class ComputerDao implements IDao<Computer> {
 	private Computer createFromResultSet(ResultSet resultSet) throws SQLException {
 		int id = resultSet.getInt(FIELD_ID);
         String name = resultSet.getString(FIELD_NAME);
-        Date introduced = resultSet.getDate(FIELD_INTRODUCED);
-        Date discontinued = resultSet.getDate(FIELD_DISCONTINUED);
+        Timestamp introduced = (Timestamp) resultSet.getObject(FIELD_INTRODUCED);
+        Timestamp discontinued = (Timestamp) resultSet.getObject(FIELD_DISCONTINUED);
         int companyId = resultSet.getInt(FIELD_COMPANY_ID);
         
-        Company company = CompanyController.getInstance().getById(companyId);
+        // Company company = CompanyController.getInstance().getById(companyId);
         
-        return new Computer(id, name, introduced, discontinued, company);
+        return new Computer(id, name, introduced, discontinued, companyId);
 	}
 	
 	@Override
@@ -84,7 +83,21 @@ public class ComputerDao implements IDao<Computer> {
 
 	@Override
 	public Computer add(Computer object) {
-		throw new ImpossibleActionException();
+		Connection connection;
+		try {
+			connection = Database.getConnection();
+			PreparedStatement statement = connection.prepareStatement(INSERT_QUERY);
+			statement.setString(1, object.getName());
+			statement.setObject(2, object.getIntroduced());
+			statement.setObject(3, object.getDiscontinued());
+			statement.setInt(4, object.getCompanyId());
+			
+			statement.executeUpdate();
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 
 	@Override
@@ -99,7 +112,7 @@ public class ComputerDao implements IDao<Computer> {
 
 	@Override
 	public boolean delete(Computer object) {
-		throw new ImpossibleActionException();
+		return deleteById(object.getId());
 	}
 	
 	@Override

@@ -1,20 +1,24 @@
 package fr.excilys.rmomprive.model;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 public class Computer {
 	private int id;
 	private String name;
-	private Date introduced;
-	private Date discontinued;
-	private Company company;
+	private Timestamp introduced;
+	private Timestamp discontinued;
+	private int companyId;
 	
-	public Computer(int id, String name, Date introduced, Date discontinued, Company company) {
+	public Computer() {
+		
+	}
+	
+	public Computer(int id, String name, Timestamp introduced, Timestamp discontinued, int companyId) {
 		this.id = id;
 		this.name = name;
 		this.introduced = introduced;
 		this.discontinued = discontinued;
-		this.company = company;
+		this.companyId = companyId;
 	}
 
 	public int getId() {
@@ -33,33 +37,33 @@ public class Computer {
 		this.name = name;
 	}
 	
-	public Date getIntroduced() {
-		return introduced;
-	}
-	
-	public void setIntroduced(Date introduced) {
+	public void setIntroduced(Timestamp introduced) {
 		this.introduced = introduced;
 	}
 	
-	public Date getDiscontinued() {
+	public Timestamp getIntroduced() {
+		return introduced;
+	}
+	
+	public Timestamp getDiscontinued() {
 		return discontinued;
 	}
 	
-	public void setDiscontinued(Date discontinued) {
+	public void setDiscontinued(Timestamp discontinued) {
 		this.discontinued = discontinued;
 	}
 	
-	public Company getCompany() {
-		return company;
+	public int getCompanyId() {
+		return companyId;
 	}
 	
-	public void setCompany(Company company) {
-		this.company = company;
+	public void setCompanyId(int companyId) {
+		this.companyId = companyId;
 	}
 
 	@Override
 	public String toString() {
 		return "Computer [id=" + id + ", name=" + name + ", introduced=" + introduced + ", discontinued=" + discontinued
-				+ ", company=" + company + "]";
+				+ ", companyId=" + companyId + "]";
 	}
 }

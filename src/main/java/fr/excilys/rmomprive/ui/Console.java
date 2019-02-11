@@ -1,5 +1,7 @@
 package fr.excilys.rmomprive.ui;
 
+import java.util.Date;
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -9,6 +11,7 @@ import fr.excilys.rmomprive.controller.CompanyController;
 import fr.excilys.rmomprive.controller.ComputerController;
 import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.model.Computer;
+import fr.excilys.rmomprive.model.ComputerBuilder;
 
 public class Console 
 {
@@ -70,11 +73,13 @@ public class Console
 				Collection<Computer> computers = ComputerController.getInstance().getAll();
 	    		System.out.println(computers);
 	    		break;
+	    		
 	    	// List all companies
     		case 2:
 	    		Collection<Company> companies = CompanyController.getInstance().getAll();
 	    		System.out.println(companies);
 	    		break;
+	    		
 	    	// Display infos for a computer
 			case 3:
 				System.out.println("What's the computer id ?");
@@ -92,6 +97,21 @@ public class Console
 					System.out.println("This computer does not exist");
 				
     			break;
+    			
+			// Add a computer
+			case 4:
+				System.out.println("What's the computer id ?");
+				
+				ComputerController.getInstance().add(
+					new ComputerBuilder()
+						.setName("name")
+						.setIntroduced(new Timestamp(new Date().getTime()))
+						.setCompanyId(1)
+						.build()
+				);
+				
+    			break;
+    			
     		// Delete the computer
 			case 6:
 				System.out.println("What's the computer id ?");
@@ -109,6 +129,7 @@ public class Console
 				}
 				
 				break;
+				
 	    	// Exit the program
     		case 9:
     			System.out.println("Bye");
