@@ -8,12 +8,16 @@ public class MenuCreateComputer extends MenuComputerForm {
 	
 	@Override
 	public void show() {
+		// Asks the user to fill a computer
 		Computer computer = form();
 		
+		// Insert the computer into the database
 		Computer createdComputer = ComputerService.getInstance().add(computer);
 		
+		// If the computer was inserted successfully
 		if (createdComputer != null)
 			System.out.println("Successfullly added " + createdComputer);
+		// Else, an error happened
 		else
 			System.out.println("Error creating " + computer);
 	}
