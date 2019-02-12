@@ -12,6 +12,7 @@ import fr.excilys.rmomprive.controller.ComputerController;
 import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.model.Computer.ComputerBuilder;
+import fr.excilys.rmomprive.model.ComputerDetails;
 import fr.excilys.rmomprive.util.Dates;
 
 public class Console 
@@ -191,10 +192,10 @@ public class Console
 		// Ask the computer id from the user command line
 		computerId = Integer.valueOf(readValue());
 		
-		// Retrieve the computer
-		Computer computer = ComputerController.getInstance().getById(computerId);
-		if (computer != null)
-			System.out.println(computer);
+		// Retrieve the computer details
+		ComputerDetails computerDetails = ComputerController.getInstance().getDetailsByComputerId(computerId);
+		if (computerDetails.getComputer() != null)
+			System.out.println(computerDetails);
 		else
 			System.out.println("This computer does not exist");
 	}

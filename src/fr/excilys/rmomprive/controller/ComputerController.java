@@ -2,21 +2,32 @@ package fr.excilys.rmomprive.controller;
 
 import java.util.Collection;
 
+import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.model.Computer;
+import fr.excilys.rmomprive.model.ComputerDetails;
+import fr.excilys.rmomprive.persistence.CompanyDao;
 import fr.excilys.rmomprive.persistence.ComputerDao;
 
 public class ComputerController implements IController<Computer> {
 
 	private static ComputerController instance;
 	private ComputerDao computerDao;
+	private CompanyDao companyDao;
 	
 	public ComputerController() {
 		this.setComputerDao(new ComputerDao());
+		this.setCompanyDao(new CompanyDao());
 	}
 	
 	@Override
 	public Computer getById(int id) {
 		return this.computerDao.getById(id);
+	}
+	
+	public ComputerDetails getDetailsByComputerId(int id) {
+		Computer computer = this.computerDao.getById(id);
+		Company company = this.companyDao.getById(computer.getCompanyId());
+		return new ComputerDetails(computer, company);
 	}
 
 	@Override
@@ -67,5 +78,13 @@ public class ComputerController implements IController<Computer> {
 
 	public void setComputerDao(ComputerDao computerDao) {
 		this.computerDao = computerDao;
+	}
+
+	public CompanyDao getCompanyDao() {
+		return companyDao;
+	}
+
+	public void setCompanyDao(CompanyDao companyDao) {
+		this.companyDao = companyDao;
 	}
 }
