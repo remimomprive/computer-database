@@ -49,6 +49,11 @@ public class CompanyController implements IController<Company> {
 		return this.companyDao.deleteById(id);
 	}
 	
+	@Override
+	public boolean checkExistenceById(int id) {
+		return this.companyDao.checkExistenceById(id);
+	}
+	
 	public static CompanyController getInstance() {
 		if (instance == null)
 			instance = new CompanyController();
@@ -63,5 +68,4 @@ public class CompanyController implements IController<Company> {
 	public void setCompanyDao(CompanyDao companyDao) {
 		this.companyDao = companyDao;
 	}
-
 }

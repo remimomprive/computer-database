@@ -106,11 +106,20 @@ public class Console
 			// Add a computer
 			case 4:
 				System.out.println("What's the computer name ?");
-				String name = readValue();
+				String name = null;
+				
+				do {
+					name = readValue();
+					
+					if (name.equals("")) {
+						System.out.println("The computer name should not be null");
+					}
+				} while (name.equals(""));
 				
 				System.out.println("What's the computer introduction date (YYYY-mm-dd HH:mm:ss) ?");
 				String introducedString;
 				Timestamp introduced = null;
+				
 				do {
 					introducedString = readValue();
 					if (!Dates.isValidTimestamp(introducedString))
@@ -119,22 +128,34 @@ public class Console
 						introduced = Timestamp.valueOf(introducedString);
 				} while (!Dates.isValidTimestamp(introducedString));
 				
-				/// TODO: check if discontinuation is after introduction
-				
 				System.out.println("What's the computer discontinuation date (YYYY-mm-dd HH:mm:ss) ?");
 				String discontinuedString;
 				Timestamp discontinued = null;
 				do {
-					discontinuedString = readValue();
-					if (!Dates.isValidTimestamp(discontinuedString))
-						System.out.println("The timestamp format is not valid");
-					else
-						discontinued = Timestamp.valueOf(discontinuedString);
-				} while (!Dates.isValidTimestamp(discontinuedString));
+					do {
+						discontinuedString = readValue();
+						if (discontinuedString.equals("NULL"))
+							discontinued = null;
+						else if (!Dates.isValidTimestamp(discontinuedString))
+							System.out.println("The timestamp format is not valid");
+						else
+							discontinued = Timestamp.valueOf(discontinuedString);
+					} while (!(Dates.isValidTimestamp(discontinuedString) || discontinuedString != null));
+					
+					if (!introduced.before(discontinued))
+						System.out.println("The discontinued date should be after the intruduction date or NULL");
+				} while (!introduced.before(discontinued));
 				
 				System.out.println("What's the company id ?");
-				String companyIdString = readValue();
-				int companyId = Integer.valueOf(companyIdString);
+				int companyId = -1;
+				
+				do {
+					String companyIdString = readValue();
+					companyId = Integer.valueOf(companyIdString);
+					
+					if (!CompanyController.getInstance().checkExistenceById(companyId))
+						System.out.println("The company does not exist");
+				} while (!CompanyController.getInstance().checkExistenceById(companyId));
 
 				Computer computer2 = new ComputerBuilder()
 						.setName(name)

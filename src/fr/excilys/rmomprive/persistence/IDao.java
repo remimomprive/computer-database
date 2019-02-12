@@ -10,4 +10,5 @@ public interface IDao<T> {
 	public T update(T object);
 	public boolean delete(T object);
 	public boolean deleteById(int id);
+	public boolean checkExistenceById(int id);
 }

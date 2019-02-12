@@ -49,6 +49,11 @@ public class ComputerController implements IController<Computer> {
 		return this.computerDao.deleteById(id);
 	}
 	
+	@Override
+	public boolean checkExistenceById(int id) {
+		return this.computerDao.checkExistenceById(id);
+	}
+	
 	public static ComputerController getInstance() {
 		if (instance == null)
 			instance = new ComputerController();

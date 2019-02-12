@@ -15,9 +15,11 @@ import fr.excilys.rmomprive.model.Company;
 public class CompanyDao implements IDao<Company> {
 	private static final String SELECT_BY_ID_QUERY = "SELECT * FROM company WHERE ID = ?";
 	private static final String SELECT_ALL_QUERY = "SELECT * FROM company";
+	private static final String CHECK_EXISTENCE_QUERY = "SELECT COUNT(id) AS count FROM company WHERE id = ?";
 	
 	private static final String FIELD_ID = "id";
 	private static final String FIELD_NAME = "name";
+	private static final String FIELD_COUNT = "count";
 	
 	private Company createFromResultSet(ResultSet resultSet) throws SQLException {
 		int id = resultSet.getInt(FIELD_ID);
@@ -93,5 +95,28 @@ public class CompanyDao implements IDao<Company> {
 	@Override
 	public boolean deleteById(int id) {
 		throw new ImpossibleActionException();
+	}
+
+	@Override
+	public boolean checkExistenceById(int id) {
+		int count = 0;
+		
+		try {
+			Connection connection = Database.getConnection();
+			
+			PreparedStatement statement = connection.prepareStatement(CHECK_EXISTENCE_QUERY);
+			statement.setInt(1, id);
+			ResultSet resultSet = statement.executeQuery();
+			
+			while (resultSet.next()) {
+                count = resultSet.getInt(FIELD_COUNT);
+            }
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return (count != 0);
 	}
 }

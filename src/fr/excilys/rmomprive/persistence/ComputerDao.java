@@ -18,12 +18,14 @@ public class ComputerDao implements IDao<Computer> {
 	private static final String SELECT_ALL_QUERY = "SELECT * FROM computer";
 	private static final String DELETE_QUERY = "DELETE FROM computer where id = ?";
 	private static final String INSERT_QUERY = "INSERT INTO computer(name, introduced, discontinued, company_id) VALUES(?, ?, ?, ?)";
+	private static final String CHECK_EXISTENCE_QUERY = "SELECT COUNT(id) AS count FROM company WHERE id = ?";
 	
 	private static final String FIELD_ID = "id";
 	private static final String FIELD_NAME = "name";
 	private static final String FIELD_INTRODUCED = "introduced";
 	private static final String FIELD_DISCONTINUED = "discontinued";
 	private static final String FIELD_COMPANY_ID = "company_id";
+	private static final String FIELD_COUNT = "count";
 	
 	private Computer createFromResultSet(ResultSet resultSet) throws SQLException {
 		int id = resultSet.getInt(FIELD_ID);
@@ -135,5 +137,28 @@ public class ComputerDao implements IDao<Computer> {
 			e.printStackTrace();
 		}
 		return false;
+	}
+
+	@Override
+	public boolean checkExistenceById(int id) {
+		int count = 0;
+		
+		try {
+			Connection connection = Database.getConnection();
+			
+			PreparedStatement statement = connection.prepareStatement(CHECK_EXISTENCE_QUERY);
+			statement.setInt(1, id);
+			ResultSet resultSet = statement.executeQuery();
+			
+			while (resultSet.next()) {
+                count = resultSet.getInt(FIELD_COUNT);
+            }
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return (count != 0);
 	}
 }
