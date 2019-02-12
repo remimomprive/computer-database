@@ -86,13 +86,20 @@ public class ComputerDao implements IDao<Computer> {
 		Connection connection;
 		try {
 			connection = Database.getConnection();
-			PreparedStatement statement = connection.prepareStatement(INSERT_QUERY);
+			PreparedStatement statement = connection.prepareStatement(INSERT_QUERY, Statement.RETURN_GENERATED_KEYS);
 			statement.setString(1, object.getName());
 			statement.setObject(2, object.getIntroduced());
 			statement.setObject(3, object.getDiscontinued());
 			statement.setInt(4, object.getCompanyId());
 			
 			statement.executeUpdate();
+			
+			 ResultSet rs = statement.getGeneratedKeys();
+             if(rs.next()) {
+                 int insertedId = rs.getInt(1);
+                 object.setId(insertedId);
+                 return object;
+             }
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}

@@ -11,7 +11,7 @@ import fr.excilys.rmomprive.controller.CompanyController;
 import fr.excilys.rmomprive.controller.ComputerController;
 import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.model.Computer;
-import fr.excilys.rmomprive.model.ComputerBuilder;
+import fr.excilys.rmomprive.model.Computer.ComputerBuilder;
 import fr.excilys.rmomprive.util.Dates;
 
 public class Console 
@@ -110,31 +110,45 @@ public class Console
 				
 				System.out.println("What's the computer introduction date (YYYY-mm-dd HH:mm:ss) ?");
 				String introducedString;
+				Timestamp introduced = null;
 				do {
 					introducedString = readValue();
 					if (!Dates.isValidTimestamp(introducedString))
 						System.out.println("The timestamp format is not valid");
+					else
+						introduced = Timestamp.valueOf(introducedString);
 				} while (!Dates.isValidTimestamp(introducedString));
+				
+				/// TODO: check if discontinuation is after introduction
 				
 				System.out.println("What's the computer discontinuation date (YYYY-mm-dd HH:mm:ss) ?");
 				String discontinuedString;
+				Timestamp discontinued = null;
 				do {
 					discontinuedString = readValue();
 					if (!Dates.isValidTimestamp(discontinuedString))
 						System.out.println("The timestamp format is not valid");
+					else
+						discontinued = Timestamp.valueOf(discontinuedString);
 				} while (!Dates.isValidTimestamp(discontinuedString));
 				
 				System.out.println("What's the company id ?");
 				String companyIdString = readValue();
 				int companyId = Integer.valueOf(companyIdString);
 
-				ComputerController.getInstance().add(
-					new ComputerBuilder()
-						.setName("name")
-						.setIntroduced(new Timestamp(new Date().getTime()))
-						.setCompanyId(1)
-						.build()
-				);
+				Computer computer2 = new ComputerBuilder()
+						.setName(name)
+						.setIntroduced(introduced)
+						.setDiscontinued(discontinued)
+						.setCompanyId(companyId)
+						.build();
+				
+				Computer createdComputer = ComputerController.getInstance().add(computer2);
+				
+				if (createdComputer != null)
+					System.out.println("Successfullly added " + createdComputer);
+				else
+					System.out.println("Error creating " + computer2);
 				
     			break;
     			
