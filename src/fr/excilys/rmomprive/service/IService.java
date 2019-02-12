@@ -1,8 +1,8 @@
-package fr.excilys.rmomprive.controller;
+package fr.excilys.rmomprive.service;
 
 import java.util.Collection;
 
-public interface IController<T> {
+public interface IService<T> {
 	public T getById(int id);
 	public Collection<T> getAll();
 	public T add(T object);

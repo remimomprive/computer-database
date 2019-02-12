@@ -2,8 +2,8 @@ package fr.excilys.rmomprive.ui.console.menu;
 
 import java.util.Collection;
 
-import fr.excilys.rmomprive.controller.ComputerController;
 import fr.excilys.rmomprive.model.Computer;
+import fr.excilys.rmomprive.service.ComputerService;
 
 public class MenuListComputers extends IMenu {
 
@@ -11,7 +11,7 @@ public class MenuListComputers extends IMenu {
 	
 	@Override
 	public void show() {
-		Collection<Computer> computers = ComputerController.getInstance().getAll();
+		Collection<Computer> computers = ComputerService.getInstance().getAll();
 		System.out.println(computers);
 	}
 	

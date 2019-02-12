@@ -1,4 +1,4 @@
-package fr.excilys.rmomprive.controller;
+package fr.excilys.rmomprive.service;
 
 import java.util.Collection;
 
@@ -8,13 +8,13 @@ import fr.excilys.rmomprive.model.ComputerDetails;
 import fr.excilys.rmomprive.persistence.CompanyDao;
 import fr.excilys.rmomprive.persistence.ComputerDao;
 
-public class ComputerController implements IController<Computer> {
+public class ComputerService implements IService<Computer> {
 
-	private static ComputerController instance;
+	private static ComputerService instance;
 	private ComputerDao computerDao;
 	private CompanyDao companyDao;
 	
-	public ComputerController() {
+	public ComputerService() {
 		this.setComputerDao(new ComputerDao());
 		this.setCompanyDao(new CompanyDao());
 	}
@@ -65,9 +65,9 @@ public class ComputerController implements IController<Computer> {
 		return this.computerDao.checkExistenceById(id);
 	}
 	
-	public static ComputerController getInstance() {
+	public static ComputerService getInstance() {
 		if (instance == null)
-			instance = new ComputerController();
+			instance = new ComputerService();
 		
 		return instance;
 	}

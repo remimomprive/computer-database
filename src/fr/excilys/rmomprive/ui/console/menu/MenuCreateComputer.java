@@ -2,10 +2,10 @@ package fr.excilys.rmomprive.ui.console.menu;
 
 import java.sql.Timestamp;
 
-import fr.excilys.rmomprive.controller.CompanyController;
-import fr.excilys.rmomprive.controller.ComputerController;
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.model.Computer.ComputerBuilder;
+import fr.excilys.rmomprive.service.CompanyService;
+import fr.excilys.rmomprive.service.ComputerService;
 import fr.excilys.rmomprive.util.Dates;
 
 public class MenuCreateComputer extends IMenu {
@@ -38,7 +38,7 @@ public class MenuCreateComputer extends IMenu {
 				.setCompanyId(companyId)
 				.build();
 		
-		Computer createdComputer = ComputerController.getInstance().add(computer);
+		Computer createdComputer = ComputerService.getInstance().add(computer);
 		
 		if (createdComputer != null)
 			System.out.println("Successfullly added " + createdComputer);
@@ -89,9 +89,9 @@ public class MenuCreateComputer extends IMenu {
 			String companyIdString = readValue();
 			companyId = Integer.valueOf(companyIdString);
 			
-			if (!CompanyController.getInstance().checkExistenceById(companyId))
+			if (!CompanyService.getInstance().checkExistenceById(companyId))
 				System.out.println("The company does not exist");
-		} while (!CompanyController.getInstance().checkExistenceById(companyId));
+		} while (!CompanyService.getInstance().checkExistenceById(companyId));
 		return companyId;
 	}
 	

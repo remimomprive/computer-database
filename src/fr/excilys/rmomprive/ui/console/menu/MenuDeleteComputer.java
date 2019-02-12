@@ -1,6 +1,6 @@
 package fr.excilys.rmomprive.ui.console.menu;
 
-import fr.excilys.rmomprive.controller.ComputerController;
+import fr.excilys.rmomprive.service.ComputerService;
 
 public class MenuDeleteComputer extends IMenu {
 
@@ -14,7 +14,7 @@ public class MenuDeleteComputer extends IMenu {
 		// Ask the computer id from the user command line
 		computerId = Integer.valueOf(readValue());
 		
-		if(ComputerController.getInstance().deleteById(computerId))
+		if(ComputerService.getInstance().deleteById(computerId))
 			System.out.printf("Successfully deleted computer %d", computerId);
 		else
 			System.out.printf("An error happened while trying to delete computer %d", computerId);

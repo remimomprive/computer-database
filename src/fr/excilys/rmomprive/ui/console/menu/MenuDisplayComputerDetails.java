@@ -1,7 +1,7 @@
 package fr.excilys.rmomprive.ui.console.menu;
 
-import fr.excilys.rmomprive.controller.ComputerController;
 import fr.excilys.rmomprive.model.ComputerDetails;
+import fr.excilys.rmomprive.service.ComputerService;
 
 public class MenuDisplayComputerDetails extends IMenu {
 
@@ -16,7 +16,7 @@ public class MenuDisplayComputerDetails extends IMenu {
 		computerId = Integer.valueOf(readValue());
 		
 		// Retrieve the computer details
-		ComputerDetails computerDetails = ComputerController.getInstance().getDetailsByComputerId(computerId);
+		ComputerDetails computerDetails = ComputerService.getInstance().getDetailsByComputerId(computerId);
 		if (computerDetails.getComputer() != null)
 			System.out.println(computerDetails);
 		else

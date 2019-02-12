@@ -2,8 +2,8 @@ package fr.excilys.rmomprive.ui.console.menu;
 
 import java.util.Collection;
 
-import fr.excilys.rmomprive.controller.CompanyController;
 import fr.excilys.rmomprive.model.Company;
+import fr.excilys.rmomprive.service.CompanyService;
 
 public class MenuListCompanies extends IMenu {
 
@@ -11,7 +11,7 @@ public class MenuListCompanies extends IMenu {
 	
 	@Override
 	public void show() {
-		Collection<Company> companies = CompanyController.getInstance().getAll();
+		Collection<Company> companies = CompanyService.getInstance().getAll();
 		System.out.println(companies);
 	}
 	

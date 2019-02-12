@@ -1,16 +1,16 @@
-package fr.excilys.rmomprive.controller;
+package fr.excilys.rmomprive.service;
 
 import java.util.Collection;
 
 import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.persistence.CompanyDao;
 
-public class CompanyController implements IController<Company> {
+public class CompanyService implements IService<Company> {
 
-	private static CompanyController instance;
+	private static CompanyService instance;
 	private CompanyDao companyDao;
 	
-	public CompanyController() {
+	public CompanyService() {
 		this.setCompanyDao(new CompanyDao());
 	}
 	
@@ -54,9 +54,9 @@ public class CompanyController implements IController<Company> {
 		return this.companyDao.checkExistenceById(id);
 	}
 	
-	public static CompanyController getInstance() {
+	public static CompanyService getInstance() {
 		if (instance == null)
-			instance = new CompanyController();
+			instance = new CompanyService();
 		
 		return instance;
 	}
