@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.Scanner;
 
 import fr.excilys.rmomprive.ui.console.menu.MenuDeleteComputer;
+import fr.excilys.rmomprive.ui.console.menu.MenuComputerForm;
 import fr.excilys.rmomprive.ui.console.menu.MenuCreateComputer;
 import fr.excilys.rmomprive.ui.console.menu.MenuDisplayComputerDetails;
 import fr.excilys.rmomprive.ui.console.menu.MenuListCompanies;
 import fr.excilys.rmomprive.ui.console.menu.MenuListComputers;
+import fr.excilys.rmomprive.ui.console.menu.MenuUpdateComputer;
 
 public class Console {
 	/**
@@ -82,6 +84,11 @@ public class Console {
 					MenuCreateComputer.getInstance().show();
 	    			break;
 	    			
+				// Add a computer
+				case 5:
+					MenuUpdateComputer.getInstance().show();
+	    			break;
+		    			
 	    		// Delete the computer
 				case 6:
 					MenuDeleteComputer.getInstance().show();
