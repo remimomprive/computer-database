@@ -31,6 +31,8 @@ public class Console
 	 */
 	private static void displayMenu() {
 		System.out.println("=====");
+		System.out.println("COMPUTER DATABASE MENU");
+		System.out.println("-----");
 		System.out.println("Choose an action");
 		System.out.println("=====");
 		System.out.println("1 - List computers");
@@ -69,39 +71,43 @@ public class Console
 	}
 
     public static void main(String[] args) {
-    	int choice = askChoice();
+    	int choice = -1;
     		
-    	switch (choice) {
-    		// List all computers
-			case 1:
-				menuListComputers();
-	    		break;
-	    		
-	    	// List all companies
-    		case 2:
-    			menuListCompanies();
-	    		break;
-	    		
-	    	// Display infos for a computer
-			case 3:
-				menuDisplayComputerDetails();
-    			break;
-    			
-			// Add a computer
-			case 4:
-				menuCreateComputer();
-    			break;
-    			
-    		// Delete the computer
-			case 6:
-				menuDeleteComputer();
-				break;
-				
-	    	// Exit the program
-    		case 9:
-    			System.out.println("Bye");
-    			break;
-    	}
+    	do {
+    		choice = askChoice();
+    		
+	    	switch (choice) {
+	    		// List all computers
+				case 1:
+					menuListComputers();
+		    		break;
+		    		
+		    	// List all companies
+	    		case 2:
+	    			menuListCompanies();
+		    		break;
+		    		
+		    	// Display infos for a computer
+				case 3:
+					menuDisplayComputerDetails();
+	    			break;
+	    			
+				// Add a computer
+				case 4:
+					menuCreateComputer();
+	    			break;
+	    			
+	    		// Delete the computer
+				case 6:
+					menuDeleteComputer();
+					break;
+					
+		    	// Exit the program
+	    		case 9:
+	    			System.out.println("Bye");
+	    			break;
+	    	}
+    	} while (choice != 9);
     }
 
 	private static void menuDeleteComputer() {
@@ -170,19 +176,19 @@ public class Console
 				System.out.println("The company does not exist");
 		} while (!CompanyController.getInstance().checkExistenceById(companyId));
 
-		Computer computer2 = new ComputerBuilder()
+		Computer computer = new ComputerBuilder()
 				.setName(name)
 				.setIntroduced(introduced)
 				.setDiscontinued(discontinued)
 				.setCompanyId(companyId)
 				.build();
 		
-		Computer createdComputer = ComputerController.getInstance().add(computer2);
+		Computer createdComputer = ComputerController.getInstance().add(computer);
 		
 		if (createdComputer != null)
 			System.out.println("Successfullly added " + createdComputer);
 		else
-			System.out.println("Error creating " + computer2);
+			System.out.println("Error creating " + computer);
 	}
 
 	private static void menuDisplayComputerDetails() {
