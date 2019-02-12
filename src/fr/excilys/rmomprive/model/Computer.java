@@ -2,7 +2,7 @@ package fr.excilys.rmomprive.model;
 
 import java.sql.Timestamp;
 
-public class Computer {
+public class Computer implements Entity {
 	private int id;
 	private String name;
 	private Timestamp introduced;
