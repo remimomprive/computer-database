@@ -21,9 +21,9 @@ public class MenuUpdateComputer extends MenuComputerForm {
 		Computer createdComputer = ComputerService.getInstance().update(computer);
 		
 		if (createdComputer != null)
-			System.out.println("Successfullly added " + createdComputer);
+			System.out.println("Successfullly updated " + createdComputer);
 		else
-			System.out.println("Error creating " + computer);
+			System.out.println("Error updating " + computer);
 	}
 	
 	public static MenuUpdateComputer getInstance() {

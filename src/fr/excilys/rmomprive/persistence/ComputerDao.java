@@ -19,6 +19,7 @@ public class ComputerDao implements IDao<Computer> {
 	private static final String DELETE_QUERY = "DELETE FROM computer where id = ?";
 	private static final String INSERT_QUERY = "INSERT INTO computer(name, introduced, discontinued, company_id) VALUES(?, ?, ?, ?)";
 	private static final String CHECK_EXISTENCE_QUERY = "SELECT COUNT(id) AS count FROM company WHERE id = ?";
+	private static final String UPDATE_QUERY = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?";
 	
 	private static final String FIELD_ID = "id";
 	private static final String FIELD_NAME = "name";
@@ -116,7 +117,24 @@ public class ComputerDao implements IDao<Computer> {
 
 	@Override
 	public Computer update(Computer object) {
-		throw new ImpossibleActionException();
+		Connection connection;
+		try {
+			connection = Database.getConnection();
+			PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY);
+			statement.setString(1, object.getName());
+			statement.setObject(2, object.getIntroduced());
+			statement.setObject(3, object.getDiscontinued());
+			statement.setInt(4, object.getCompanyId());
+			statement.setInt(5, object.getId());
+			
+			statement.executeUpdate();
+			
+			return object;
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 
 	@Override
