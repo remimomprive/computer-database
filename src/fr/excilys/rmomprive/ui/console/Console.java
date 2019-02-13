@@ -1,6 +1,7 @@
 package fr.excilys.rmomprive.ui.console;
 
-import java.util.Scanner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import fr.excilys.rmomprive.ui.console.menu.MenuDeleteComputer;
 import fr.excilys.rmomprive.ui.console.menu.MenuChoice;
@@ -10,8 +11,15 @@ import fr.excilys.rmomprive.ui.console.menu.MenuListCompanies;
 import fr.excilys.rmomprive.ui.console.menu.MenuListComputers;
 import fr.excilys.rmomprive.ui.console.menu.MenuListPageComputers;
 import fr.excilys.rmomprive.ui.console.menu.MenuUpdateComputer;
+import fr.excilys.rmomprive.ui.console.menu.Menus;
 
 public class Console {
+	private static Logger logger;
+	
+	static {
+		Console.logger = LoggerFactory.getLogger(Console.class);
+	}
+	
 	/**
 	 * Displays the choices
 	 */
@@ -46,13 +54,12 @@ public class Console {
     		displayMenu();
     		
     		// Ask the choice from the user
-    		Scanner scanner = new Scanner(System.in);
-    		choiceInt = Integer.valueOf(scanner. nextLine());
+    		choiceInt = Menus.readInteger("The choice should be an integer");
     		choice = MenuChoice.getById(choiceInt);
 			
 			// If the choice is not valid
 			if (choice == null)
-				System.out.println("Invalid choice");
+				logger.error("Invalid choice");
 		} while (choice == null);
     	
     	return choice;

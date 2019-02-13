@@ -5,7 +5,7 @@ import java.util.Collection;
 import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.service.CompanyService;
 
-public class MenuListCompanies implements IMenu {
+public class MenuListCompanies extends Menu {
 
 	private static MenuListCompanies instance;
 	

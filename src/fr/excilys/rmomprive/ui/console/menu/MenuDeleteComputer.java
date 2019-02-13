@@ -2,7 +2,7 @@ package fr.excilys.rmomprive.ui.console.menu;
 
 import fr.excilys.rmomprive.service.ComputerService;
 
-public class MenuDeleteComputer implements IMenu {
+public class MenuDeleteComputer extends Menu {
 
 	private static MenuDeleteComputer instance;
 	
@@ -13,9 +13,9 @@ public class MenuDeleteComputer implements IMenu {
 		int computerId = Menus.readInteger("The computer id should be an integer");
 		
 		if(ComputerService.getInstance().deleteById(computerId))
-			System.out.printf("Successfully deleted computer %d\n", computerId);
+			getLogger().info("Successfully deleted computer %d\n", computerId);
 		else
-			System.out.printf("An error happened while trying to delete computer %d\n", computerId);
+			getLogger().error("An error happened while trying to delete computer %d\n", computerId);
 	}
 	
 	public static MenuDeleteComputer getInstance() {

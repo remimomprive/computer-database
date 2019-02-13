@@ -3,7 +3,7 @@ package fr.excilys.rmomprive.ui.console.menu;
 import fr.excilys.rmomprive.model.ComputerDetails;
 import fr.excilys.rmomprive.service.ComputerService;
 
-public class MenuDisplayComputerDetails implements IMenu {
+public class MenuDisplayComputerDetails extends Menu {
 
 	private static MenuDisplayComputerDetails instance;
 	
@@ -18,7 +18,7 @@ public class MenuDisplayComputerDetails implements IMenu {
 		if (computerDetails.getComputer() != null)
 			System.out.println(computerDetails);
 		else
-			System.out.println("This computer does not exist");
+			getLogger().error("This computer does not exist\n");
 	}
 	
 	public static MenuDisplayComputerDetails getInstance() {

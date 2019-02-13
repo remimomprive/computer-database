@@ -2,12 +2,14 @@ package fr.excilys.rmomprive.ui.console.menu;
 
 import java.sql.Timestamp;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.model.Computer.ComputerBuilder;
-import fr.excilys.rmomprive.service.CompanyService;
-import fr.excilys.rmomprive.util.Dates;
+import fr.excilys.rmomprive.ui.console.Console;
 
-public abstract class MenuComputerForm implements IMenu {
+public abstract class MenuComputerForm extends Menu {
 	/**
 	 * This method displays a form in order to fill a Computer
 	 * @return The filled computer
@@ -28,7 +30,7 @@ public abstract class MenuComputerForm implements IMenu {
 				validDiscontinuedDate = (discontinued != null) ? introduced.before(discontinued) : true;
 				
 				if (!validDiscontinuedDate)
-					System.out.println("The discontinued date should be after the intruduction date or NULL");
+					getLogger().error("The discontinued date should be after the intruduction date or NULL\n");
 			} while (!validDiscontinuedDate);
 		}
 		

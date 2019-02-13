@@ -16,10 +16,10 @@ public class MenuCreateComputer extends MenuComputerForm {
 		
 		// If the computer was inserted successfully
 		if (createdComputer != null)
-			System.out.println("Successfullly added " + createdComputer);
+			getLogger().info("Successfullly added " + createdComputer + "\n");
 		// Else, an error happened
 		else
-			System.out.println("Error creating " + computer);
+			getLogger().error("Error creating " + computer + "\n");
 	}
 	
 	public static MenuCreateComputer getInstance() {

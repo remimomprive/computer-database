@@ -3,10 +3,19 @@ package fr.excilys.rmomprive.ui.console.menu;
 import java.sql.Timestamp;
 import java.util.Scanner;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import fr.excilys.rmomprive.service.CompanyService;
 import fr.excilys.rmomprive.util.Dates;
 
 public class Menus {
+	private static Logger logger;
+	
+	static {
+		Menus.logger = LoggerFactory.getLogger(Menus.class);
+	}
+	
 	public static String readString() {
 		Scanner scanner = new Scanner(System.in);
 		return scanner. nextLine();
@@ -45,8 +54,9 @@ public class Menus {
 			name = Menus.readString();
 			
 			if (name.equals(""))
-				System.out.println("The computer name should not be null");
+				logger.error("The computer name should not be null\n");
 		} while (name.equals(""));
+		
 		return name;
 	}
 
@@ -68,7 +78,7 @@ public class Menus {
 				timestamp = null;
 			// If the String format is not valid
 			else if (!Dates.isValidTimestamp(timestampString))
-				System.out.println("The timestamp format is not valid");
+				logger.error("The timestamp format is not valid\n");
 			// Else, the String format is not valid
 			else
 				timestamp = Timestamp.valueOf(timestampString);
@@ -97,8 +107,9 @@ public class Menus {
 			companyId = Menus.readInteger("The company id should be an integer");
 			
 			if (!CompanyService.getInstance().checkExistenceById(companyId))
-				System.out.println("The company does not exist");
+				logger.error("The company does not exist\n");
 		} while (!CompanyService.getInstance().checkExistenceById(companyId));
+		
 		return companyId;
 	}
 }

@@ -6,7 +6,7 @@ import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.service.ComputerService;
 import fr.excilys.rmomprive.service.Page;
 
-public class MenuListPageComputers implements IMenu {
+public class MenuListPageComputers extends Menu {
 
 	private static MenuListPageComputers instance;
 	
@@ -25,7 +25,7 @@ public class MenuListPageComputers implements IMenu {
 		try {
 			computers = ComputerService.getInstance().getPage(pageId, pageSize);
 		} catch (InvalidPageIdException | InvalidPageSizeException e) {
-			System.out.println("The page parameters are not valid");
+			getLogger().error("The page parameters are not valid\n");
 		}
 		
 		if (computers != null)

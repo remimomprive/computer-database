@@ -11,7 +11,6 @@ import fr.excilys.rmomprive.persistence.CompanyDao;
 import fr.excilys.rmomprive.persistence.ComputerDao;
 
 public class ComputerService implements IService<Computer> {
-
 	private static ComputerService instance;
 	private ComputerDao computerDao;
 	private CompanyDao companyDao;
@@ -26,6 +25,7 @@ public class ComputerService implements IService<Computer> {
 		return this.computerDao.getById(id);
 	}
 	
+	/// TODO : fix throw an error when the computer does not exist
 	public ComputerDetails getDetailsByComputerId(int id) {
 		Computer computer = this.computerDao.getById(id);
 		Company company = this.companyDao.getById(computer.getCompanyId());
