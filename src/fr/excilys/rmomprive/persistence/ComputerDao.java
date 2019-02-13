@@ -11,7 +11,9 @@ import java.util.Collection;
 import java.util.List;
 
 import fr.excilys.rmomprive.exception.ImpossibleActionException;
+import fr.excilys.rmomprive.exception.InvalidPageNumberException;
 import fr.excilys.rmomprive.model.Computer;
+import fr.excilys.rmomprive.service.Page;
 
 public class ComputerDao implements IDao<Computer> {
 	private static final String SELECT_BY_ID_QUERY = "SELECT * FROM computer WHERE ID = ?";
@@ -20,6 +22,8 @@ public class ComputerDao implements IDao<Computer> {
 	private static final String INSERT_QUERY = "INSERT INTO computer(name, introduced, discontinued, company_id) VALUES(?, ?, ?, ?)";
 	private static final String CHECK_EXISTENCE_QUERY = "SELECT COUNT(id) AS count FROM company WHERE id = ?";
 	private static final String UPDATE_QUERY = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?";
+	private static final String COUNT_QUERY = "SELECT COUNT(id) AS count FROM computer";
+	private static final String SELECT_PAGE_QUERY = "SELECT * FROM computer LIMIT ? OFFSET ?";
 	
 	private static final String FIELD_ID = "id";
 	private static final String FIELD_NAME = "name";
@@ -178,5 +182,71 @@ public class ComputerDao implements IDao<Computer> {
 		}
 		
 		return (count != 0);
+	}
+	
+	public int getRowCount() {
+		int count = -1;
+		
+		try {
+			Connection connection = Database.getConnection();
+			
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(COUNT_QUERY);
+			
+			while (resultSet.next()) {
+                count = resultSet.getInt(FIELD_COUNT);
+            }
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return count;
+	}
+	
+	public int getPageCount(int pageSize) {
+		return (int) Math.round((1.0 * this.getRowCount()) / pageSize);
+	}
+	
+	public Page getPage(int pageId, int pageSize) throws InvalidPageNumberException {
+		int pageCount = getPageCount(pageSize);
+		
+		if (pageId > 0 && pageId <= pageCount) {
+			int offset = (pageId - 1) * pageSize;
+			
+			List<Computer> computers = new ArrayList<>();
+			
+			try {
+				Connection connection = Database.getConnection();
+				PreparedStatement statement = connection.prepareStatement(SELECT_PAGE_QUERY);
+				statement.setInt(1, pageSize);
+				statement.setInt(2, offset);
+				ResultSet resultSet = statement.executeQuery();
+				
+				while (resultSet.next()) {
+					computers.add(createFromResultSet(resultSet));
+	            }
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+			return new Page<Computer>(computers, pageId, pageId > 1, pageId < pageCount);
+		}
+		
+		throw new InvalidPageNumberException();
+	}
+	
+	public static void main(String[] args) {
+		ComputerDao computerDao = new ComputerDao();
+		
+		try  {
+			Page<Computer> results = computerDao.getPage(1, 2);
+			System.out.println(results);
+		} catch(InvalidPageNumberException e) {
+			e.printStackTrace();
+		}
 	}
 }
