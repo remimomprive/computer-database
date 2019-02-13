@@ -2,6 +2,7 @@ package fr.excilys.rmomprive.service;
 
 import java.util.Collection;
 
+import fr.excilys.rmomprive.exception.EntityNotFoundException;
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.exception.InvalidPageSizeException;
 import fr.excilys.rmomprive.model.Company;
@@ -25,9 +26,12 @@ public class ComputerService implements IService<Computer> {
 		return this.computerDao.getById(id);
 	}
 	
-	/// TODO : fix throw an error when the computer does not exist
 	public ComputerDetails getDetailsByComputerId(int id) {
 		Computer computer = this.computerDao.getById(id);
+		
+		if (computer == null)
+			throw new EntityNotFoundException();
+			
 		Company company = this.companyDao.getById(computer.getCompanyId());
 		return new ComputerDetails(computer, company);
 	}
