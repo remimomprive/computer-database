@@ -2,9 +2,7 @@ package fr.excilys.rmomprive.service;
 
 import java.util.List;
 
-import fr.excilys.rmomprive.model.Entity;
-
-public class Page<T extends Entity> {
+public class Page<T> {
 	private List<T> content;
 	private int pageId;
 	private boolean previous;

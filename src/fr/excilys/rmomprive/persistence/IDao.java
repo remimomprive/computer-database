@@ -1,9 +1,5 @@
 package fr.excilys.rmomprive.persistence;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Collection;
 
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
@@ -20,5 +16,5 @@ public interface IDao<T> {
 	public boolean checkExistenceById(int id);
 	public int getRowCount();
 	public int getPageCount(int pageSize);
-	public Page getPage(int pageId, int pageSize) throws InvalidPageIdException, InvalidPageSizeException;
+	public Page<T> getPage(int pageId, int pageSize) throws InvalidPageIdException, InvalidPageSizeException;
 }

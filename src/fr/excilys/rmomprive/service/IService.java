@@ -16,5 +16,5 @@ public interface IService<T> {
 	public boolean checkExistenceById(int id);
 	public int getRowCount();
 	public int getPageCount(int pageSize);
-	public Page getPage(int pageId, int pageSize) throws InvalidPageIdException, InvalidPageSizeException;
+	public Page<T> getPage(int pageId, int pageSize) throws InvalidPageIdException, InvalidPageSizeException;
 }

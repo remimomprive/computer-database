@@ -207,7 +207,7 @@ public class ComputerDao implements IDao<Computer> {
 		return (int) Math.round((1.0 * this.getRowCount()) / pageSize);
 	}
 	
-	public Page getPage(int pageId, int pageSize) throws InvalidPageIdException, InvalidPageSizeException {
+	public Page<Computer> getPage(int pageId, int pageSize) throws InvalidPageIdException, InvalidPageSizeException {
 		int pageCount = getPageCount(pageSize);
 		
 		if (pageSize <= 0)

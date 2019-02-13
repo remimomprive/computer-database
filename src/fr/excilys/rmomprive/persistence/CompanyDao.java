@@ -133,7 +133,7 @@ public class CompanyDao implements IDao<Company> {
 	}
 
 	@Override
-	public Page getPage(int pageId, int pageSize) throws InvalidPageIdException {
+	public Page<Company> getPage(int pageId, int pageSize) throws InvalidPageIdException {
 		throw new ImpossibleActionException();
 	}
 }
