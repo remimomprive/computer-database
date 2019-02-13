@@ -35,11 +35,9 @@ public class ComputerDao implements IDao<Computer> {
 	private Computer createFromResultSet(ResultSet resultSet) throws SQLException {
 		int id = resultSet.getInt(FIELD_ID);
         String name = resultSet.getString(FIELD_NAME);
-        Timestamp introduced = (Timestamp) resultSet.getObject(FIELD_INTRODUCED);
-        Timestamp discontinued = (Timestamp) resultSet.getObject(FIELD_DISCONTINUED);
+        Timestamp introduced = resultSet.getTimestamp(FIELD_INTRODUCED);
+        Timestamp discontinued =  resultSet.getTimestamp(FIELD_DISCONTINUED);
         int companyId = resultSet.getInt(FIELD_COMPANY_ID);
-        
-        // Company company = CompanyController.getInstance().getById(companyId);
         
         return new Computer(id, name, introduced, discontinued, companyId);
 	}
