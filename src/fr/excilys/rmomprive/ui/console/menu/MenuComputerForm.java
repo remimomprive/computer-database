@@ -15,18 +15,22 @@ public abstract class MenuComputerForm implements IMenu {
 	protected Computer form() {
 		String name = askComputerName();
 		
-		System.out.println("What's the computer introduction date (YYYY-mm-dd HH:mm:ss) ?");
+		System.out.println("What's the computer introduction date (YYYY-mm-dd HH:mm:ss) or NULL?");
 		Timestamp introduced = askTimestamp();
 		
-		/// TODO : check the behaviour if discontinued date is null
-		System.out.println("What's the computer discontinuation date (YYYY-mm-dd HH:mm:ss) ?");
 		Timestamp discontinued = null;
-		do { 
-			discontinued = askTimestamp(true);
+		if (introduced != null) {
+			System.out.println("What's the computer discontinuation date (YYYY-mm-dd HH:mm:ss) or NULL?");
+			boolean validDiscontinuedDate = false;
 			
-			if (!introduced.before(discontinued))
-				System.out.println("The discontinued date should be after the intruduction date or NULL");
-		} while (!introduced.before(discontinued));
+			do { 
+				discontinued = askTimestamp();
+				validDiscontinuedDate = (discontinued != null) ? introduced.before(discontinued) : true;
+				
+				if (!validDiscontinuedDate)
+					System.out.println("The discontinued date should be after the intruduction date or NULL");
+			} while (!validDiscontinuedDate);
+		}
 		
 		int companyId = askCompanyId();
 
@@ -85,11 +89,11 @@ public abstract class MenuComputerForm implements IMenu {
 	}
 	
 	/**
-	 * Ask a timestamp String, preventing the user to set null value
+	 * Ask a timestamp String, allowing the user to set null value
 	 * @return The String timestamp converted into a Timestamp object
 	 */
 	private Timestamp askTimestamp() {
-		return askTimestamp(false);
+		return askTimestamp(true);
 	}
 	
 	/**
