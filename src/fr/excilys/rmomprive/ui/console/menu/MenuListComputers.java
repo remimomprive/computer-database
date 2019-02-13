@@ -15,19 +15,31 @@ public class MenuListComputers extends IMenu {
 	@Override
 	public void show() {
 		System.out.println("What is the page size ?");
-		int pageSize = Integer.valueOf(readValue());
+		int pageSize = -1;
+		do {
+			try {
+				pageSize = Integer.valueOf(readValue());
+			} catch(NumberFormatException e) {
+				System.out.println("The page size should be an int");
+			}
+		} while (pageSize < 1);
 		
 		System.out.println("What is the page id ?");
-		int pageId = Integer.valueOf(readValue());
+		int pageId = -1;
+		do {
+			try {
+				pageId = Integer.valueOf(readValue());
+			} catch(NumberFormatException e) {
+				System.out.println("The page id should be an int");
+			}
+		} while (pageId < 1);
 		
 		Page<Computer> computers = null;
 		
 		try {
 			computers = ComputerService.getInstance().getPage(pageId, pageSize);
-		} catch (InvalidPageIdException e) {
-			e.printStackTrace();
-		} catch (InvalidPageSizeException e) {
-			e.printStackTrace();
+		} catch (InvalidPageIdException | InvalidPageSizeException e) {
+			System.out.println("The page parameters are not valid");
 		}
 		
 		if (computers != null)
