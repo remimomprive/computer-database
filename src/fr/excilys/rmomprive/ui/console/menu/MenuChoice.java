@@ -2,12 +2,13 @@ package fr.excilys.rmomprive.ui.console.menu;
 
 public enum MenuChoice {
 	LIST_COMPUTERS(1),
-	LIST_COMPANIES(2),
-	SHOW_COMPUTER_DETAILS(3),
-	CREATE_COMPUTER(4),
-	UPDATE_COMPUTER(5),
-	DELETE_COMPUTER(6),
-	EXIT(7);
+	LIST_COMPUTER_PAGES(2),
+	LIST_COMPANIES(3),
+	SHOW_COMPUTER_DETAILS(4),
+	CREATE_COMPUTER(5),
+	UPDATE_COMPUTER(6),
+	DELETE_COMPUTER(7),
+	EXIT(8);
 	
 	private final int id;
 	

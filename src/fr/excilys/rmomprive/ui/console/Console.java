@@ -8,6 +8,7 @@ import fr.excilys.rmomprive.ui.console.menu.MenuCreateComputer;
 import fr.excilys.rmomprive.ui.console.menu.MenuDisplayComputerDetails;
 import fr.excilys.rmomprive.ui.console.menu.MenuListCompanies;
 import fr.excilys.rmomprive.ui.console.menu.MenuListComputers;
+import fr.excilys.rmomprive.ui.console.menu.MenuListPageComputers;
 import fr.excilys.rmomprive.ui.console.menu.MenuUpdateComputer;
 
 public class Console {
@@ -21,6 +22,7 @@ public class Console {
 		System.out.println("Choose an action");
 		System.out.println("=====");
 		System.out.printf("%d - List computers\n", MenuChoice.LIST_COMPUTERS.getId());
+		System.out.printf("%d - List a computer page\n", MenuChoice.LIST_COMPUTER_PAGES.getId());
 		System.out.printf("%d - List companies\n", MenuChoice.LIST_COMPANIES.getId());
 		System.out.printf("%d - Show computer details (the detailed information of only one computer)\n", MenuChoice.SHOW_COMPUTER_DETAILS.getId());
 		System.out.printf("%d - Create a computer\n", MenuChoice.CREATE_COMPUTER.getId());
@@ -66,6 +68,10 @@ public class Console {
 	    		// List all computers
 				case LIST_COMPUTERS:
 					MenuListComputers.getInstance().show();
+		    		break;
+		    		
+				case LIST_COMPUTER_PAGES:
+					MenuListPageComputers.getInstance().show();
 		    		break;
 		    		
 		    	// List all companies
