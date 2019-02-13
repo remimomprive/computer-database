@@ -13,18 +13,18 @@ public abstract class MenuComputerForm implements IMenu {
 	 * @return The filled computer
 	 */
 	protected Computer form() {
-		String name = askComputerName();
+		String name = Menus.readComputerName();
 		
-		System.out.println("What's the computer introduction date (YYYY-mm-dd HH:mm:ss) or NULL?");
-		Timestamp introduced = askTimestamp();
+		System.out.println("What's the computer introduction date (YYYY-mm-dd HH:mm:ss) or null?");
+		Timestamp introduced = Menus.readTimestamp(true);
 		
 		Timestamp discontinued = null;
 		if (introduced != null) {
-			System.out.println("What's the computer discontinuation date (YYYY-mm-dd HH:mm:ss) or NULL?");
+			System.out.println("What's the computer discontinuation date (YYYY-mm-dd HH:mm:ss) or null?");
 			boolean validDiscontinuedDate = false;
 			
 			do { 
-				discontinued = askTimestamp();
+				discontinued = Menus.readTimestamp(true);
 				validDiscontinuedDate = (discontinued != null) ? introduced.before(discontinued) : true;
 				
 				if (!validDiscontinuedDate)
@@ -32,7 +32,7 @@ public abstract class MenuComputerForm implements IMenu {
 			} while (!validDiscontinuedDate);
 		}
 		
-		int companyId = askCompanyId();
+		int companyId = Menus.readCompanyId();
 
 		Computer computer = new ComputerBuilder()
 				.setName(name)
@@ -42,74 +42,5 @@ public abstract class MenuComputerForm implements IMenu {
 				.build();
 		
 		return computer;
-	}
-
-	/**
-	 * Asks a String corresponding to the computer name
-	 * @return The given String
-	 */
-	private String askComputerName() {
-		System.out.println("What's the computer name ?");
-		String name = null;
-		
-		do {
-			name = Menus.readString();
-			
-			if (name.equals(""))
-				System.out.println("The computer name should not be null");
-		} while (name.equals(""));
-		return name;
-	}
-
-	/**
-	 * Asks the user a timestamp String until its format is valid
-	 * @param nullable true if the user can set NULL to return a null Timestamp
-	 * @return The String timestamp converted into a Timestamp object
-	 */
-	private Timestamp askTimestamp(boolean nullable) {
-		String timestampString;
-		Timestamp timestamp = null;
-		
-		do {
-			// Read a string value from the terminal
-			timestampString = Menus.readString();
-			
-			// If the user sets "NULL" and the value can be nullable
-			if (nullable && timestampString.contentEquals("NULL"))
-				timestamp = null;
-			// If the String format is not valid
-			else if (!Dates.isValidTimestamp(timestampString))
-				System.out.println("The timestamp format is not valid");
-			// Else, the String format is not valid
-			else
-				timestamp = Timestamp.valueOf(timestampString);
-		} while (!(Dates.isValidTimestamp(timestampString) || (nullable && timestampString != null)));
-		
-		return timestamp;
-	}
-	
-	/**
-	 * Ask a timestamp String, allowing the user to set null value
-	 * @return The String timestamp converted into a Timestamp object
-	 */
-	private Timestamp askTimestamp() {
-		return askTimestamp(true);
-	}
-	
-	/**
-	 * Ask a company id until its value corresponds to an existing company id
-	 * @return The given company id
-	 */
-	private int askCompanyId() {
-		System.out.println("What's the company id ?");
-		int companyId = -1;
-		
-		do {
-			companyId = Menus.readInteger("The company id should be an integer");
-			
-			if (!CompanyService.getInstance().checkExistenceById(companyId))
-				System.out.println("The company does not exist");
-		} while (!CompanyService.getInstance().checkExistenceById(companyId));
-		return companyId;
 	}
 }
