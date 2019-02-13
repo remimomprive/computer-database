@@ -12,6 +12,7 @@ import java.util.List;
 
 import fr.excilys.rmomprive.exception.ImpossibleActionException;
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
+import fr.excilys.rmomprive.exception.InvalidPageSizeException;
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.service.Page;
 

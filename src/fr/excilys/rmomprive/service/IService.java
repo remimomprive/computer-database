@@ -3,7 +3,7 @@ package fr.excilys.rmomprive.service;
 import java.util.Collection;
 
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
-import fr.excilys.rmomprive.persistence.InvalidPageSizeException;
+import fr.excilys.rmomprive.exception.InvalidPageSizeException;
 
 public interface IService<T> {
 	public T getById(int id);

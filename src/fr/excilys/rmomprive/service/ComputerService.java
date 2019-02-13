@@ -3,12 +3,12 @@ package fr.excilys.rmomprive.service;
 import java.util.Collection;
 
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
+import fr.excilys.rmomprive.exception.InvalidPageSizeException;
 import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.model.ComputerDetails;
 import fr.excilys.rmomprive.persistence.CompanyDao;
 import fr.excilys.rmomprive.persistence.ComputerDao;
-import fr.excilys.rmomprive.persistence.InvalidPageSizeException;
 
 public class ComputerService implements IService<Computer> {
 

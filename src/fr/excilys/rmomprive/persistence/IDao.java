@@ -3,6 +3,7 @@ package fr.excilys.rmomprive.persistence;
 import java.util.Collection;
 
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
+import fr.excilys.rmomprive.exception.InvalidPageSizeException;
 import fr.excilys.rmomprive.service.Page;
 
 public interface IDao<T> {

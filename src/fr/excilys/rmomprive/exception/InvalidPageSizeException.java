@@ -1,4 +1,4 @@
-package fr.excilys.rmomprive.persistence;
+package fr.excilys.rmomprive.exception;
 
 public class InvalidPageSizeException extends Exception {
 
