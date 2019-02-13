@@ -3,7 +3,7 @@ package fr.excilys.rmomprive.ui.console.menu;
 import fr.excilys.rmomprive.model.ComputerDetails;
 import fr.excilys.rmomprive.service.ComputerService;
 
-public class MenuDisplayComputerDetails extends IMenu {
+public class MenuDisplayComputerDetails implements IMenu {
 
 	private static MenuDisplayComputerDetails instance;
 	

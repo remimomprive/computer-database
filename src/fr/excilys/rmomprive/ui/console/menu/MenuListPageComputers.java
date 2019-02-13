@@ -6,7 +6,7 @@ import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.service.ComputerService;
 import fr.excilys.rmomprive.service.Page;
 
-public class MenuListPageComputers extends IMenu {
+public class MenuListPageComputers implements IMenu {
 
 	private static MenuListPageComputers instance;
 	

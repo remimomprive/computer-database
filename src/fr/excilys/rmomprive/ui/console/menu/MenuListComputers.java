@@ -4,7 +4,7 @@ import java.util.Collection;
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.service.ComputerService;
 
-public class MenuListComputers extends IMenu {
+public class MenuListComputers implements IMenu {
 
 	private static MenuListComputers instance;
 	

@@ -7,13 +7,7 @@ import fr.excilys.rmomprive.model.Computer.ComputerBuilder;
 import fr.excilys.rmomprive.service.CompanyService;
 import fr.excilys.rmomprive.util.Dates;
 
-public abstract class MenuComputerForm extends IMenu {
-	/**
-	 * This method should display the form (with form() method) and add the business logic
-	 */
-	@Override
-	public abstract void show();
-
+public abstract class MenuComputerForm implements IMenu {
 	/**
 	 * This method displays a form in order to fill a Computer
 	 * @return The filled computer

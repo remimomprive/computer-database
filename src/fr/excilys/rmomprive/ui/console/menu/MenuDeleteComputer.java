@@ -2,7 +2,7 @@ package fr.excilys.rmomprive.ui.console.menu;
 
 import fr.excilys.rmomprive.service.ComputerService;
 
-public class MenuDeleteComputer extends IMenu {
+public class MenuDeleteComputer implements IMenu {
 
 	private static MenuDeleteComputer instance;
 	
