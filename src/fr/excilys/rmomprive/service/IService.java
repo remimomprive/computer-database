@@ -2,6 +2,8 @@ package fr.excilys.rmomprive.service;
 
 import java.util.Collection;
 
+import fr.excilys.rmomprive.exception.InvalidPageNumberException;
+
 public interface IService<T> {
 	public T getById(int id);
 	public Collection<T> getAll();
@@ -11,4 +13,7 @@ public interface IService<T> {
 	public boolean delete(T object);
 	public boolean deleteById(int id);
 	public boolean checkExistenceById(int id);
+	public int getRowCount();
+	public int getPageCount(int pageSize);
+	public Page getPage(int pageId, int pageSize) throws InvalidPageNumberException;
 }

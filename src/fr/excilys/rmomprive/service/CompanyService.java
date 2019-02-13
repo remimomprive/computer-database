@@ -2,6 +2,7 @@ package fr.excilys.rmomprive.service;
 
 import java.util.Collection;
 
+import fr.excilys.rmomprive.exception.InvalidPageNumberException;
 import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.persistence.CompanyDao;
 
@@ -52,6 +53,21 @@ public class CompanyService implements IService<Company> {
 	@Override
 	public boolean checkExistenceById(int id) {
 		return this.companyDao.checkExistenceById(id);
+	}
+
+	@Override
+	public int getRowCount() {
+		return this.companyDao.getRowCount();
+	}
+
+	@Override
+	public int getPageCount(int pageSize) {
+		return this.companyDao.getPageCount(pageSize);
+	}
+
+	@Override
+	public Page getPage(int pageId, int pageSize) throws InvalidPageNumberException {
+		return this.companyDao.getPage(pageId, pageSize);
 	}
 	
 	public static CompanyService getInstance() {

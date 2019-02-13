@@ -65,7 +65,18 @@ public class ComputerService implements IService<Computer> {
 	public boolean checkExistenceById(int id) {
 		return this.computerDao.checkExistenceById(id);
 	}
+
+	@Override
+	public int getRowCount() {
+		return this.computerDao.getRowCount();
+	}
+
+	@Override
+	public int getPageCount(int pageSize) {
+		return this.computerDao.getPageCount(pageSize);
+	}
 	
+	@Override
 	public Page<Computer> getPage(int pageId, int pageSize) throws InvalidPageNumberException {
 		return this.computerDao.getPage(pageId, pageSize);
 	}

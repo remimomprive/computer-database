@@ -1,6 +1,13 @@
 package fr.excilys.rmomprive.persistence;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Collection;
+
+import fr.excilys.rmomprive.exception.InvalidPageNumberException;
+import fr.excilys.rmomprive.service.Page;
 
 public interface IDao<T> {
 	public T getById(int id);
@@ -11,4 +18,7 @@ public interface IDao<T> {
 	public boolean delete(T object);
 	public boolean deleteById(int id);
 	public boolean checkExistenceById(int id);
+	public int getRowCount();
+	public int getPageCount(int pageSize);
+	public Page getPage(int pageId, int pageSize) throws InvalidPageNumberException;
 }

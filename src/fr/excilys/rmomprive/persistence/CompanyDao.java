@@ -10,7 +10,9 @@ import java.util.Collection;
 import java.util.List;
 
 import fr.excilys.rmomprive.exception.ImpossibleActionException;
+import fr.excilys.rmomprive.exception.InvalidPageNumberException;
 import fr.excilys.rmomprive.model.Company;
+import fr.excilys.rmomprive.service.Page;
 
 public class CompanyDao implements IDao<Company> {
 	private static final String SELECT_BY_ID_QUERY = "SELECT * FROM company WHERE ID = ?";
@@ -118,5 +120,20 @@ public class CompanyDao implements IDao<Company> {
 		}
 		
 		return (count != 0);
+	}
+
+	@Override
+	public int getRowCount() {
+		throw new ImpossibleActionException();
+	}
+
+	@Override
+	public int getPageCount(int pageSize) {
+		throw new ImpossibleActionException();
+	}
+
+	@Override
+	public Page getPage(int pageId, int pageSize) throws InvalidPageNumberException {
+		throw new ImpossibleActionException();
 	}
 }
