@@ -1,11 +1,9 @@
 package fr.excilys.rmomprive.ui.console;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 
 import fr.excilys.rmomprive.ui.console.menu.MenuDeleteComputer;
-import fr.excilys.rmomprive.ui.console.menu.MenuComputerForm;
+import fr.excilys.rmomprive.ui.console.menu.MenuChoice;
 import fr.excilys.rmomprive.ui.console.menu.MenuCreateComputer;
 import fr.excilys.rmomprive.ui.console.menu.MenuDisplayComputerDetails;
 import fr.excilys.rmomprive.ui.console.menu.MenuListCompanies;
@@ -22,13 +20,13 @@ public class Console {
 		System.out.println("-----");
 		System.out.println("Choose an action");
 		System.out.println("=====");
-		System.out.println("1 - List computers");
-		System.out.println("2 - List companies");
-		System.out.println("3 - Show computer details (the detailed information of only one computer)");
-		System.out.println("4 - Create a computer");
-		System.out.println("5 - Update a computer");
-		System.out.println("6 - Delete a computer");
-		System.out.println("9 - Exit");
+		System.out.printf("%d - List computers\n", MenuChoice.LIST_COMPUTERS.getId());
+		System.out.printf("%d - List companies\n", MenuChoice.LIST_COMPANIES.getId());
+		System.out.printf("%d - Show computer details (the detailed information of only one computer)\n", MenuChoice.SHOW_COMPUTER_DETAILS.getId());
+		System.out.printf("%d - Create a computer\n", MenuChoice.CREATE_COMPUTER.getId());
+		System.out.printf("%d - Update a computer\n", MenuChoice.UPDATE_COMPUTER.getId());
+		System.out.printf("%d - Delete a computer\n", MenuChoice.DELETE_COMPUTER.getId());
+		System.out.printf("%d - Exit\n", MenuChoice.EXIT.getId());
 		System.out.println("=====");
 	}
 	
@@ -36,9 +34,9 @@ public class Console {
 	 * Asks a choice until its value is correct
 	 * @return The value of the choice
 	 */
-	private static int askChoice() {
-    	List<Integer> validMenuOptions = Arrays.asList(1, 2, 3, 4, 5, 6, 9);
-    	int choice = 0;
+	private static MenuChoice askChoice() {
+    	MenuChoice choice = null;
+    	int choiceInt;
     	
     	// Ask the choice until the user selects a valid choice
     	do {
@@ -47,58 +45,59 @@ public class Console {
     		
     		// Ask the choice from the user
     		Scanner scanner = new Scanner(System.in);
-			choice = Integer.valueOf(scanner. nextLine());
+    		choiceInt = Integer.valueOf(scanner. nextLine());
+    		choice = MenuChoice.getById(choiceInt);
 			
 			// If the choice is not valid
-			if (!validMenuOptions.contains(choice))
+			if (choice == null)
 				System.out.println("Invalid choice");
-		} while (!validMenuOptions.contains(choice));
+		} while (choice == null);
     	
     	return choice;
 	}
 	
 	public static void run() {
-		int choice = -1;
+		MenuChoice choice = null;
     		
     	do {
     		choice = askChoice();
     		
 	    	switch (choice) {
 	    		// List all computers
-				case 1:
+				case LIST_COMPUTERS:
 					MenuListComputers.getInstance().show();
 		    		break;
 		    		
 		    	// List all companies
-	    		case 2:
+	    		case LIST_COMPANIES:
 	    			MenuListCompanies.getInstance().show();
 		    		break;
 		    		
 		    	// Display infos for a computer
-				case 3:
+				case SHOW_COMPUTER_DETAILS:
 					MenuDisplayComputerDetails.getInstance().show();
 	    			break;
 	    			
 				// Add a computer
-				case 4:
+				case CREATE_COMPUTER:
 					MenuCreateComputer.getInstance().show();
 	    			break;
 	    			
 				// Add a computer
-				case 5:
+				case UPDATE_COMPUTER:
 					MenuUpdateComputer.getInstance().show();
 	    			break;
 		    			
 	    		// Delete the computer
-				case 6:
+				case DELETE_COMPUTER:
 					MenuDeleteComputer.getInstance().show();
 					break;
 					
 		    	// Exit the program
-	    		case 9:
+	    		case EXIT:
 	    			System.out.println("Bye");
 	    			break;
 	    	}
-    	} while (choice != 9);
+    	} while (choice != MenuChoice.EXIT);
 	}
 }
