@@ -2,8 +2,10 @@ package fr.excilys.rmomprive.ui.console.menu;
 
 import java.util.Collection;
 
+import fr.excilys.rmomprive.exception.InvalidPageNumberException;
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.service.ComputerService;
+import fr.excilys.rmomprive.service.Page;
 
 public class MenuListComputers extends IMenu {
 
@@ -11,8 +13,22 @@ public class MenuListComputers extends IMenu {
 	
 	@Override
 	public void show() {
-		Collection<Computer> computers = ComputerService.getInstance().getAll();
-		System.out.println(computers);
+		System.out.println("What is the page size ?");
+		int pageSize = Integer.valueOf(readValue());
+		
+		System.out.println("What is the page id ?");
+		int pageId = Integer.valueOf(readValue());
+		
+		Page<Computer> computers = null;
+		
+		try {
+			computers = ComputerService.getInstance().getPage(pageId, pageSize);
+		} catch (InvalidPageNumberException e) {
+			e.printStackTrace();
+		}
+		
+		if (computers != null)
+			System.out.println(computers);
 	}
 	
 	public static MenuListComputers getInstance() {

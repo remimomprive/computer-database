@@ -2,6 +2,7 @@ package fr.excilys.rmomprive.service;
 
 import java.util.Collection;
 
+import fr.excilys.rmomprive.exception.InvalidPageNumberException;
 import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.model.ComputerDetails;
@@ -63,6 +64,10 @@ public class ComputerService implements IService<Computer> {
 	@Override
 	public boolean checkExistenceById(int id) {
 		return this.computerDao.checkExistenceById(id);
+	}
+	
+	public Page<Computer> getPage(int pageId, int pageSize) throws InvalidPageNumberException {
+		return this.computerDao.getPage(pageId, pageSize);
 	}
 	
 	public static ComputerService getInstance() {
