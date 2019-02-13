@@ -9,11 +9,9 @@ public class MenuDisplayComputerDetails extends IMenu {
 	
 	@Override
 	public void show() {
-		int computerId;
-		System.out.println("What's the computer id ?");
-		
 		// Ask the computer id from the user command line
-		computerId = Integer.valueOf(readValue());
+		System.out.println("What's the computer id ?");
+		int computerId = Menus.readInteger("The computer id should be an integer");
 		
 		// Retrieve the computer details
 		ComputerDetails computerDetails = ComputerService.getInstance().getDetailsByComputerId(computerId);

@@ -55,11 +55,10 @@ public abstract class MenuComputerForm extends IMenu {
 		String name = null;
 		
 		do {
-			name = readValue();
+			name = Menus.readString();
 			
-			if (name.equals("")) {
+			if (name.equals(""))
 				System.out.println("The computer name should not be null");
-			}
 		} while (name.equals(""));
 		return name;
 	}
@@ -75,7 +74,7 @@ public abstract class MenuComputerForm extends IMenu {
 		
 		do {
 			// Read a string value from the terminal
-			timestampString = readValue();
+			timestampString = Menus.readString();
 			
 			// If the user sets "NULL" and the value can be nullable
 			if (nullable && timestampString.contentEquals("NULL"))
@@ -108,8 +107,7 @@ public abstract class MenuComputerForm extends IMenu {
 		int companyId = -1;
 		
 		do {
-			String companyIdString = readValue();
-			companyId = Integer.valueOf(companyIdString);
+			companyId = Menus.readInteger("The company id should be an integer");
 			
 			if (!CompanyService.getInstance().checkExistenceById(companyId))
 				System.out.println("The company does not exist");

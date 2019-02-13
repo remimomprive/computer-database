@@ -13,7 +13,7 @@ public class MenuUpdateComputer extends MenuComputerForm {
 		System.out.println("What's the computer id ?");
 		
 		// Ask the computer id from the user command line
-		computerId = Integer.valueOf(readValue());
+		computerId = Integer.valueOf(Menus.readString());
 		
 		Computer computer = form();
 		computer.setId(computerId);

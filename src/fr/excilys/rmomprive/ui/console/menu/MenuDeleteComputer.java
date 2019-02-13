@@ -8,16 +8,14 @@ public class MenuDeleteComputer extends IMenu {
 	
 	@Override
 	public void show() {
-		int computerId;
-		System.out.println("What's the computer id ?");
-		
 		// Ask the computer id from the user command line
-		computerId = Integer.valueOf(readValue());
+		System.out.println("What's the computer id ?");
+		int computerId = Menus.readInteger("The computer id should be an integer");
 		
 		if(ComputerService.getInstance().deleteById(computerId))
-			System.out.printf("Successfully deleted computer %d", computerId);
+			System.out.printf("Successfully deleted computer %d\n", computerId);
 		else
-			System.out.printf("An error happened while trying to delete computer %d", computerId);
+			System.out.printf("An error happened while trying to delete computer %d\n", computerId);
 	}
 	
 	public static MenuDeleteComputer getInstance() {
