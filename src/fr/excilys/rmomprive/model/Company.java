@@ -1,6 +1,6 @@
 package fr.excilys.rmomprive.model;
 
-public class Company implements Entity {
+public class Company {
 	private int id;
 	private String name;
 	

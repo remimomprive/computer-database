@@ -66,7 +66,7 @@ public class CompanyService implements IService<Company> {
 	}
 
 	@Override
-	public Page getPage(int pageId, int pageSize) throws InvalidPageIdException {
+	public Page<Company> getPage(int pageId, int pageSize) throws InvalidPageIdException {
 		return this.companyDao.getPage(pageId, pageSize);
 	}
 	
