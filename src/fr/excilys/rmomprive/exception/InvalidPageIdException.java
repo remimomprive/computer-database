@@ -1,6 +1,6 @@
 package fr.excilys.rmomprive.exception;
 
-public class InvalidPageNumberException extends Exception {
+public class InvalidPageIdException extends Exception {
 
 	/**
 	 * 

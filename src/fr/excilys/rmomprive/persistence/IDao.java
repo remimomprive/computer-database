@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collection;
 
-import fr.excilys.rmomprive.exception.InvalidPageNumberException;
+import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.service.Page;
 
 public interface IDao<T> {
@@ -20,5 +20,5 @@ public interface IDao<T> {
 	public boolean checkExistenceById(int id);
 	public int getRowCount();
 	public int getPageCount(int pageSize);
-	public Page getPage(int pageId, int pageSize) throws InvalidPageNumberException;
+	public Page getPage(int pageId, int pageSize) throws InvalidPageIdException, InvalidPageSizeException;
 }

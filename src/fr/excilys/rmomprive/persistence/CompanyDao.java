@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 
 import fr.excilys.rmomprive.exception.ImpossibleActionException;
-import fr.excilys.rmomprive.exception.InvalidPageNumberException;
+import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.service.Page;
 
@@ -133,7 +133,7 @@ public class CompanyDao implements IDao<Company> {
 	}
 
 	@Override
-	public Page getPage(int pageId, int pageSize) throws InvalidPageNumberException {
+	public Page getPage(int pageId, int pageSize) throws InvalidPageIdException {
 		throw new ImpossibleActionException();
 	}
 }

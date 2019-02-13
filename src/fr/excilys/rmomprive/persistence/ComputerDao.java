@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.List;
 
 import fr.excilys.rmomprive.exception.ImpossibleActionException;
-import fr.excilys.rmomprive.exception.InvalidPageNumberException;
+import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.service.Page;
 
@@ -207,10 +207,14 @@ public class ComputerDao implements IDao<Computer> {
 		return (int) Math.round((1.0 * this.getRowCount()) / pageSize);
 	}
 	
-	public Page getPage(int pageId, int pageSize) throws InvalidPageNumberException {
+	public Page getPage(int pageId, int pageSize) throws InvalidPageIdException, InvalidPageSizeException {
 		int pageCount = getPageCount(pageSize);
 		
-		if (pageId > 0 && pageId <= pageCount) {
+		if (pageSize <= 0)
+			throw new InvalidPageSizeException();
+		else if (pageId <= 0 || pageId > pageCount)
+			throw new InvalidPageIdException();
+		else {
 			int offset = (pageId - 1) * pageSize;
 			
 			List<Computer> computers = new ArrayList<>();
@@ -233,8 +237,6 @@ public class ComputerDao implements IDao<Computer> {
 			
 			return new Page<Computer>(computers, pageId, pageId > 1, pageId < pageCount);
 		}
-		
-		throw new InvalidPageNumberException();
 	}
 	
 	public static void main(String[] args) {
@@ -243,7 +245,9 @@ public class ComputerDao implements IDao<Computer> {
 		try  {
 			Page<Computer> results = computerDao.getPage(1, 2);
 			System.out.println(results);
-		} catch(InvalidPageNumberException e) {
+		} catch(InvalidPageIdException e) {
+			e.printStackTrace();
+		} catch (InvalidPageSizeException e) {
 			e.printStackTrace();
 		}
 	}

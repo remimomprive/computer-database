@@ -2,12 +2,13 @@ package fr.excilys.rmomprive.service;
 
 import java.util.Collection;
 
-import fr.excilys.rmomprive.exception.InvalidPageNumberException;
+import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.model.ComputerDetails;
 import fr.excilys.rmomprive.persistence.CompanyDao;
 import fr.excilys.rmomprive.persistence.ComputerDao;
+import fr.excilys.rmomprive.persistence.InvalidPageSizeException;
 
 public class ComputerService implements IService<Computer> {
 
@@ -77,7 +78,7 @@ public class ComputerService implements IService<Computer> {
 	}
 	
 	@Override
-	public Page<Computer> getPage(int pageId, int pageSize) throws InvalidPageNumberException {
+	public Page<Computer> getPage(int pageId, int pageSize) throws InvalidPageIdException, InvalidPageSizeException {
 		return this.computerDao.getPage(pageId, pageSize);
 	}
 	
