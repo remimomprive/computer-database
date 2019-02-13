@@ -183,6 +183,10 @@ public class ComputerDao implements IDao<Computer> {
 		return (count != 0);
 	}
 	
+	/**
+	 * Returns the number of computers inside the database
+	 */
+	@Override
 	public int getRowCount() {
 		int count = -1;
 		
@@ -204,15 +208,27 @@ public class ComputerDao implements IDao<Computer> {
 		return count;
 	}
 	
+	/**
+	 * Returns the number of pages with the specified size
+	 */
 	public int getPageCount(int pageSize) {
 		return (int) Math.round((1.0 * this.getRowCount()) / pageSize);
 	}
 	
+	/**
+	 * Returns the specific page
+	 * @param pageId the page id we want to retrieve
+	 * @param pageSize
+	 * @return The specified spage
+	 */
 	public Page<Computer> getPage(int pageId, int pageSize) throws InvalidPageIdException, InvalidPageSizeException {
+		// Compute the page count
 		int pageCount = getPageCount(pageSize);
 		
+		// The page size should not be < 1
 		if (pageSize <= 0)
 			throw new InvalidPageSizeException();
+		// The page id is between 1 and pageCount (a computed value)
 		else if (pageId <= 0 || pageId > pageCount)
 			throw new InvalidPageIdException();
 		else {
@@ -222,6 +238,8 @@ public class ComputerDao implements IDao<Computer> {
 			
 			try {
 				Connection connection = Database.getConnection();
+				
+				// Retrieve the page content
 				PreparedStatement statement = connection.prepareStatement(SELECT_PAGE_QUERY);
 				statement.setInt(1, pageSize);
 				statement.setInt(2, offset);
@@ -236,20 +254,8 @@ public class ComputerDao implements IDao<Computer> {
 				e.printStackTrace();
 			}
 			
+			// Return the page
 			return new Page<Computer>(computers, pageId, pageId > 1, pageId < pageCount);
-		}
-	}
-	
-	public static void main(String[] args) {
-		ComputerDao computerDao = new ComputerDao();
-		
-		try  {
-			Page<Computer> results = computerDao.getPage(1, 2);
-			System.out.println(results);
-		} catch(InvalidPageIdException e) {
-			e.printStackTrace();
-		} catch (InvalidPageSizeException e) {
-			e.printStackTrace();
 		}
 	}
 }
