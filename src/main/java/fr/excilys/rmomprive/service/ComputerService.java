@@ -18,7 +18,7 @@ public class ComputerService implements IService<Computer> {
 	private static ComputerService instance;
 	
 	@Override
-	public Optional<Computer> getById(int id) throws SQLException {
+	public Optional<Computer> getById(long id) throws SQLException {
 		return this.getComputerDao().getById(id);
 	}
 	
@@ -67,12 +67,12 @@ public class ComputerService implements IService<Computer> {
 	}
 	
 	@Override
-	public boolean deleteById(int id) throws SQLException {
+	public boolean deleteById(long id) throws SQLException {
 		return this.getComputerDao().deleteById(id);
 	}
 	
 	@Override
-	public boolean checkExistenceById(int id) throws SQLException {
+	public boolean checkExistenceById(long id) throws SQLException {
 		return this.getComputerDao().checkExistenceById(id);
 	}
 

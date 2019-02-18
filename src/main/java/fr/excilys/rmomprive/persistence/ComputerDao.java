@@ -47,10 +47,10 @@ public class ComputerDao implements IDao<Computer> {
 	}
 	
 	@Override
-	public Optional<Computer> getById(int objectId) throws SQLException {
+	public Optional<Computer> getById(long objectId) throws SQLException {
 		try (Connection connection = Database.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID_QUERY);
-			statement.setInt(1, objectId);
+			statement.setLong(1, objectId);
 			ResultSet resultSet = statement.executeQuery();
 			
 			while (resultSet.next()) {
@@ -84,7 +84,7 @@ public class ComputerDao implements IDao<Computer> {
 			statement.setString(1, object.getName());
 			statement.setObject(2, object.getIntroduced());
 			statement.setObject(3, object.getDiscontinued());
-			statement.setInt(4, object.getCompanyId());
+			statement.setLong(4, object.getCompanyId());
 			
 			statement.executeUpdate();
 			
@@ -110,8 +110,8 @@ public class ComputerDao implements IDao<Computer> {
 			statement.setString(1, object.getName());
 			statement.setObject(2, object.getIntroduced());
 			statement.setObject(3, object.getDiscontinued());
-			statement.setInt(4, object.getCompanyId());
-			statement.setInt(5, object.getId());
+			statement.setLong(4, object.getCompanyId());
+			statement.setLong(5, object.getId());
 			statement.executeUpdate();
 			
 			return object;
@@ -124,22 +124,22 @@ public class ComputerDao implements IDao<Computer> {
 	}
 	
 	@Override
-	public boolean deleteById(int id) throws SQLException {
+	public boolean deleteById(long id) throws SQLException {
 		try (Connection connection = Database.getConnection()){
 			PreparedStatement statement = connection.prepareStatement(DELETE_QUERY);
-			statement.setInt(1, id);
+			statement.setLong(1, id);
 			
 			return (statement.executeUpdate() != 0);
 		}
 	}
 
 	@Override
-	public boolean checkExistenceById(int id) throws SQLException {
+	public boolean checkExistenceById(long id) throws SQLException {
 		int count = 0;
 		
 		try (Connection connection = Database.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(CHECK_EXISTENCE_QUERY);
-			statement.setInt(1, id);
+			statement.setLong(1, id);
 			ResultSet resultSet = statement.executeQuery();
 			
 			while (resultSet.next()) {

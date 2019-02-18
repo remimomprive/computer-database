@@ -1,10 +1,10 @@
 package fr.excilys.rmomprive.model;
 
 public class Company {
-	private int id;
+	private long id;
 	private String name;
 	
-	public Company(int id, String name) {
+	public Company(long id, String name) {
 		this.id = id;
 		this.name = name;
 	}

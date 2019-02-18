@@ -3,17 +3,17 @@ package fr.excilys.rmomprive.model;
 import java.sql.Timestamp;
 
 public class Computer {
-	private int id;
+	private long id;
 	private String name;
 	private Timestamp introduced;
 	private Timestamp discontinued;
-	private int companyId;
+	private long companyId;
 	
 	private Computer() {
 		
 	}
 	
-	public Computer(int id, String name, Timestamp introduced, Timestamp discontinued, int companyId) {
+	public Computer(long id, String name, Timestamp introduced, Timestamp discontinued, long companyId) {
 		this.id = id;
 		this.name = name;
 		this.introduced = introduced;
@@ -21,11 +21,11 @@ public class Computer {
 		this.companyId = companyId;
 	}
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -53,11 +53,11 @@ public class Computer {
 		this.discontinued = discontinued;
 	}
 	
-	public int getCompanyId() {
+	public long getCompanyId() {
 		return companyId;
 	}
 	
-	public void setCompanyId(int companyId) {
+	public void setCompanyId(long companyId) {
 		this.companyId = companyId;
 	}
 
@@ -68,11 +68,11 @@ public class Computer {
 	}
 	
 	public static class ComputerBuilder {
-		private int id;
+		private long id;
 		private String name;
 		private Timestamp introduced;
 		private Timestamp discontinued;
-		private int companyId;
+		private long companyId;
 		
 		public Computer build() {
 			Computer computer = new Computer();
@@ -86,7 +86,7 @@ public class Computer {
 			return computer;
 		}
 
-		public ComputerBuilder setId(int id) {
+		public ComputerBuilder setId(long id) {
 			this.id = id;
 			return this;
 		}
@@ -106,7 +106,7 @@ public class Computer {
 			return this;
 		}
 
-		public ComputerBuilder setCompanyId(int companyId) {
+		public ComputerBuilder setCompanyId(long companyId) {
 			this.companyId = companyId;
 			return this;
 		}

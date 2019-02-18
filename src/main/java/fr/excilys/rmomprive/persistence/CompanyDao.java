@@ -34,10 +34,10 @@ public class CompanyDao implements IDao<Company> {
 	}
 	
 	@Override
-	public Optional<Company> getById(int objectId) throws SQLException {
+	public Optional<Company> getById(long objectId) throws SQLException {
 		try (Connection connection = Database.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID_QUERY);
-			statement.setInt(1, objectId);
+			statement.setLong(1, objectId);
 			ResultSet resultSet = statement.executeQuery();
 			
 			while (resultSet.next()) {
@@ -85,17 +85,17 @@ public class CompanyDao implements IDao<Company> {
 	}
 	
 	@Override
-	public boolean deleteById(int id) {
+	public boolean deleteById(long id) {
 		throw new ImpossibleActionException();
 	}
 
 	@Override
-	public boolean checkExistenceById(int id) {
+	public boolean checkExistenceById(long id) {
 		int count = 0;
 		
 		try (Connection connection = Database.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(CHECK_EXISTENCE_QUERY);
-			statement.setInt(1, id);
+			statement.setLong(1, id);
 			ResultSet resultSet = statement.executeQuery();
 			
 			while (resultSet.next()) {

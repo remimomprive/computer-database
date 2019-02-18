@@ -13,7 +13,7 @@ public class CompanyService implements IService<Company> {
 	private static CompanyService instance;
 	
 	@Override
-	public Optional<Company> getById(int id) throws SQLException {
+	public Optional<Company> getById(long id) throws SQLException {
 		return this.getCompanyDao().getById(id);
 	}
 
@@ -43,12 +43,12 @@ public class CompanyService implements IService<Company> {
 	}
 	
 	@Override
-	public boolean deleteById(int id) {
+	public boolean deleteById(long id) throws SQLException {
 		return this.getCompanyDao().deleteById(id);
 	}
 	
 	@Override
-	public boolean checkExistenceById(int id) {
+	public boolean checkExistenceById(long id) {
 		return this.getCompanyDao().checkExistenceById(id);
 	}
 
