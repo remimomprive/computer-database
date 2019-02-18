@@ -1,6 +1,8 @@
 package fr.excilys.rmomprive.service;
 
+import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Optional;
 
 import fr.excilys.rmomprive.exception.EntityNotFoundException;
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
@@ -22,27 +24,35 @@ public class ComputerService implements IService<Computer> {
 	}
 	
 	@Override
-	public Computer getById(int id) {
+	public Optional<Computer> getById(int id) throws SQLException {
 		return this.computerDao.getById(id);
 	}
 	
-	public ComputerDetails getDetailsByComputerId(int id) {
-		Computer computer = this.computerDao.getById(id);
+	public Optional<ComputerDetails> getDetailsByComputerId(int id) throws SQLException {
+		Optional<Computer> computer = this.computerDao.getById(id);
 		
-		if (computer == null)
-			throw new EntityNotFoundException();
+		if (!computer.isPresent()) {
+			return Optional.empty();
+		}
+		else {
+			Optional<Company> company = this.companyDao.getById(computer.get().getCompanyId());
 			
-		Company company = this.companyDao.getById(computer.getCompanyId());
-		return new ComputerDetails(computer, company);
+			if (company.isPresent()) {
+				return Optional.of(new ComputerDetails(computer.get(), company.get()));
+			}
+			else {
+				return Optional.empty();
+			}				
+		}
 	}
 
 	@Override
-	public Collection<Computer> getAll() {
+	public Collection<Computer> getAll() throws SQLException {
 		return this.computerDao.getAll();
 	}
 
 	@Override
-	public Computer add(Computer object) {
+	public Optional<Computer> add(Computer object) throws SQLException {
 		return this.computerDao.add(object);
 	}
 
@@ -52,37 +62,37 @@ public class ComputerService implements IService<Computer> {
 	}
 
 	@Override
-	public Computer update(Computer object) {
+	public Computer update(Computer object) throws SQLException {
 		return this.computerDao.update(object);
 	}
 
 	@Override
-	public boolean delete(Computer object) {
+	public boolean delete(Computer object) throws SQLException {
 		return this.computerDao.delete(object);
 	}
 	
 	@Override
-	public boolean deleteById(int id) {
+	public boolean deleteById(int id) throws SQLException {
 		return this.computerDao.deleteById(id);
 	}
 	
 	@Override
-	public boolean checkExistenceById(int id) {
+	public boolean checkExistenceById(int id) throws SQLException {
 		return this.computerDao.checkExistenceById(id);
 	}
 
 	@Override
-	public int getRowCount() {
+	public int getRowCount() throws SQLException {
 		return this.computerDao.getRowCount();
 	}
 
 	@Override
-	public int getPageCount(int pageSize) {
+	public int getPageCount(int pageSize) throws SQLException {
 		return this.computerDao.getPageCount(pageSize);
 	}
 	
 	@Override
-	public Page<Computer> getPage(int pageId, int pageSize) throws InvalidPageIdException, InvalidPageSizeException {
+	public Page<Computer> getPage(int pageId, int pageSize) throws InvalidPageIdException, InvalidPageSizeException, SQLException {
 		return this.computerDao.getPage(pageId, pageSize);
 	}
 	

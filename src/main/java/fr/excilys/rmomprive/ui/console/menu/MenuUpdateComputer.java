@@ -1,5 +1,7 @@
 package fr.excilys.rmomprive.ui.console.menu;
 
+import java.sql.SQLException;
+
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.service.ComputerService;
 
@@ -18,12 +20,16 @@ public class MenuUpdateComputer extends MenuComputerForm {
 		Computer computer = form();
 		computer.setId(computerId);
 		
-		Computer createdComputer = ComputerService.getInstance().update(computer);
-		
-		if (createdComputer != null)
-			System.out.println("Successfullly updated " + createdComputer);
-		else
-			System.out.println("Error updating " + computer);
+		try {
+			Computer createdComputer = ComputerService.getInstance().update(computer);
+			
+			if (createdComputer != null)
+				System.out.println("Successfullly updated " + createdComputer);
+			else
+				System.out.println("Error updating " + computer);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static MenuUpdateComputer getInstance() {

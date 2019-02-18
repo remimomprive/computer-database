@@ -1,5 +1,6 @@
 package fr.excilys.rmomprive.ui.console.menu;
 
+import java.sql.SQLException;
 import java.util.Collection;
 
 import fr.excilys.rmomprive.model.Company;
@@ -11,8 +12,12 @@ public class MenuListCompanies extends Menu {
 	
 	@Override
 	public void show() {
-		Collection<Company> companies = CompanyService.getInstance().getAll();
-		System.out.println(companies);
+		try {
+			Collection<Company> companies = CompanyService.getInstance().getAll();
+			System.out.println(companies);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static MenuListCompanies getInstance() {

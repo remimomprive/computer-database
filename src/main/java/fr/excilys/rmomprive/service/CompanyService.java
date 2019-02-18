@@ -1,6 +1,8 @@
 package fr.excilys.rmomprive.service;
 
+import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Optional;
 
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.model.Company;
@@ -16,17 +18,17 @@ public class CompanyService implements IService<Company> {
 	}
 	
 	@Override
-	public Company getById(int id) {
+	public Optional<Company> getById(int id) throws SQLException {
 		return this.companyDao.getById(id);
 	}
 
 	@Override
-	public Collection<Company> getAll() {
+	public Collection<Company> getAll() throws SQLException {
 		return this.companyDao.getAll();
 	}
 
 	@Override
-	public Company add(Company object) {
+	public Optional<Company> add(Company object) {
 		return this.companyDao.add(object);
 	}
 

@@ -1,5 +1,7 @@
 package fr.excilys.rmomprive.ui.console.menu;
 
+import java.sql.SQLException;
+
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.exception.InvalidPageSizeException;
 import fr.excilys.rmomprive.model.Computer;
@@ -20,16 +22,16 @@ public class MenuListPageComputers extends Menu {
 		System.out.println("What is the page id ?");
 		int pageId = Menus.readInteger("The page id should be an int");
 		
-		Page<Computer> computers = null;
-		
 		try {
-			computers = ComputerService.getInstance().getPage(pageId, pageSize);
+			Page<Computer> computers = ComputerService.getInstance().getPage(pageId, pageSize);
+			
+			if (computers != null)
+				System.out.println(computers);
 		} catch (InvalidPageIdException | InvalidPageSizeException e) {
 			getLogger().error("The page parameters are not valid\n");
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-		
-		if (computers != null)
-			System.out.println(computers);
 	}
 
 	public static MenuListPageComputers getInstance() {

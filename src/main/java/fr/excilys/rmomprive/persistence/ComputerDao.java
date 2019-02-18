@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import fr.excilys.rmomprive.exception.ImpossibleActionException;
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
@@ -44,54 +45,39 @@ public class ComputerDao implements IDao<Computer> {
 	}
 	
 	@Override
-	public Computer getById(int objectId) {
-		Computer result = null;
-		
-		try {
-			Connection connection = Database.getConnection();
-			
+	public Optional<Computer> getById(int objectId) throws SQLException {
+		try (Connection connection = Database.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID_QUERY);
 			statement.setInt(1, objectId);
 			ResultSet resultSet = statement.executeQuery();
 			
 			while (resultSet.next()) {
-            	result = createFromResultSet(resultSet);
+            	return Optional.of(createFromResultSet(resultSet));
             }
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 		
-		return result;
+		return Optional.empty();
 	}
 
 	@Override
-	public Collection<Computer> getAll() {
+	public Collection<Computer> getAll() throws SQLException {
 		List<Computer> result = new ArrayList<>();
 		
-		try {
-			Connection connection = Database.getConnection();
+		try (Connection connection = Database.getConnection()) {
 			Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery(SELECT_ALL_QUERY);
 			
 			while (resultSet.next()) {
                 result.add(createFromResultSet(resultSet));
             }
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 		
 		return result;
 	}
 
 	@Override
-	public Computer add(Computer object) {
-		Connection connection;
-		try {
-			connection = Database.getConnection();
+	public Optional<Computer> add(Computer object) throws SQLException {
+		try (Connection connection = Database.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(INSERT_QUERY, Statement.RETURN_GENERATED_KEYS);
 			statement.setString(1, object.getName());
 			statement.setObject(2, object.getIntroduced());
@@ -102,15 +88,12 @@ public class ComputerDao implements IDao<Computer> {
 			
 			 ResultSet rs = statement.getGeneratedKeys();
              if(rs.next()) {
-                 int insertedId = rs.getInt(1);
-                 object.setId(insertedId);
-                 return object;
+                 object.setId(rs.getInt(1));
+                 return Optional.of(object);
              }
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
 		}
 		
-		return null;
+		return Optional.empty();
 	}
 
 	@Override
@@ -119,54 +102,40 @@ public class ComputerDao implements IDao<Computer> {
 	}
 
 	@Override
-	public Computer update(Computer object) {
-		Connection connection;
-		try {
-			connection = Database.getConnection();
+	public Computer update(Computer object) throws SQLException {
+		try (Connection connection = Database.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY);
 			statement.setString(1, object.getName());
 			statement.setObject(2, object.getIntroduced());
 			statement.setObject(3, object.getDiscontinued());
 			statement.setInt(4, object.getCompanyId());
 			statement.setInt(5, object.getId());
-			
 			statement.executeUpdate();
 			
 			return object;
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
 		}
-		
-		return null;
 	}
 
 	@Override
-	public boolean delete(Computer object) {
+	public boolean delete(Computer object) throws SQLException {
 		return deleteById(object.getId());
 	}
 	
 	@Override
-	public boolean deleteById(int id) {
-		Connection connection;
-		try {
-			connection = Database.getConnection();
+	public boolean deleteById(int id) throws SQLException {
+		try (Connection connection = Database.getConnection()){
 			PreparedStatement statement = connection.prepareStatement(DELETE_QUERY);
 			statement.setInt(1, id);
 			
 			return (statement.executeUpdate() != 0);
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
 		}
-		return false;
 	}
 
 	@Override
-	public boolean checkExistenceById(int id) {
+	public boolean checkExistenceById(int id) throws SQLException {
 		int count = 0;
 		
-		try {
-			Connection connection = Database.getConnection();
-			
+		try (Connection connection = Database.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(CHECK_EXISTENCE_QUERY);
 			statement.setInt(1, id);
 			ResultSet resultSet = statement.executeQuery();
@@ -174,10 +143,6 @@ public class ComputerDao implements IDao<Computer> {
 			while (resultSet.next()) {
                 count = resultSet.getInt(FIELD_COUNT);
             }
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 		
 		return (count != 0);
@@ -185,24 +150,19 @@ public class ComputerDao implements IDao<Computer> {
 	
 	/**
 	 * Returns the number of computers inside the database
+	 * @throws SQLException 
 	 */
 	@Override
-	public int getRowCount() {
+	public int getRowCount() throws SQLException {
 		int count = -1;
 		
-		try {
-			Connection connection = Database.getConnection();
-			
+		try (Connection connection = Database.getConnection()) {
 			Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery(COUNT_QUERY);
 			
 			while (resultSet.next()) {
                 count = resultSet.getInt(FIELD_COUNT);
             }
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 		
 		return count;
@@ -210,8 +170,9 @@ public class ComputerDao implements IDao<Computer> {
 	
 	/**
 	 * Returns the number of pages with the specified size
+	 * @throws SQLException 
 	 */
-	public int getPageCount(int pageSize) {
+	public int getPageCount(int pageSize) throws SQLException {
 		return (int) Math.round((1.0 * this.getRowCount()) / pageSize);
 	}
 	
@@ -220,8 +181,9 @@ public class ComputerDao implements IDao<Computer> {
 	 * @param pageId the page id we want to retrieve
 	 * @param pageSize
 	 * @return The specified spage
+	 * @throws SQLException 
 	 */
-	public Page<Computer> getPage(int pageId, int pageSize) throws InvalidPageIdException, InvalidPageSizeException {
+	public Page<Computer> getPage(int pageId, int pageSize) throws InvalidPageIdException, InvalidPageSizeException, SQLException {
 		// Compute the page count
 		int pageCount = getPageCount(pageSize);
 		
@@ -236,9 +198,7 @@ public class ComputerDao implements IDao<Computer> {
 			
 			List<Computer> computers = new ArrayList<>();
 			
-			try {
-				Connection connection = Database.getConnection();
-				
+			try (Connection connection = Database.getConnection()) {
 				// Retrieve the page content
 				PreparedStatement statement = connection.prepareStatement(SELECT_PAGE_QUERY);
 				statement.setInt(1, pageSize);
@@ -248,10 +208,6 @@ public class ComputerDao implements IDao<Computer> {
 				while (resultSet.next()) {
 					computers.add(createFromResultSet(resultSet));
 	            }
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			} catch (SQLException e) {
-				e.printStackTrace();
 			}
 			
 			// Return the page

@@ -1,5 +1,7 @@
 package fr.excilys.rmomprive.ui.console.menu;
 
+import java.sql.SQLException;
+
 import fr.excilys.rmomprive.service.ComputerService;
 
 public class MenuDeleteComputer extends Menu {
@@ -12,10 +14,14 @@ public class MenuDeleteComputer extends Menu {
 		System.out.println("What's the computer id ?");
 		int computerId = Menus.readInteger("The computer id should be an integer");
 		
-		if(ComputerService.getInstance().deleteById(computerId))
-			getLogger().info("Successfully deleted computer %d\n", computerId);
-		else
-			getLogger().error("An error happened while trying to delete computer %d\n", computerId);
+		try {
+			if(ComputerService.getInstance().deleteById(computerId))
+				getLogger().info("Successfully deleted computer %d\n", computerId);
+			else
+				getLogger().error("An error happened while trying to delete computer %d\n", computerId);
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static MenuDeleteComputer getInstance() {

@@ -1,5 +1,6 @@
 package fr.excilys.rmomprive.ui.console.menu;
 
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Scanner;
 
@@ -82,7 +83,7 @@ public class Menus {
 			// Else, the String format is not valid
 			else
 				timestamp = Timestamp.valueOf(timestampString);
-		} while (!(Dates.isValidTimestamp(timestampString) || (nullable && timestampString != null)));
+		} while (!(Dates.isValidTimestamp(timestampString) || (nullable && timestampString.equals(""))));
 		
 		return timestamp;
 	}
@@ -98,6 +99,7 @@ public class Menus {
 	/**
 	 * Ask a company id until its value corresponds to an existing company id
 	 * @return The given company id
+	 * @throws SQLException 
 	 */
 	public static int readCompanyId() {
 		System.out.println("What's the company id ?");

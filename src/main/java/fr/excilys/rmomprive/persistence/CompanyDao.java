@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import fr.excilys.rmomprive.exception.ImpossibleActionException;
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
@@ -31,51 +32,38 @@ public class CompanyDao implements IDao<Company> {
 	}
 	
 	@Override
-	public Company getById(int objectId) {
-		Company result = null;
-		
-		try {
-			Connection connection = Database.getConnection();
-			
+	public Optional<Company> getById(int objectId) throws SQLException {
+		try (Connection connection = Database.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID_QUERY);
 			statement.setInt(1, objectId);
 			ResultSet resultSet = statement.executeQuery();
 			
 			while (resultSet.next()) {
-                result = createFromResultSet(resultSet);
+                return Optional.of(createFromResultSet(resultSet));
             }
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 		
-		return result;
+		return Optional.empty();
 	}
 
 	@Override
-	public Collection<Company> getAll() {
+	public Collection<Company> getAll() throws SQLException {
 		List<Company> result = new ArrayList<>();
 		
-		try {
-			Connection connection = Database.getConnection();
+		try (Connection connection = Database.getConnection()) {
 			Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery(SELECT_ALL_QUERY);
 			
 			while (resultSet.next()) {
                 result.add(createFromResultSet(resultSet));
             }
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 		
 		return result;
 	}
 
 	@Override
-	public Company add(Company object) {
+	public Optional<Company> add(Company object) {
 		throw new ImpossibleActionException();
 	}
 
@@ -103,9 +91,7 @@ public class CompanyDao implements IDao<Company> {
 	public boolean checkExistenceById(int id) {
 		int count = 0;
 		
-		try {
-			Connection connection = Database.getConnection();
-			
+		try (Connection connection = Database.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(CHECK_EXISTENCE_QUERY);
 			statement.setInt(1, id);
 			ResultSet resultSet = statement.executeQuery();
@@ -113,8 +99,6 @@ public class CompanyDao implements IDao<Company> {
 			while (resultSet.next()) {
                 count = resultSet.getInt(FIELD_COUNT);
             }
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

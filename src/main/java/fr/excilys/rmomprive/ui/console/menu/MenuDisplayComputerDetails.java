@@ -1,6 +1,8 @@
 package fr.excilys.rmomprive.ui.console.menu;
 
-import fr.excilys.rmomprive.exception.EntityNotFoundException;
+import java.sql.SQLException;
+import java.util.Optional;
+
 import fr.excilys.rmomprive.model.ComputerDetails;
 import fr.excilys.rmomprive.service.ComputerService;
 
@@ -15,16 +17,16 @@ public class MenuDisplayComputerDetails extends Menu {
 		int computerId = Menus.readInteger("The computer id should be an integer");
 		
 		// Retrieve the computer details
-		ComputerDetails computerDetails = null;
-		
 		try {
-			computerDetails = ComputerService.getInstance().getDetailsByComputerId(computerId);
-		} catch (EntityNotFoundException e) {
-			getLogger().error("This computer does not exist\n");
+			Optional<ComputerDetails> computerDetails = ComputerService.getInstance().getDetailsByComputerId(computerId);
+			
+			if (computerDetails.isPresent())
+				System.out.println(computerDetails);
+			else
+				getLogger().error("This computer does not exist\n");
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-		
-		if (computerDetails != null)
-			System.out.println(computerDetails);
 	}
 	
 	public static MenuDisplayComputerDetails getInstance() {
