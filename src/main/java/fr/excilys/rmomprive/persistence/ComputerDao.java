@@ -34,6 +34,8 @@ public class ComputerDao implements IDao<Computer> {
 	private static final String FIELD_COMPANY_ID = "company_id";
 	private static final String FIELD_COUNT = "count";
 	
+	private static ComputerDao instance;
+	
 	private Computer createFromResultSet(ResultSet resultSet) throws SQLException {
 		int id = resultSet.getInt(FIELD_ID);
         String name = resultSet.getString(FIELD_NAME);
@@ -213,5 +215,11 @@ public class ComputerDao implements IDao<Computer> {
 			// Return the page
 			return new Page<Computer>(computers, pageId, pageId > 1, pageId < pageCount);
 		}
+	}
+	
+	public static ComputerDao getInstance() {
+		if (instance == null)
+			instance = new ComputerDao();
+		return instance;
 	}
 }

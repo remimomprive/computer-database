@@ -24,6 +24,8 @@ public class CompanyDao implements IDao<Company> {
 	private static final String FIELD_NAME = "name";
 	private static final String FIELD_COUNT = "count";
 	
+	private static CompanyDao instance;
+	
 	private Company createFromResultSet(ResultSet resultSet) throws SQLException {
 		int id = resultSet.getInt(FIELD_ID);
         String name = resultSet.getString(FIELD_NAME);
@@ -119,5 +121,11 @@ public class CompanyDao implements IDao<Company> {
 	@Override
 	public Page<Company> getPage(int pageId, int pageSize) throws InvalidPageIdException {
 		throw new ImpossibleActionException();
+	}
+	
+	public static CompanyDao getInstance() {
+		if (instance == null)
+			instance = new CompanyDao();
+		return instance;
 	}
 }

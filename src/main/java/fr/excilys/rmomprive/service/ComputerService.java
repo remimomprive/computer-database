@@ -16,13 +16,6 @@ import fr.excilys.rmomprive.validation.ComputerValidator;
 
 public class ComputerService implements IService<Computer> {
 	private static ComputerService instance;
-	private ComputerDao computerDao;
-	private CompanyDao companyDao;
-	
-	public ComputerService() {
-		this.setComputerDao(new ComputerDao());
-		this.setCompanyDao(new CompanyDao());
-	}
 	
 	@Override
 	public Optional<Computer> getById(int id) throws SQLException {
@@ -105,19 +98,11 @@ public class ComputerService implements IService<Computer> {
 		return instance;
 	}
 
-	public ComputerDao getComputerDao() {
-		return computerDao;
-	}
-
-	public void setComputerDao(ComputerDao computerDao) {
-		this.computerDao = computerDao;
-	}
-
 	public CompanyDao getCompanyDao() {
-		return companyDao;
+		return CompanyDao.getInstance();
 	}
 
-	public void setCompanyDao(CompanyDao companyDao) {
-		this.companyDao = companyDao;
+	public ComputerDao getComputerDao() {
+		return ComputerDao.getInstance();
 	}
 }
