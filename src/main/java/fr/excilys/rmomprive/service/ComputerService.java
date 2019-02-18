@@ -12,6 +12,7 @@ import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.model.ComputerDetails;
 import fr.excilys.rmomprive.persistence.CompanyDao;
 import fr.excilys.rmomprive.persistence.ComputerDao;
+import fr.excilys.rmomprive.validation.ComputerValidator;
 
 public class ComputerService implements IService<Computer> {
 	private static ComputerService instance;
@@ -25,17 +26,17 @@ public class ComputerService implements IService<Computer> {
 	
 	@Override
 	public Optional<Computer> getById(int id) throws SQLException {
-		return this.computerDao.getById(id);
+		return this.getComputerDao().getById(id);
 	}
 	
 	public Optional<ComputerDetails> getDetailsByComputerId(int id) throws SQLException {
-		Optional<Computer> computer = this.computerDao.getById(id);
+		Optional<Computer> computer = this.getComputerDao().getById(id);
 		
 		if (!computer.isPresent()) {
 			return Optional.empty();
 		}
 		else {
-			Optional<Company> company = this.companyDao.getById(computer.get().getCompanyId());
+			Optional<Company> company = this.getCompanyDao().getById(computer.get().getCompanyId());
 			
 			if (company.isPresent()) {
 				return Optional.of(new ComputerDetails(computer.get(), company.get()));
@@ -48,52 +49,53 @@ public class ComputerService implements IService<Computer> {
 
 	@Override
 	public Collection<Computer> getAll() throws SQLException {
-		return this.computerDao.getAll();
+		return this.getComputerDao().getAll();
 	}
 
 	@Override
 	public Optional<Computer> add(Computer object) throws SQLException {
-		return this.computerDao.add(object);
+		ComputerValidator.validate(object);
+		return this.getComputerDao().add(object);
 	}
 
 	@Override
 	public Collection<Computer> addAll(Collection<Computer> objects) {
-		return this.computerDao.addAll(objects);
+		return this.getComputerDao().addAll(objects);
 	}
 
 	@Override
 	public Computer update(Computer object) throws SQLException {
-		return this.computerDao.update(object);
+		return this.getComputerDao().update(object);
 	}
 
 	@Override
 	public boolean delete(Computer object) throws SQLException {
-		return this.computerDao.delete(object);
+		return this.getComputerDao().delete(object);
 	}
 	
 	@Override
 	public boolean deleteById(int id) throws SQLException {
-		return this.computerDao.deleteById(id);
+		return this.getComputerDao().deleteById(id);
 	}
 	
 	@Override
 	public boolean checkExistenceById(int id) throws SQLException {
-		return this.computerDao.checkExistenceById(id);
+		return this.getComputerDao().checkExistenceById(id);
 	}
 
 	@Override
 	public int getRowCount() throws SQLException {
-		return this.computerDao.getRowCount();
+		return this.getComputerDao().getRowCount();
 	}
 
 	@Override
 	public int getPageCount(int pageSize) throws SQLException {
-		return this.computerDao.getPageCount(pageSize);
+		return this.getComputerDao().getPageCount(pageSize);
 	}
 	
 	@Override
 	public Page<Computer> getPage(int pageId, int pageSize) throws InvalidPageIdException, InvalidPageSizeException, SQLException {
-		return this.computerDao.getPage(pageId, pageSize);
+		return this.getComputerDao().getPage(pageId, pageSize);
 	}
 	
 	public static ComputerService getInstance() {
