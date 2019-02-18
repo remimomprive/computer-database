@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.exception.InvalidPageSizeException;
-import fr.excilys.rmomprive.service.Page;
+import fr.excilys.rmomprive.pagination.Page;
 
 public interface IDao<T> {
 	public Optional<T> getById(long id) throws SQLException;

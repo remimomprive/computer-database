@@ -15,7 +15,7 @@ import fr.excilys.rmomprive.exception.ImpossibleActionException;
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.exception.InvalidPageSizeException;
 import fr.excilys.rmomprive.model.Computer;
-import fr.excilys.rmomprive.service.Page;
+import fr.excilys.rmomprive.pagination.Page;
 
 public class ComputerDao implements IDao<Computer> {
 	private static final String SELECT_BY_ID_QUERY = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE ID = ?";

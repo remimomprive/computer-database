@@ -10,6 +10,7 @@ import fr.excilys.rmomprive.exception.InvalidPageSizeException;
 import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.model.ComputerDetails;
+import fr.excilys.rmomprive.pagination.Page;
 import fr.excilys.rmomprive.persistence.CompanyDao;
 import fr.excilys.rmomprive.persistence.ComputerDao;
 import fr.excilys.rmomprive.validation.ComputerValidator;

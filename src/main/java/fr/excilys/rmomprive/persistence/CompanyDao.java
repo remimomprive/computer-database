@@ -13,7 +13,7 @@ import java.util.Optional;
 import fr.excilys.rmomprive.exception.ImpossibleActionException;
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.model.Company;
-import fr.excilys.rmomprive.service.Page;
+import fr.excilys.rmomprive.pagination.Page;
 
 public class CompanyDao implements IDao<Company> {
 	private static final String SELECT_BY_ID_QUERY = "SELECT id, name FROM company WHERE ID = ?";

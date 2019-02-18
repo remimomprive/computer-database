@@ -1,4 +1,4 @@
-package fr.excilys.rmomprive.service;
+package fr.excilys.rmomprive.pagination;
 
 import java.util.List;
 

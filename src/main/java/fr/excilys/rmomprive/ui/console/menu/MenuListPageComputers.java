@@ -5,8 +5,8 @@ import java.sql.SQLException;
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.exception.InvalidPageSizeException;
 import fr.excilys.rmomprive.model.Computer;
+import fr.excilys.rmomprive.pagination.Page;
 import fr.excilys.rmomprive.service.ComputerService;
-import fr.excilys.rmomprive.service.Page;
 
 public class MenuListPageComputers extends Menu {
 

@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.model.Company;
+import fr.excilys.rmomprive.pagination.Page;
 import fr.excilys.rmomprive.persistence.CompanyDao;
 
 public class CompanyService implements IService<Company> {
