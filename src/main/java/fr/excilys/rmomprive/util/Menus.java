@@ -28,20 +28,30 @@ public class Menus {
 	 * @param message
 	 * @return The given integer
 	 */
-	public static int readInteger(String message) {
-		int returnValue = -1;
+	public static Optional<Integer> readInteger(boolean nullable, String message) {
 		boolean validValue = false;
+		String readString = null;
 		
 		do {
-			try {
-				returnValue = Integer.valueOf(readString());
-				validValue = true;
-			} catch(NumberFormatException e) {
-				System.out.println(message);
+			readString = readString();
+			
+			if (!readString.equals("")) {
+				try {
+					return Optional.of(Integer.valueOf(readString));
+				} catch(NumberFormatException e) {
+					System.out.println(message);
+				}
+			}
+			else if (nullable) {
+				return Optional.empty();
 			}
 		} while (!validValue);
 		
-		return returnValue;
+		return Optional.empty();
+	}
+	
+	public static Optional<Integer> readInteger(String message) {
+		return readInteger(false, message);
 	}
 	
 	/**
@@ -109,17 +119,17 @@ public class Menus {
 	 * @return The given company id
 	 * @throws SQLException 
 	 */
-	public static int readCompanyId() {
+	public static Optional<Integer> readCompanyId() {
 		System.out.println("What's the company id ?");
-		int companyId = -1;
+		Optional<Integer> companyId = Optional.empty();
 		
 		do {
-			companyId = Menus.readInteger("The company id should be an integer");
+			companyId = Menus.readInteger(true, "The company id should be an integer");
 			
-			if (!CompanyService.getInstance().checkExistenceById(companyId)) {
+			if (companyId.isPresent() && !CompanyService.getInstance().checkExistenceById(companyId.get())) {
 				logger.error("The company does not exist\n");
 			}
-		} while (!CompanyService.getInstance().checkExistenceById(companyId));
+		} while (companyId.isPresent() && !CompanyService.getInstance().checkExistenceById(companyId.get()));
 		
 		return companyId;
 	}

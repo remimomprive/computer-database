@@ -15,7 +15,7 @@ public class MenuDisplayComputerDetails extends Menu {
 	public void show() {
 		// Ask the computer id from the user command line
 		System.out.println("What's the computer id ?");
-		int computerId = Menus.readInteger("The computer id should be an integer");
+		int computerId = Menus.readInteger("The computer id should be an integer").get();
 		
 		// Retrieve the computer details
 		try {

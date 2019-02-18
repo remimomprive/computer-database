@@ -33,12 +33,12 @@ public abstract class MenuComputerForm extends Menu {
 			} while (!validDiscontinuedDate);
 		}
 		
-		int companyId = Menus.readCompanyId();
+		Optional<Integer> companyId = Menus.readCompanyId();
 
-		ComputerBuilder computerBuilder = new ComputerBuilder()
-				.setName(name)
-				.setCompanyId(companyId);
+		ComputerBuilder computerBuilder = new ComputerBuilder().setName(name);
 		
+		if (companyId.isPresent())
+			computerBuilder.setCompanyId(companyId.get());
 		if (introduced.isPresent())
 			computerBuilder.setIntroduced(introduced.get());			
 		if (discontinued.isPresent())

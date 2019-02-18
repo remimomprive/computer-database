@@ -13,7 +13,7 @@ public class MenuDeleteComputer extends Menu {
 	public void show() {
 		// Ask the computer id from the user command line
 		System.out.println("What's the computer id ?");
-		int computerId = Menus.readInteger("The computer id should be an integer");
+		int computerId = Menus.readInteger("The computer id should be an integer").get();
 		
 		try {
 			if(ComputerService.getInstance().deleteById(computerId))

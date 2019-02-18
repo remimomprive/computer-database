@@ -17,11 +17,11 @@ public class MenuListPageComputers extends Menu {
 	public void show() {
 		// Ask for a valid integer
 		System.out.println("What is the page size ?");
-		int pageSize = Menus.readInteger("The page size should be an integer");
+		int pageSize = Menus.readInteger("The page size should be an integer").get();
 		
 		// Ask for a valid integer
 		System.out.println("What is the page id ?");
-		int pageId = Menus.readInteger("The page id should be an int");
+		int pageId = Menus.readInteger("The page id should be an int").get();
 		
 		try {
 			Page<Computer> computers = ComputerService.getInstance().getPage(pageId, pageSize);

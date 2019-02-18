@@ -54,7 +54,7 @@ public class Console {
     		displayMenu();
     		
     		// Ask the choice from the user
-    		choiceInt = Menus.readInteger("The choice should be an integer");
+    		choiceInt = Menus.readInteger("The choice should be an integer").get();
     		choice = MenuChoice.getById(choiceInt);
 			
 			// If the choice is not valid
