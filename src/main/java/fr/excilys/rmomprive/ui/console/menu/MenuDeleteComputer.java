@@ -16,9 +16,9 @@ public class MenuDeleteComputer extends Menu {
 		
 		try {
 			if(ComputerService.getInstance().deleteById(computerId))
-				getLogger().info("Successfully deleted computer %d\n", computerId);
+				getLogger().info("Successfully deleted computer {}\n", computerId);
 			else
-				getLogger().error("An error happened while trying to delete computer %d\n", computerId);
+				getLogger().error("An error happened while trying to delete computer {}\n", computerId);
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}
