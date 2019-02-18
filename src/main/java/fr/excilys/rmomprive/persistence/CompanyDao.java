@@ -15,8 +15,8 @@ import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.service.Page;
 
 public class CompanyDao implements IDao<Company> {
-	private static final String SELECT_BY_ID_QUERY = "SELECT * FROM company WHERE ID = ?";
-	private static final String SELECT_ALL_QUERY = "SELECT * FROM company";
+	private static final String SELECT_BY_ID_QUERY = "SELECT id, name FROM company WHERE ID = ?";
+	private static final String SELECT_ALL_QUERY = "SELECT id, name FROM company";
 	private static final String CHECK_EXISTENCE_QUERY = "SELECT COUNT(id) AS count FROM company WHERE id = ?";
 	
 	private static final String FIELD_ID = "id";

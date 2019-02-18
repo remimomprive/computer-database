@@ -17,14 +17,14 @@ import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.service.Page;
 
 public class ComputerDao implements IDao<Computer> {
-	private static final String SELECT_BY_ID_QUERY = "SELECT * FROM computer WHERE ID = ?";
-	private static final String SELECT_ALL_QUERY = "SELECT * FROM computer";
+	private static final String SELECT_BY_ID_QUERY = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE ID = ?";
+	private static final String SELECT_ALL_QUERY = "SELECT id, name, introduced, discontinued, company_id FROM computer";
 	private static final String DELETE_QUERY = "DELETE FROM computer where id = ?";
 	private static final String INSERT_QUERY = "INSERT INTO computer(name, introduced, discontinued, company_id) VALUES(?, ?, ?, ?)";
-	private static final String CHECK_EXISTENCE_QUERY = "SELECT COUNT(id) AS count FROM company WHERE id = ?";
+	private static final String CHECK_EXISTENCE_QUERY = "SELECT COUNT(id) AS count FROM computer WHERE id = ?";
 	private static final String UPDATE_QUERY = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?";
 	private static final String COUNT_QUERY = "SELECT COUNT(id) AS count FROM computer";
-	private static final String SELECT_PAGE_QUERY = "SELECT * FROM computer LIMIT ? OFFSET ?";
+	private static final String SELECT_PAGE_QUERY = "SELECT id, name, introduced, discontinued, company_id FROM computer LIMIT ? OFFSET ?";
 	
 	private static final String FIELD_ID = "id";
 	private static final String FIELD_NAME = "name";
