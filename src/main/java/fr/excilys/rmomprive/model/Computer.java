@@ -1,19 +1,19 @@
 package fr.excilys.rmomprive.model;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 public class Computer {
 	private long id;
 	private String name;
-	private Timestamp introduced;
-	private Timestamp discontinued;
+	private Date introduced;
+	private Date discontinued;
 	private long companyId;
 	
 	private Computer() {
 		
 	}
 	
-	public Computer(long id, String name, Timestamp introduced, Timestamp discontinued, long companyId) {
+	public Computer(long id, String name, Date introduced, Date discontinued, long companyId) {
 		this.id = id;
 		this.name = name;
 		this.introduced = introduced;
@@ -37,19 +37,19 @@ public class Computer {
 		this.name = name;
 	}
 	
-	public void setIntroduced(Timestamp introduced) {
+	public void setIntroduced(Date introduced) {
 		this.introduced = introduced;
 	}
 	
-	public Timestamp getIntroduced() {
+	public Date getIntroduced() {
 		return introduced;
 	}
 	
-	public Timestamp getDiscontinued() {
+	public Date getDiscontinued() {
 		return discontinued;
 	}
 	
-	public void setDiscontinued(Timestamp discontinued) {
+	public void setDiscontinued(Date discontinued) {
 		this.discontinued = discontinued;
 	}
 	
@@ -70,8 +70,8 @@ public class Computer {
 	public static class ComputerBuilder {
 		private long id;
 		private String name;
-		private Timestamp introduced;
-		private Timestamp discontinued;
+		private Date introduced;
+		private Date discontinued;
 		private long companyId;
 		
 		public Computer build() {
@@ -96,12 +96,12 @@ public class Computer {
 			return this;
 		}
 
-		public ComputerBuilder setIntroduced(Timestamp timestamp) {
+		public ComputerBuilder setIntroduced(Date timestamp) {
 			this.introduced = timestamp;
 			return this;
 		}
 
-		public ComputerBuilder setDiscontinued(Timestamp discontinued) {
+		public ComputerBuilder setDiscontinued(Date discontinued) {
 			this.discontinued = discontinued;
 			return this;
 		}

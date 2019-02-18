@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import fr.excilys.rmomprive.model.ComputerDetails;
 import fr.excilys.rmomprive.service.ComputerService;
+import fr.excilys.rmomprive.util.Menus;
 
 public class MenuDisplayComputerDetails extends Menu {
 

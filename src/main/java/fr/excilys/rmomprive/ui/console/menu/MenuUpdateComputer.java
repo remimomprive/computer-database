@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.service.ComputerService;
+import fr.excilys.rmomprive.util.Menus;
 
 public class MenuUpdateComputer extends MenuComputerForm {
 

@@ -1,9 +1,12 @@
 package fr.excilys.rmomprive.ui.console.menu;
 
 import java.sql.Timestamp;
+import java.util.Date;
+import java.util.Optional;
 
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.model.Computer.ComputerBuilder;
+import fr.excilys.rmomprive.util.Menus;
 
 public abstract class MenuComputerForm extends Menu {
 	/**
@@ -13,17 +16,17 @@ public abstract class MenuComputerForm extends Menu {
 	protected Computer form() {
 		String name = Menus.readComputerName();
 		
-		System.out.println("What's the computer introduction date (YYYY-mm-dd HH:mm:ss) or null?");
-		Timestamp introduced = Menus.readTimestamp(true);
+		System.out.println("What's the computer introduction date (YYYY-mm-dd) or null?");
+		Optional<Date> introduced = Menus.readDate(true);
 		
-		Timestamp discontinued = null;
-		if (introduced != null) {
-			System.out.println("What's the computer discontinuation date (YYYY-mm-dd HH:mm:ss) or null?");
+		Optional<Date> discontinued = Optional.empty();
+		if (introduced.isPresent()) {
+			System.out.println("What's the computer discontinuation date (YYYY-mm-dd) or null?");
 			boolean validDiscontinuedDate = false;
 			
 			do { 
-				discontinued = Menus.readTimestamp(true);
-				validDiscontinuedDate = (discontinued != null) ? introduced.before(discontinued) : true;
+				discontinued = Menus.readDate(true);
+				validDiscontinuedDate = (discontinued.isPresent()) ? introduced.get().before(discontinued.get()) : true;
 				
 				if (!validDiscontinuedDate)
 					getLogger().error("The discontinued date should be after the intruduction date or NULL\n");
@@ -32,13 +35,15 @@ public abstract class MenuComputerForm extends Menu {
 		
 		int companyId = Menus.readCompanyId();
 
-		Computer computer = new ComputerBuilder()
+		ComputerBuilder computerBuilder = new ComputerBuilder()
 				.setName(name)
-				.setIntroduced(introduced)
-				.setDiscontinued(discontinued)
-				.setCompanyId(companyId)
-				.build();
+				.setCompanyId(companyId);
 		
-		return computer;
+		if (introduced.isPresent())
+			computerBuilder.setIntroduced(introduced.get());			
+		if (discontinued.isPresent())
+			computerBuilder.setDiscontinued(discontinued.get());
+		
+		return computerBuilder.build();
 	}
 }

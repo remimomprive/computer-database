@@ -1,14 +1,15 @@
-package fr.excilys.rmomprive.ui.console.menu;
+package fr.excilys.rmomprive.util;
 
 import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.Optional;
 import java.util.Scanner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fr.excilys.rmomprive.service.CompanyService;
-import fr.excilys.rmomprive.util.Dates;
 
 public class Menus {
 	private static Logger logger;
@@ -62,38 +63,41 @@ public class Menus {
 	}
 
 	/**
-	 * Asks the user a timestamp String until its format is valid
-	 * @param nullable true if the user can set NULL to return a null Timestamp
-	 * @return The String timestamp converted into a Timestamp object
+	 * Asks the user a date String until its format is valid
+	 * @param nullable true if the user can set NULL to return a null Date
+	 * @return The String date converted into a Date object
 	 */
-	public static Timestamp readTimestamp(boolean nullable) {
-		String timestampString;
-		Timestamp timestamp = null;
+	public static Optional<Date> readDate(boolean nullable) {
+		String dateString;
 		
 		do {
 			// Read a string value from the terminal
-			timestampString = Menus.readString();
+			dateString = Menus.readString();
 			
 			// If the user sets null value and the value can be nullable
-			if (nullable && timestampString.equals(""))
-				timestamp = null;
+			if (nullable && dateString.equals(""))
+				return Optional.empty();
 			// If the String format is not valid
-			else if (!Dates.isValidTimestamp(timestampString))
+			else if (!Dates.isValidDate(dateString))
 				logger.error("The timestamp format is not valid\n");
 			// Else, the String format is not valid
 			else
-				timestamp = Timestamp.valueOf(timestampString);
-		} while (!(Dates.isValidTimestamp(timestampString) || (nullable && timestampString.equals(""))));
+				try {
+					return Optional.of(Dates.parse(dateString));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+		} while (!(Dates.isValidDate(dateString) || (nullable && dateString.equals(""))));
 		
-		return timestamp;
+		return Optional.empty();
 	}
 	
 	/**
-	 * Ask a timestamp String, preventing the user to set null value
-	 * @return The String timestamp converted into a Timestamp object
+	 * Ask a date String, preventing the user to set null value
+	 * @return The String date converted into a Date object
 	 */
-	public static Timestamp readTimestamp() {
-		return Menus.readTimestamp(false);
+	public static Optional<Date> readDate() {
+		return Menus.readDate(false);
 	}
 	
 	/**

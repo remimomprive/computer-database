@@ -3,6 +3,7 @@ package fr.excilys.rmomprive.ui.console.menu;
 import java.sql.SQLException;
 
 import fr.excilys.rmomprive.service.ComputerService;
+import fr.excilys.rmomprive.util.Menus;
 
 public class MenuDeleteComputer extends Menu {
 

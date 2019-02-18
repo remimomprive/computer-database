@@ -11,7 +11,7 @@ import fr.excilys.rmomprive.ui.console.menu.MenuListCompanies;
 import fr.excilys.rmomprive.ui.console.menu.MenuListComputers;
 import fr.excilys.rmomprive.ui.console.menu.MenuListPageComputers;
 import fr.excilys.rmomprive.ui.console.menu.MenuUpdateComputer;
-import fr.excilys.rmomprive.ui.console.menu.Menus;
+import fr.excilys.rmomprive.util.Menus;
 
 public class Console {
 	private static Logger logger;

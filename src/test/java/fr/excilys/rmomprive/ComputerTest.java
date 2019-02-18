@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Optional;
 
 import org.junit.Test;
@@ -19,7 +20,7 @@ import fr.excilys.rmomprive.service.ComputerService;
 public class ComputerTest {
 	@Test
 	public void validCreation() throws SQLException {
-		Computer computer = new Computer(1, "ABC", new Timestamp(100), null, 1);
+		Computer computer = new Computer(1, "ABC", new Date(100), null, 1);
 		Optional<Computer> expectedData = Optional.of(computer);
 		
 		ComputerDao computerDao = Mockito.mock(ComputerDao.class);
@@ -42,7 +43,7 @@ public class ComputerTest {
 	// When the computer name is empty
 	@Test(expected = ValidationException.class)
 	public void invalidComputerName() throws SQLException {
-		Computer computer = new Computer(1, "", new Timestamp(100), null, 1);
+		Computer computer = new Computer(1, "", new Date(100), null, 1);
 		Optional<Computer> expectedData = Optional.of(computer);
 		
 		ComputerDao computerDao = Mockito.mock(ComputerDao.class);
@@ -59,7 +60,7 @@ public class ComputerTest {
 	// When introduction date is after discontinution date
 	@Test(expected = ValidationException.class)
 	public void invalidDates() throws SQLException {
-		Computer computer = new Computer(1, "ABC", new Timestamp(100), new Timestamp(50), 1);
+		Computer computer = new Computer(1, "ABC", new Date(100), new Date(50), 1);
 		Optional<Computer> expectedData = Optional.of(computer);
 		
 		ComputerDao computerDao = Mockito.mock(ComputerDao.class);
@@ -76,7 +77,7 @@ public class ComputerTest {
 	// When company does not exist
 	@Test
 	public void invalidCompanyId() throws SQLException {
-		Computer computer = new Computer(1, "ABC", new Timestamp(50), new Timestamp(500), 1);
+		Computer computer = new Computer(1, "ABC", new Date(50), new Date(500), 1);
 		
 		ComputerDao computerDao = Mockito.mock(ComputerDao.class);
 		CompanyDao companyDao = Mockito.mock(CompanyDao.class);

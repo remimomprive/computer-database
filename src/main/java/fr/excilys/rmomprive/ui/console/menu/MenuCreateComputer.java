@@ -20,10 +20,10 @@ public class MenuCreateComputer extends MenuComputerForm {
 					
 			// If the computer was inserted successfully
 			if (createdComputer.isPresent())
-				getLogger().info("Successfullly added {} \n");
+				getLogger().info("Successfullly added {}\n", createdComputer.get());
 			// Else, an error happened
 			else
-				getLogger().error("Error creating {} \n", computer);
+				getLogger().error("Error creating {}\n", computer);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
