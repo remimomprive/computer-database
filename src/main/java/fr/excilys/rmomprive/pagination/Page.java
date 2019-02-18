@@ -8,7 +8,7 @@ public class Page<T> {
 	private boolean previous;
 	private boolean next;
 	
-	public Page(List<T> content, int pageId, boolean previous, boolean next) {
+	public Page(final List<T> content, final int pageId, final boolean previous, final boolean next) {
 		this.content = content;
 		this.pageId = pageId;
 		this.previous = previous;
@@ -19,31 +19,31 @@ public class Page<T> {
 		return content;
 	}
 
-	public void setContent(List<T> content) {
+	public final void setContent(final List<T> content) {
 		this.content = content;
 	}
 
-	public int getPageId() {
+	public final int getPageId() {
 		return pageId;
 	}
 
-	public void setPageId(int pageId) {
+	public final void setPageId(final int pageId) {
 		this.pageId = pageId;
 	}
 
-	public boolean isPrevious() {
+	public final boolean isPrevious() {
 		return previous;
 	}
 
-	public void setPrevious(boolean previous) {
+	public final void setPrevious(final boolean previous) {
 		this.previous = previous;
 	}
 
-	public boolean isNext() {
+	public final boolean isNext() {
 		return next;
 	}
 
-	public void setNext(boolean next) {
+	public final void setNext(final boolean next) {
 		this.next = next;
 	}
 

@@ -55,8 +55,9 @@ public class Menus {
 		do {
 			name = Menus.readString();
 			
-			if (name.equals(""))
-				logger.error("The computer name should not be null\n");
+			if (name.equals("")) {
+				logger.error("The computer name should not be null\n");	
+			}
 		} while (name.equals(""));
 		
 		return name;
@@ -75,18 +76,21 @@ public class Menus {
 			dateString = Menus.readString();
 			
 			// If the user sets null value and the value can be nullable
-			if (nullable && dateString.equals(""))
+			if (nullable && dateString.equals("")) {
 				return Optional.empty();
+			}
 			// If the String format is not valid
-			else if (!Dates.isValidDate(dateString))
-				logger.error("The timestamp format is not valid\n");
+			else if (!Dates.isValidDate(dateString)) {
+				logger.error("The timestamp format is not valid\n");	
+			}
 			// Else, the String format is not valid
-			else
+			else {
 				try {
 					return Optional.of(Dates.parse(dateString));
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
+			}
 		} while (!(Dates.isValidDate(dateString) || (nullable && dateString.equals(""))));
 		
 		return Optional.empty();
@@ -112,8 +116,9 @@ public class Menus {
 		do {
 			companyId = Menus.readInteger("The company id should be an integer");
 			
-			if (!CompanyService.getInstance().checkExistenceById(companyId))
+			if (!CompanyService.getInstance().checkExistenceById(companyId)) {
 				logger.error("The company does not exist\n");
+			}
 		} while (!CompanyService.getInstance().checkExistenceById(companyId));
 		
 		return companyId;

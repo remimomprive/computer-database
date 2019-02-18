@@ -13,7 +13,7 @@ public class Computer {
 		
 	}
 	
-	public Computer(long id, String name, Date introduced, Date discontinued, long companyId) {
+	public Computer(final long id, final String name, final Date introduced, final Date discontinued, final long companyId) {
 		this.id = id;
 		this.name = name;
 		this.introduced = introduced;
@@ -25,7 +25,7 @@ public class Computer {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(final long id) {
 		this.id = id;
 	}
 
@@ -33,11 +33,11 @@ public class Computer {
 		return name;
 	}
 	
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 	
-	public void setIntroduced(Date introduced) {
+	public void setIntroduced(final Date introduced) {
 		this.introduced = introduced;
 	}
 	
@@ -49,7 +49,7 @@ public class Computer {
 		return discontinued;
 	}
 	
-	public void setDiscontinued(Date discontinued) {
+	public void setDiscontinued(final Date discontinued) {
 		this.discontinued = discontinued;
 	}
 	
@@ -57,7 +57,7 @@ public class Computer {
 		return companyId;
 	}
 	
-	public void setCompanyId(long companyId) {
+	public void setCompanyId(final long companyId) {
 		this.companyId = companyId;
 	}
 

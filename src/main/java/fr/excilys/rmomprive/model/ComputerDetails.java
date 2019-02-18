@@ -4,8 +4,7 @@ public class ComputerDetails {
 	private Computer computer;
 	private Company company;
 	
-	public ComputerDetails(Computer computer, Company company) {
-		super();
+	public ComputerDetails(final Computer computer, final Company company) {
 		this.computer = computer;
 		this.company = company;
 	}
@@ -14,7 +13,7 @@ public class ComputerDetails {
 		return computer;
 	}
 
-	public void setComputer(Computer computer) {
+	public final void setComputer(final Computer computer) {
 		this.computer = computer;
 	}
 
@@ -22,7 +21,7 @@ public class ComputerDetails {
 		return company;
 	}
 
-	public void setCompany(Company company) {
+	public final void setCompany(final Company company) {
 		this.company = company;
 	}
 
