@@ -7,6 +7,7 @@
   <groupId>fr.excilys.rmomprive</groupId>
   <artifactId>computer-database</artifactId>
   <version>1.0-SNAPSHOT</version>
+  <packaging>war</packaging>
 
   <name>computer-database</name>
   <!-- FIXME change it to the project's website -->
@@ -40,31 +41,29 @@
 	  <artifactId>mockito-core</artifactId>
 	  <version>2.24.0</version>
 	</dependency>
+	<dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>javax.servlet-api</artifactId>
+		<version>3.1.0</version>
+		<scope>provided</scope>
+	</dependency>
+	<dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>jstl</artifactId>
+        <version>1.2</version>
+    </dependency>
   </dependencies>
 
   <build>
   	<plugins>
 		<plugin>
-		  <groupId>org.apache.maven.plugins</groupId>
-		  <artifactId>maven-assembly-plugin</artifactId>
-		  <executions>
-		    <execution>
-		      <phase>package</phase>
-		      <goals>
-		        <goal>single</goal>
-		      </goals>
-		      <configuration>
-		        <archive>
-		          <manifest>
-		            <mainClass>fr.excilys.rmomprive.ui.App</mainClass>
-		          </manifest>
-		        </archive>
-		        <descriptorRefs>
-		          <descriptorRef>jar-with-dependencies</descriptorRef>
-		        </descriptorRefs>
-		      </configuration>
-		    </execution>
-		  </executions>
+			<groupId>org.apache.tomcat.maven</groupId>
+			<artifactId>tomcat7-maven-plugin</artifactId>
+			<version>2.2</version>
+            <configuration>
+                <port>8080</port>
+                <path>/computer-database</path>
+            </configuration>
 		</plugin>
   	</plugins>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
