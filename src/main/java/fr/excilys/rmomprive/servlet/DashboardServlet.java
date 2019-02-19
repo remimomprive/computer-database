@@ -25,6 +25,8 @@ public class DashboardServlet extends HttpServlet {
 	private int pageSize = 10;
 	private int pageId = 1;
 
+	/// TODO : add dto
+	
 	private void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String pageSizeParam = request.getParameter("page_size");

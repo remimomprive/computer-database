@@ -42,6 +42,8 @@ public class ComputerDao implements IDao<Computer> {
 		
 	}
 	
+	/// TODO : find computer by name
+	
 	private Computer createFromResultSet(ResultSet resultSet) throws SQLException {
 		int id = resultSet.getInt(FIELD_ID);
         String name = resultSet.getString(FIELD_NAME);
