@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import fr.excilys.rmomprive.exception.ValidationException;
+import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.persistence.CompanyDao;
 import fr.excilys.rmomprive.persistence.ComputerDao;
@@ -20,7 +21,8 @@ import fr.excilys.rmomprive.service.ComputerService;
 public class ComputerTest {
 	@Test
 	public void validCreation() throws SQLException {
-		Computer computer = new Computer(1, "ABC", new Date(100), null, 1);
+		Company company = new Company(1, "company");
+		Computer computer = new Computer(1, "ABC", new Date(100), null, company);
 		Optional<Computer> expectedData = Optional.of(computer);
 		
 		ComputerDao computerDao = Mockito.mock(ComputerDao.class);
@@ -37,13 +39,14 @@ public class ComputerTest {
 		assertEquals(resultData.get().getName(), expectedData.get().getName());
 		assertEquals(resultData.get().getIntroduced(), expectedData.get().getIntroduced());
 		assertEquals(resultData.get().getDiscontinued(), expectedData.get().getDiscontinued());
-		assertEquals(resultData.get().getCompanyId(), expectedData.get().getCompanyId());
+		assertEquals(resultData.get().getCompany().getId(), expectedData.get().getCompany().getId());
 	}
 	
 	// When the computer name is empty
 	@Test(expected = ValidationException.class)
 	public void invalidComputerName() throws SQLException {
-		Computer computer = new Computer(1, "", new Date(100), null, 1);
+		Company company = new Company(1, "company");
+		Computer computer = new Computer(1, "", new Date(100), null, company);
 		Optional<Computer> expectedData = Optional.of(computer);
 		
 		ComputerDao computerDao = Mockito.mock(ComputerDao.class);
@@ -60,7 +63,8 @@ public class ComputerTest {
 	// When introduction date is after discontinution date
 	@Test(expected = ValidationException.class)
 	public void invalidDates() throws SQLException {
-		Computer computer = new Computer(1, "ABC", new Date(100), new Date(50), 1);
+		Company company = new Company(1, "company");
+		Computer computer = new Computer(1, "ABC", new Date(100), new Date(50), company);
 		Optional<Computer> expectedData = Optional.of(computer);
 		
 		ComputerDao computerDao = Mockito.mock(ComputerDao.class);
@@ -77,7 +81,8 @@ public class ComputerTest {
 	// When company does not exist
 	@Test
 	public void invalidCompanyId() throws SQLException {
-		Computer computer = new Computer(1, "ABC", new Date(50), new Date(500), 1);
+		Company company = new Company(1, "company");
+		Computer computer = new Computer(1, "ABC", new Date(50), new Date(500), company);
 		
 		ComputerDao computerDao = Mockito.mock(ComputerDao.class);
 		CompanyDao companyDao = Mockito.mock(CompanyDao.class);

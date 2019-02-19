@@ -7,18 +7,18 @@ public class Computer {
 	private String name;
 	private Date introduced;
 	private Date discontinued;
-	private long companyId;
+	private Company company;
 	
 	private Computer() {
 		
 	}
 	
-	public Computer(final long id, final String name, final Date introduced, final Date discontinued, final long companyId) {
+	public Computer(final long id, final String name, final Date introduced, final Date discontinued, final Company company) {
 		this.id = id;
 		this.name = name;
 		this.introduced = introduced;
 		this.discontinued = discontinued;
-		this.companyId = companyId;
+		this.company = company;
 	}
 
 	public long getId() {
@@ -53,18 +53,18 @@ public class Computer {
 		this.discontinued = discontinued;
 	}
 	
-	public long getCompanyId() {
-		return companyId;
+	public Company getCompany() {
+		return company;
 	}
 	
-	public void setCompanyId(final long companyId) {
-		this.companyId = companyId;
+	public void setCompany(final Company company) {
+		this.company = company;
 	}
 
 	@Override
 	public String toString() {
 		return "Computer [id=" + id + ", name=" + name + ", introduced=" + introduced + ", discontinued=" + discontinued
-				+ ", companyId=" + companyId + "]";
+				+ ", company=" + company + "]";
 	}
 	
 	public static class ComputerBuilder {
@@ -72,7 +72,7 @@ public class Computer {
 		private String name;
 		private Date introduced;
 		private Date discontinued;
-		private long companyId;
+		private Company company;
 		
 		public Computer build() {
 			Computer computer = new Computer();
@@ -81,7 +81,7 @@ public class Computer {
 			computer.setName(this.name);
 			computer.setIntroduced(this.introduced);
 			computer.setDiscontinued(this.discontinued);
-			computer.setCompanyId(this.companyId);
+			computer.setCompany(this.company);
 			
 			return computer;
 		}
@@ -106,8 +106,8 @@ public class Computer {
 			return this;
 		}
 
-		public ComputerBuilder setCompanyId(long companyId) {
-			this.companyId = companyId;
+		public ComputerBuilder setCompany(Company company) {
+			this.company = company;
 			return this;
 		}
 	}

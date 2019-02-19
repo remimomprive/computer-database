@@ -86,7 +86,7 @@
 	                        </td>
 	                        <td>${computer.introduced}</td>
 	                        <td>${computer.discontinued}</td>
-	                        <td>${computer.companyId}</td>
+	                        <td>${computer.company.name}</td>
 	                    </tr>
 					</c:forEach>
                 </tbody>

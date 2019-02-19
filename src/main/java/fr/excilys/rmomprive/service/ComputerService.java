@@ -30,13 +30,13 @@ public class ComputerService implements IService<Computer> {
 			return Optional.empty();
 		}
 		else {
-			Optional<Company> company = this.getCompanyDao().getById(computer.get().getCompanyId());
+			Optional<Company> company = this.getCompanyDao().getById(computer.get().getCompany().getId());
 			
 			if (company.isPresent()) {
 				return Optional.of(new ComputerDetails(computer.get(), company.get()));
 			}
 			else {
-				return Optional.empty();
+				return Optional.of(new ComputerDetails(computer.get(), null));
 			}				
 		}
 	}

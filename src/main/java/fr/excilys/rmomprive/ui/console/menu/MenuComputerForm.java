@@ -1,11 +1,14 @@
 package fr.excilys.rmomprive.ui.console.menu;
 
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Optional;
 
+import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.model.Computer.ComputerBuilder;
+import fr.excilys.rmomprive.service.CompanyService;
 import fr.excilys.rmomprive.util.Menus;
 
 public abstract class MenuComputerForm extends Menu {
@@ -37,8 +40,16 @@ public abstract class MenuComputerForm extends Menu {
 
 		ComputerBuilder computerBuilder = new ComputerBuilder().setName(name);
 		
-		if (companyId.isPresent())
-			computerBuilder.setCompanyId(companyId.get());
+		if (companyId.isPresent()) {
+			Optional<Company> company;
+			try {
+				company = CompanyService.getInstance().getById(companyId.get());
+				if (company.isPresent())
+					computerBuilder.setCompany(company.get());
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}	
 		if (introduced.isPresent())
 			computerBuilder.setIntroduced(introduced.get());			
 		if (discontinued.isPresent())

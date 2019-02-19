@@ -14,24 +14,26 @@ import java.util.Optional;
 import fr.excilys.rmomprive.exception.ImpossibleActionException;
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.exception.InvalidPageSizeException;
+import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.pagination.Page;
+import fr.excilys.rmomprive.service.CompanyService;
 
 public class ComputerDao implements IDao<Computer> {
-	private static final String SELECT_BY_ID_QUERY = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE ID = ?";
-	private static final String SELECT_ALL_QUERY = "SELECT id, name, introduced, discontinued, company_id FROM computer";
+	private static final String SELECT_BY_ID_QUERY = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer INNER JOIN company ON company.id = company_id  WHERE computer.id = ?";
+	private static final String SELECT_ALL_QUERY = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer INNER JOIN company ON company.id = company_id";
 	private static final String DELETE_QUERY = "DELETE FROM computer where id = ?";
 	private static final String INSERT_QUERY = "INSERT INTO computer(name, introduced, discontinued, company_id) VALUES(?, ?, ?, ?)";
 	private static final String CHECK_EXISTENCE_QUERY = "SELECT COUNT(id) AS count FROM computer WHERE id = ?";
 	private static final String UPDATE_QUERY = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?";
 	private static final String COUNT_QUERY = "SELECT COUNT(id) AS count FROM computer";
-	private static final String SELECT_PAGE_QUERY = "SELECT id, name, introduced, discontinued, company_id FROM computer LIMIT ? OFFSET ?";
-	
-	private static final String FIELD_ID = "id";
-	private static final String FIELD_NAME = "name";
-	private static final String FIELD_INTRODUCED = "introduced";
-	private static final String FIELD_DISCONTINUED = "discontinued";
-	private static final String FIELD_COMPANY_ID = "company_id";
+	private static final String SELECT_PAGE_QUERY = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer INNER JOIN company ON company.id = company_id LIMIT ? OFFSET ?";
+	private static final String FIELD_ID = "computer.id";
+	private static final String FIELD_NAME = "computer.name";
+	private static final String FIELD_INTRODUCED = "computer.introduced";
+	private static final String FIELD_DISCONTINUED = "computer.discontinued";
+	private static final String FIELD_COMPANY_ID = "computer.company_id";
+	private static final String FIELD_COMPANY_NAME = "company.name";
 	private static final String FIELD_COUNT = "count";
 	
 	private static ComputerDao instance;
@@ -46,8 +48,11 @@ public class ComputerDao implements IDao<Computer> {
         Timestamp introduced = resultSet.getTimestamp(FIELD_INTRODUCED);
         Timestamp discontinued =  resultSet.getTimestamp(FIELD_DISCONTINUED);
         int companyId = resultSet.getInt(FIELD_COMPANY_ID);
+        String companyName = resultSet.getString(FIELD_COMPANY_NAME);
         
-        return new Computer(id, name, introduced, discontinued, companyId);
+        Company company = new Company(companyId, companyName);
+        
+        return new Computer(id, name, introduced, discontinued, company);
 	}
 	
 	@Override
@@ -88,7 +93,7 @@ public class ComputerDao implements IDao<Computer> {
 			statement.setString(1, object.getName());
 			statement.setObject(2, object.getIntroduced());
 			statement.setObject(3, object.getDiscontinued());
-			statement.setLong(4, object.getCompanyId());
+			statement.setLong(4, object.getCompany().getId());
 			
 			statement.executeUpdate();
 			
@@ -114,7 +119,7 @@ public class ComputerDao implements IDao<Computer> {
 			statement.setString(1, object.getName());
 			statement.setObject(2, object.getIntroduced());
 			statement.setObject(3, object.getDiscontinued());
-			statement.setLong(4, object.getCompanyId());
+			statement.setLong(4, object.getCompany().getId());
 			statement.setLong(5, object.getId());
 			statement.executeUpdate();
 			
