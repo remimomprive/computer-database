@@ -17,9 +17,9 @@
 	</header>
 
 	<section id="main">
-		<div class="container">
+		<div class="container">	
 			<div class="alert alert-danger">
-				Error 403: Access denied!
+				Error 500: An error has occured!
 				<br/>
 				<!-- stacktrace -->
 			</div>
