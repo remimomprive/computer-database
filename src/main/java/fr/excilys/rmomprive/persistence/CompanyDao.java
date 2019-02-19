@@ -26,6 +26,10 @@ public class CompanyDao implements IDao<Company> {
 	
 	private static CompanyDao instance;
 	
+	private CompanyDao() {
+		
+	}
+	
 	private Company createFromResultSet(ResultSet resultSet) throws SQLException {
 		int id = resultSet.getInt(FIELD_ID);
         String name = resultSet.getString(FIELD_NAME);

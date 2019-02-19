@@ -13,6 +13,10 @@ public class CompanyService implements IService<Company> {
 
 	private static CompanyService instance;
 	
+	private CompanyService() {
+		
+	}
+	
 	@Override
 	public Optional<Company> getById(long id) throws SQLException {
 		return this.getCompanyDao().getById(id);

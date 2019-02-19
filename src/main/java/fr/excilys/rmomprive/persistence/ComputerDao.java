@@ -36,6 +36,10 @@ public class ComputerDao implements IDao<Computer> {
 	
 	private static ComputerDao instance;
 	
+	private ComputerDao() {
+		
+	}
+	
 	private Computer createFromResultSet(ResultSet resultSet) throws SQLException {
 		int id = resultSet.getInt(FIELD_ID);
         String name = resultSet.getString(FIELD_NAME);
