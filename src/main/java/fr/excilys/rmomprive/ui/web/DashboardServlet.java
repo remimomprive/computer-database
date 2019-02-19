@@ -1,4 +1,4 @@
-package fr.excilys.rmomprive.servlet;
+package fr.excilys.rmomprive.ui.web;
 
 import java.io.IOException;
 import java.sql.SQLException;
