@@ -2,25 +2,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Computer Database</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta charset="utf-8">
-<!-- Bootstrap -->
-<link href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet" media="screen">
-<link href="${pageContext.request.contextPath}/resources/css/font-awesome.css" rel="stylesheet" media="screen">
-<link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet" media="screen">
+	<title>Computer Database</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+	<!-- Bootstrap -->
+	<link href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet" media="screen">
+	<link href="${pageContext.request.contextPath}/resources/css/font-awesome.css" rel="stylesheet" media="screen">
+	<link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet" media="screen">
 </head>
 <body>
     <header class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="dashboard.jsp"> Application - Computer Database </a>
+            <a class="navbar-brand" href="${pageContext.request.contextPath}/dashboard"> Application - Computer Database </a>
         </div>
     </header>
 
     <section id="main">
         <div class="container">
             <h1 id="homeTitle">
-                121 Computers found
+                ${computerCount} Computers found
             </h1>
             <div id="actions" class="form-horizontal">
                 <div class="pull-left">
@@ -76,7 +76,7 @@
                 </thead>
                 <!-- Browse attribute computers -->
                 <tbody id="results">
-                	<c:forEach items="${computers}" var="computer">
+                	<c:forEach items="${computers.content}" var="computer">
 	                    <tr>
 	                        <td class="editMode">
 	                            <input type="checkbox" name="cb" class="cb" value="0">
@@ -97,33 +97,39 @@
     <footer class="navbar-fixed-bottom">
         <div class="container text-center">
             <ul class="pagination">
-                <li>
-                    <a href="#" aria-label="Previous">
-                      <span aria-hidden="true">&laquo;</span>
-                  </a>
-              </li>
-              <li><a href="#">1</a></li>
-              <li><a href="#">2</a></li>
-              <li><a href="#">3</a></li>
-              <li><a href="#">4</a></li>
-              <li><a href="#">5</a></li>
-              <li>
-                <a href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
+              <c:if test = "${pageId > 1}">
+	              <li>
+					<a href="?page_id=${pageId - 1}" aria-label="Previous">
+					  <span aria-hidden="true">&laquo;</span>
+					</a>
+	              </li>
+              </c:if>
+              <c:forEach var="i" begin="1" end="${pageCount}" step="1">
+              	<li><a href="?page_id=${i}">${i}</a></li>
+              </c:forEach>
+              <c:if test = "${pageId < pageCount}">
+	              <li>
+	                <a href="?page_id=${pageId + 1}" aria-label="Next">
+	                    <span aria-hidden="true">&raquo;</span>
+	                </a>
+	              </li>
+              </c:if>
         </ul>
 
-        <div class="btn-group btn-group-sm pull-right" role="group" >
-            <button type="button" class="btn btn-default">10</button>
-            <button type="button" class="btn btn-default">50</button>
-            <button type="button" class="btn btn-default">100</button>
+        <div class="btn-group btn-group-sm pull-right" role="group">
+        	<c:set var="pageSizeValues">10,20,50</c:set>
+        	<c:forTokens items="${pageSizeValues}" var="pageSizeValue" delims=",">
+	            <a role="button" type="button" class="btn btn-default" href="
+	            	<c:url value="http://localhost:8080/computer-database/home"><c:param name="page_id" value="${pageId}"/><c:param name="page_size" value="${pageSizeValue}"/></c:url>
+	            ">
+	            	${pageSizeValue}
+	            </a>
+            </c:forTokens>
         </div>
 
     </footer>
-<script src="../js/jquery.min.js"></script>
-<script src="../js/bootstrap.min.js"></script>
-<script src="../js/dashboard.js"></script>
-
+	<script src="${pageContext.request.contextPath}/resources/js/jquery.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/js/dashboard.js"></script>
 </body>
 </html>

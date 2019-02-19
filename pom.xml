@@ -7,7 +7,7 @@
   <groupId>fr.excilys.rmomprive</groupId>
   <artifactId>computer-database</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <packaging>war</packaging>
 
   <name>computer-database</name>
   <!-- FIXME change it to the project's website -->
