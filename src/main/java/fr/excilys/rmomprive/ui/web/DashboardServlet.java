@@ -24,8 +24,6 @@ public class DashboardServlet extends HttpServlet {
   private int pageSize = 10;
   private int pageId = 1;
 
-  /// TODO : add dto
-
   /**
    * Processes the incoming request (retrieves data and passes them to the view).
    * @param request object that represents the request the client makes of the servlet

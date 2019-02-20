@@ -14,15 +14,19 @@ import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.model.Computer.ComputerBuilder;
 import fr.excilys.rmomprive.service.CompanyService;
+import fr.excilys.rmomprive.util.Dates;
 
 public class ComputerMapper implements IMapper<Computer> {
   private static ComputerMapper instance;
 
   @Override
   public ComputerDto mapFromEntity(Computer computer) {
-    return new ComputerDto(String.valueOf(computer.getId()), computer.getName(),
+    return new ComputerDto(Optional.of(computer.getId()), computer.getName(),
         parseDateToString(computer.getIntroduced()), parseDateToString(computer.getDiscontinued()),
-        computer.getCompany() != null ? computer.getCompany().getName() : "");
+        computer.getCompany() != null ? Optional.of(computer.getCompany().getId())
+            : Optional.empty(),
+        computer.getCompany() != null ? Optional.of(computer.getCompany().getName())
+            : Optional.empty());
   }
 
   /**
@@ -30,16 +34,29 @@ public class ComputerMapper implements IMapper<Computer> {
    * @return The computer entity from a computer dto
    */
   public Computer mapFromDto(ComputerDto dto) {
-    ComputerBuilder computerBuilder = new ComputerBuilder().setId(Long.parseLong(dto.getId()))
-        .setName(dto.getName()).setIntroduced(parseStringToDate(dto.getIntroduced()))
-        .setDiscontinued(parseStringToDate(dto.getDiscontinued()));
+    ComputerBuilder computerBuilder = new ComputerBuilder().setName(dto.getName());
 
     try {
-      Optional<Company> company = CompanyService.getInstance().getByName(dto.getCompanyName());
-
-      if (company.isPresent()) {
-        computerBuilder.setCompany(company.get());
+      if (dto.getId().isPresent()) {
+        computerBuilder.setId(dto.getId().get());
       }
+
+      if (!dto.getIntroduced().equals("")) {
+        computerBuilder.setIntroduced(Dates.parse(dto.getIntroduced()));
+      }
+
+      if (!dto.getDiscontinued().equals("")) {
+        computerBuilder.setDiscontinued(Dates.parse(dto.getDiscontinued()));
+      }
+
+      if (dto.getCompanyId().isPresent()) {
+        Optional<Company> company = CompanyService.getInstance().getById(dto.getCompanyId().get());
+        if (company.isPresent()) {
+          computerBuilder.setCompany(company.get());
+        }
+      }
+    } catch (ParseException e) {
+      e.printStackTrace();
     } catch (NumberFormatException e) {
       e.printStackTrace();
     } catch (SQLException e) {
@@ -51,6 +68,7 @@ public class ComputerMapper implements IMapper<Computer> {
 
   /**
    * Parse a date object for printing.
+   *
    * @param date The date object
    * @return The output string
    */
@@ -67,12 +85,13 @@ public class ComputerMapper implements IMapper<Computer> {
 
   /**
    * Parse a date object for printing.
+   *
    * @param dateString The date object
    * @return The output string
    */
   private Date parseStringToDate(String dateString) {
     if (dateString != null && !dateString.equals("")) {
-      DateFormat format = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
+      DateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
       try {
         return format.parse(dateString);
       } catch (ParseException e) {

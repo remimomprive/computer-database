@@ -1,13 +1,16 @@
 package fr.excilys.rmomprive.dto;
 
+import java.util.Optional;
+
 import fr.excilys.rmomprive.model.Computer;
 
 public class ComputerDto implements IDto<Computer> {
-  private String id;
+  private Optional<Long> id;
   private String name;
   private String introduced;
   private String discontinued;
-  private String companyName;
+  private Optional<Long> companyId;
+  private Optional<String> companyName;
 
   /**
    * Constructs a ComputerDto object.
@@ -15,22 +18,24 @@ public class ComputerDto implements IDto<Computer> {
    * @param name         The Computer name
    * @param introduced   The Computer introduction date
    * @param discontinued The Computer discontinution date
+   * @param companyId  The Computer company id
    * @param companyName  The Computer company name
    */
-  public ComputerDto(String id, String name, String introduced, String discontinued,
-      String companyName) {
+  public ComputerDto(Optional<Long> id, String name, String introduced, String discontinued,
+      Optional<Long> companyId, Optional<String> companyName) {
     this.id = id;
     this.name = name;
     this.introduced = introduced;
     this.discontinued = discontinued;
+    this.companyId = companyId;
     this.companyName = companyName;
   }
 
-  public String getId() {
+  public Optional<Long> getId() {
     return id;
   }
 
-  public void setId(String id) {
+  public void setId(Optional<Long> id) {
     this.id = id;
   }
 
@@ -58,17 +63,28 @@ public class ComputerDto implements IDto<Computer> {
     this.discontinued = discontinued;
   }
 
-  public String getCompanyName() {
+  public Optional<Long> getCompanyId() {
+    return companyId;
+  }
+
+  public void setCompanyId(Optional<Long> companyId) {
+    this.companyId = companyId;
+  }
+
+  public Optional<String> getCompanyName() {
     return companyName;
   }
 
-  public void setCompanyName(String companyName) {
+  public void setCompanyName(Optional<String> companyName) {
     this.companyName = companyName;
   }
 
   @Override
   public String toString() {
     return "ComputerDto [id=" + id + ", name=" + name + ", introduced=" + introduced
-        + ", discontinued=" + discontinued + ", companyName=" + companyName + "]";
+        + ", discontinued=" + discontinued + ", companyId=" + companyId + ", companyName="
+        + companyName + "]";
   }
+
+  /// TODO : add validation method
 }

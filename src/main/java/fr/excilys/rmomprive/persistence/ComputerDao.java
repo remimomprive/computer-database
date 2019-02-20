@@ -23,6 +23,7 @@ public class ComputerDao implements IDao<Computer> {
   private static final String SELECT_ALL_QUERY = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON company.id = company_id";
   private static final String DELETE_QUERY = "DELETE FROM computer where id = ?";
   private static final String INSERT_QUERY = "INSERT INTO computer(name, introduced, discontinued, company_id) VALUES(?, ?, ?, ?)";
+  private static final String INSERT_QUERY_WITHOUT_COMPANY = "INSERT INTO computer(name, introduced, discontinued) VALUES(?, ?, ?)";
   private static final String CHECK_EXISTENCE_QUERY = "SELECT COUNT(id) AS count FROM computer WHERE id = ?";
   private static final String UPDATE_QUERY = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?";
   private static final String COUNT_QUERY = "SELECT COUNT(id) AS count FROM computer";
@@ -103,12 +104,16 @@ public class ComputerDao implements IDao<Computer> {
   @Override
   public Optional<Computer> add(Computer object) throws SQLException {
     try (Connection connection = Database.getConnection()) {
-      PreparedStatement statement = connection.prepareStatement(INSERT_QUERY,
-          Statement.RETURN_GENERATED_KEYS);
+      PreparedStatement statement = (object.getCompany() != null)
+          ? connection.prepareStatement(INSERT_QUERY, Statement.RETURN_GENERATED_KEYS)
+          : connection.prepareStatement(INSERT_QUERY_WITHOUT_COMPANY, Statement.RETURN_GENERATED_KEYS);
       statement.setString(1, object.getName());
       statement.setObject(2, object.getIntroduced());
       statement.setObject(3, object.getDiscontinued());
-      statement.setLong(4, object.getCompany().getId());
+
+      if (object.getCompany() != null) {
+        statement.setLong(4, object.getCompany().getId());
+      }
 
       statement.executeUpdate();
 
