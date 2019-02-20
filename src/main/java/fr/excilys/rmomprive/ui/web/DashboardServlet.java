@@ -20,52 +20,52 @@ import fr.excilys.rmomprive.service.ComputerService;
 
 @WebServlet("/dashboard")
 public class DashboardServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	private int pageSize = 10;
-	private int pageId = 1;
+  private int pageSize = 10;
+  private int pageId = 1;
 
-	/// TODO : add dto
-	
-	private void processRequest(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		String pageSizeParam = request.getParameter("page_size");
-		if (pageSizeParam != null) {
-			pageSize = Integer.valueOf(pageSizeParam);
-		}
+  /// TODO : add dto
 
-		String pageIdParam = request.getParameter("page_id");
-		if (pageIdParam != null) {
-			pageId = Integer.valueOf(pageIdParam);
-		}
+  private void processRequest(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
+    String pageSizeParam = request.getParameter("page_size");
+    if (pageSizeParam != null) {
+      pageSize = Integer.valueOf(pageSizeParam);
+    }
 
-		try {
-			Page<Computer> page = ComputerService.getInstance().getPage(this.pageId, this.pageSize);
-			request.setAttribute("computers", page);
-			request.setAttribute("computerCount", ComputerService.getInstance().getRowCount());
-			request.setAttribute("pageSize", pageSize);
-			request.setAttribute("pageId", pageId);
-			request.setAttribute("pageCount", getPageCount());
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (InvalidPageIdException e) {
-			e.printStackTrace();
-		} catch (InvalidPageSizeException e) {
-			e.printStackTrace();
-		}
+    String pageIdParam = request.getParameter("page_id");
+    if (pageIdParam != null) {
+      pageId = Integer.valueOf(pageIdParam);
+    }
 
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/views/dashboard.jsp");
-		dispatcher.forward(request, response);
-	}
+    try {
+      Page<Computer> page = ComputerService.getInstance().getPage(this.pageId, this.pageSize);
+      request.setAttribute("computers", page);
+      request.setAttribute("computerCount", ComputerService.getInstance().getRowCount());
+      request.setAttribute("pageSize", pageSize);
+      request.setAttribute("pageId", pageId);
+      request.setAttribute("pageCount", getPageCount());
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } catch (InvalidPageIdException e) {
+      e.printStackTrace();
+    } catch (InvalidPageSizeException e) {
+      e.printStackTrace();
+    }
 
-	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+    RequestDispatcher dispatcher = request.getRequestDispatcher("/views/dashboard.jsp");
+    dispatcher.forward(request, response);
+  }
 
-		processRequest(request, response);
-	}
+  @Override
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
 
-	public int getPageCount() throws SQLException {
-		return ComputerService.getInstance().getPageCount(pageSize);
-	}
+    processRequest(request, response);
+  }
+
+  public int getPageCount() throws SQLException {
+    return ComputerService.getInstance().getPageCount(pageSize);
+  }
 }

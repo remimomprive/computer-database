@@ -105,7 +105,7 @@
 	              </li>
               </c:if>
               <c:forEach var="i" begin="1" end="${pageCount}" step="1">
-              	<li><a href="?page_id=${i}">${i}</a></li>
+              	<li><a href="?page_id=${i}&page_size=${pageSize}">${i}</a></li>
               </c:forEach>
               <c:if test = "${pageId < pageCount}">
 	              <li>
@@ -119,9 +119,7 @@
         <div class="btn-group btn-group-sm pull-right" role="group">
         	<c:set var="pageSizeValues">10,20,50</c:set>
         	<c:forTokens items="${pageSizeValues}" var="pageSizeValue" delims=",">
-	            <a role="button" type="button" class="btn btn-default" href="
-	            	<c:url value="http://localhost:8080/computer-database/home"><c:param name="page_id" value="${pageId}"/><c:param name="page_size" value="${pageSizeValue}"/></c:url>
-	            ">
+	            <a role="button" type="button" class="btn btn-default" href="http://localhost:8080/computer-database/dashboard?page_id=${pageId}&page_size=${pageSizeValue}">
 	            	${pageSizeValue}
 	            </a>
             </c:forTokens>
