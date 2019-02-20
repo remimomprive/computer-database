@@ -11,12 +11,14 @@ public class ComputerDto implements IDto<Computer> {
 
   /**
    * Constructs a ComputerDto object.
-   * @param name The Computer name
-   * @param introduced The Computer introduction date
+   * @param id           The Computer id
+   * @param name         The Computer name
+   * @param introduced   The Computer introduction date
    * @param discontinued The Computer discontinution date
-   * @param companyName The Computer company name
+   * @param companyName  The Computer company name
    */
-  public ComputerDto(String id, String name, String introduced, String discontinued, String companyName) {
+  public ComputerDto(String id, String name, String introduced, String discontinued,
+      String companyName) {
     this.id = id;
     this.name = name;
     this.introduced = introduced;
@@ -31,7 +33,7 @@ public class ComputerDto implements IDto<Computer> {
   public void setId(String id) {
     this.id = id;
   }
-  
+
   public String getName() {
     return name;
   }
@@ -66,7 +68,7 @@ public class ComputerDto implements IDto<Computer> {
 
   @Override
   public String toString() {
-    return "ComputerDto [id=" + id + ", name=" + name + ", introduced=" + introduced + ", discontinued="
-        + discontinued + ", companyName=" + companyName + "]";
+    return "ComputerDto [id=" + id + ", name=" + name + ", introduced=" + introduced
+        + ", discontinued=" + discontinued + ", companyName=" + companyName + "]";
   }
 }
