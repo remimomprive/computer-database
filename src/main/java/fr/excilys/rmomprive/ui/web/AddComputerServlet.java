@@ -72,7 +72,7 @@ public class AddComputerServlet extends HttpServlet {
     }
 
     /// TODO : replace with computer dto validation method
-    if (!introduced.equals("")) {
+    if (true) {
       try {
         Optional<Company> company = companyId.isPresent()
             ? CompanyService.getInstance().getById(companyId.get())
