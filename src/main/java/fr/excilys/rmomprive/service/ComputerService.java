@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Optional;
 
-import fr.excilys.rmomprive.exception.EntityNotFoundException;
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.exception.InvalidPageSizeException;
 import fr.excilys.rmomprive.model.Company;
@@ -18,11 +17,23 @@ import fr.excilys.rmomprive.validation.ComputerValidator;
 public class ComputerService implements IService<Computer> {
   private static ComputerService instance;
 
+  /**
+   * Private constructor for singleton.
+   */
+  private ComputerService() {
+
+  }
+
   @Override
   public Optional<Computer> getById(long id) throws SQLException {
     return this.getComputerDao().getById(id);
   }
 
+  /**
+   * @param id The computer id
+   * @return The computer details of a specific computer
+   * @throws SQLException If an error accessing the database happened
+   */
   public Optional<ComputerDetails> getDetailsByComputerId(final int id) throws SQLException {
     Optional<Computer> computer = this.getComputerDao().getById(id);
 
@@ -91,9 +102,13 @@ public class ComputerService implements IService<Computer> {
     return this.getComputerDao().getPage(pageId, pageSize);
   }
 
+  /**
+   * @return The ComputerService instance in memory.
+   */
   public static ComputerService getInstance() {
-    if (instance == null)
+    if (instance == null) {
       instance = new ComputerService();
+    }
 
     return instance;
   }

@@ -8,23 +8,34 @@ import fr.excilys.rmomprive.service.CompanyService;
 
 public class MenuListCompanies extends Menu {
 
-	private static MenuListCompanies instance;
-	
-	@Override
-	public void show() {
-		try {
-			Collection<Company> companies = CompanyService.getInstance().getAll();
-			System.out.println(companies);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public static MenuListCompanies getInstance() {
-		if (instance == null)
-			instance = new MenuListCompanies();
-		
-		return instance;
-	}
+  private static MenuListCompanies instance;
+
+  /**
+   * Private constructor for singleton.
+   */
+  private MenuListCompanies() {
+
+  }
+
+  @Override
+  public void show() {
+    try {
+      Collection<Company> companies = CompanyService.getInstance().getAll();
+      System.out.println(companies);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * @return The instance of MenuListCompanies in memory
+   */
+  public static MenuListCompanies getInstance() {
+    if (instance == null) {
+      instance = new MenuListCompanies();
+    }
+
+    return instance;
+  }
 
 }

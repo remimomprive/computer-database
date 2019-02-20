@@ -1,32 +1,37 @@
 package fr.excilys.rmomprive.model;
 
 public class Company {
-	private long id;
-	private String name;
-	
-	public Company(final long id, final String name) {
-		this.id = id;
-		this.name = name;
-	}
+  private long id;
+  private String name;
 
-	@Override
-	public String toString() {
-		return "Company [id=" + id + ", name=" + name + "]";
-	}
+  /**
+   * Create a Company object with its fields.
+   * @param id The company id
+   * @param name The company name
+   */
+  public Company(final long id, final String name) {
+    this.id = id;
+    this.name = name;
+  }
 
-	public long getId() {
-		return id;
-	}
+  @Override
+  public String toString() {
+    return "Company [id=" + id + ", name=" + name + "]";
+  }
 
-	public void setId(long id) {
-		this.id = id;
-	}
+  public long getId() {
+    return id;
+  }
 
-	public String getName() {
-		return name;
-	}
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
 }

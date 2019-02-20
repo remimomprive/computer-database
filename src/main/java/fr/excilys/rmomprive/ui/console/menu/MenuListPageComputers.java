@@ -11,35 +11,47 @@ import fr.excilys.rmomprive.util.Menus;
 
 public class MenuListPageComputers extends Menu {
 
-	private static MenuListPageComputers instance;
-	
-	@Override
-	public void show() {
-		// Ask for a valid integer
-		System.out.println("What is the page size ?");
-		int pageSize = Menus.readInteger("The page size should be an integer").get();
-		
-		// Ask for a valid integer
-		System.out.println("What is the page id ?");
-		int pageId = Menus.readInteger("The page id should be an int").get();
-		
-		try {
-			Page<Computer> computers = ComputerService.getInstance().getPage(pageId, pageSize);
-			
-			if (computers != null)
-				System.out.println(computers);
-		} catch (InvalidPageIdException | InvalidPageSizeException e) {
-			getLogger().error("The page parameters are not valid\n");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
+  private static MenuListPageComputers instance;
 
-	public static MenuListPageComputers getInstance() {
-		if (instance == null)
-			instance = new MenuListPageComputers();
-		
-		return instance;
-	}
+  /**
+   * Private constructor for singleton.
+   */
+  private MenuListPageComputers() {
+
+  }
+
+  @Override
+  public void show() {
+    // Ask for a valid integer
+    System.out.println("What is the page size ?");
+    int pageSize = Menus.readInteger("The page size should be an integer").get();
+
+    // Ask for a valid integer
+    System.out.println("What is the page id ?");
+    int pageId = Menus.readInteger("The page id should be an int").get();
+
+    try {
+      Page<Computer> computers = ComputerService.getInstance().getPage(pageId, pageSize);
+
+      if (computers != null) {
+        System.out.println(computers);
+      }
+    } catch (InvalidPageIdException | InvalidPageSizeException e) {
+      getLogger().error("The page parameters are not valid\n");
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * @return The instance of MenuUpdateComputer in memory
+   */
+  public static MenuListPageComputers getInstance() {
+    if (instance == null) {
+      instance = new MenuListPageComputers();
+    }
+
+    return instance;
+  }
 
 }

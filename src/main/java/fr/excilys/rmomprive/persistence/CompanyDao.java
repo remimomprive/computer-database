@@ -26,10 +26,19 @@ public class CompanyDao implements IDao<Company> {
 
   private static CompanyDao instance;
 
+  /**
+   * Constructor for singleton.
+   */
   private CompanyDao() {
 
   }
 
+  /**
+   * Create a Company object from a ResultSet given by a database result.
+   * @param resultSet The ResultSet value
+   * @return The Company object
+   * @throws SQLException if the columnLabel is not valid; if a database access error occurs or this method is called on a closed result set
+   */
   private Company createFromResultSet(ResultSet resultSet) throws SQLException {
     int id = resultSet.getInt(FIELD_ID);
     String name = resultSet.getString(FIELD_NAME);
@@ -127,9 +136,13 @@ public class CompanyDao implements IDao<Company> {
     throw new ImpossibleActionException();
   }
 
+  /**
+   * @return The instance of CompanyDao in the database.
+   */
   public static CompanyDao getInstance() {
-    if (instance == null)
+    if (instance == null) {
       instance = new CompanyDao();
+    }
     return instance;
   }
 }

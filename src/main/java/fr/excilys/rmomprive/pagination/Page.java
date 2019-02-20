@@ -3,52 +3,60 @@ package fr.excilys.rmomprive.pagination;
 import java.util.List;
 
 public class Page<T> {
-	private List<T> content;
-	private int pageId;
-	private boolean previous;
-	private boolean next;
-	
-	public Page(final List<T> content, final int pageId, final boolean previous, final boolean next) {
-		this.content = content;
-		this.pageId = pageId;
-		this.previous = previous;
-		this.next = next;
-	}
+  private List<T> content;
+  private int pageId;
+  private boolean previous;
+  private boolean next;
 
-	public List<T> getContent() {
-		return content;
-	}
+  /**
+   * Constructs a Page object with the parameters.
+   * @param content The page content (generally, a list of entities)
+   * @param pageId (the current page id)
+   * @param previous true if the page is not the first in the page list, false if not
+   * @param next true if the page is not the last in the page list, false if not
+   */
+  public Page(final List<T> content, final int pageId, final boolean previous, final boolean next) {
+    this.content = content;
+    this.pageId = pageId;
+    this.previous = previous;
+    this.next = next;
+  }
 
-	public final void setContent(final List<T> content) {
-		this.content = content;
-	}
+  public List<T> getContent() {
+    return content;
+  }
 
-	public final int getPageId() {
-		return pageId;
-	}
+  public final void setContent(final List<T> content) {
+    this.content = content;
+  }
 
-	public final void setPageId(final int pageId) {
-		this.pageId = pageId;
-	}
+  public final int getPageId() {
+    return pageId;
+  }
 
-	public final boolean isPrevious() {
-		return previous;
-	}
+  public final void setPageId(final int pageId) {
+    this.pageId = pageId;
+  }
 
-	public final void setPrevious(final boolean previous) {
-		this.previous = previous;
-	}
+  public final boolean isPrevious() {
+    return previous;
+  }
 
-	public final boolean isNext() {
-		return next;
-	}
+  public final void setPrevious(final boolean previous) {
+    this.previous = previous;
+  }
 
-	public final void setNext(final boolean next) {
-		this.next = next;
-	}
+  public final boolean isNext() {
+    return next;
+  }
 
-	@Override
-	public String toString() {
-		return "Page [content=" + content + ", pageId=" + pageId + ", previous=" + previous + ", next=" + next + "]";
-	}
+  public final void setNext(final boolean next) {
+    this.next = next;
+  }
+
+  @Override
+  public String toString() {
+    return "Page [content=" + content + ", pageId=" + pageId + ", previous=" + previous + ", next="
+        + next + "]";
+  }
 }

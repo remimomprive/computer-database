@@ -3,112 +3,148 @@ package fr.excilys.rmomprive.model;
 import java.util.Date;
 
 public class Computer {
-	private long id;
-	private String name;
-	private Date introduced;
-	private Date discontinued;
-	private Company company;
-	
-	private Computer() {
-		
-	}
-	
-	public Computer(final long id, final String name, final Date introduced, final Date discontinued, final Company company) {
-		this.id = id;
-		this.name = name;
-		this.introduced = introduced;
-		this.discontinued = discontinued;
-		this.company = company;
-	}
+  private long id;
+  private String name;
+  private Date introduced;
+  private Date discontinued;
+  private Company company;
 
-	public long getId() {
-		return id;
-	}
+  /**
+   * Private constructor for builder.
+   */
+  private Computer() {
 
-	public void setId(final long id) {
-		this.id = id;
-	}
+  }
 
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(final String name) {
-		this.name = name;
-	}
-	
-	public void setIntroduced(final Date introduced) {
-		this.introduced = introduced;
-	}
-	
-	public Date getIntroduced() {
-		return introduced;
-	}
-	
-	public Date getDiscontinued() {
-		return discontinued;
-	}
-	
-	public void setDiscontinued(final Date discontinued) {
-		this.discontinued = discontinued;
-	}
-	
-	public Company getCompany() {
-		return company;
-	}
-	
-	public void setCompany(final Company company) {
-		this.company = company;
-	}
+  /**
+   * Create a Computer object.
+   * @param id The computer id
+   * @param name The computer name
+   * @param introduced The computer introduction date.
+   * @param discontinued The computer discontinution date.
+   * @param company The computer company.
+   */
+  public Computer(final long id, final String name, final Date introduced, final Date discontinued,
+      final Company company) {
+    this.id = id;
+    this.name = name;
+    this.introduced = introduced;
+    this.discontinued = discontinued;
+    this.company = company;
+  }
 
-	@Override
-	public String toString() {
-		return "Computer [id=" + id + ", name=" + name + ", introduced=" + introduced + ", discontinued=" + discontinued
-				+ ", company=" + company + "]";
-	}
-	
-	public static class ComputerBuilder {
-		private long id;
-		private String name;
-		private Date introduced;
-		private Date discontinued;
-		private Company company;
-		
-		public Computer build() {
-			Computer computer = new Computer();
-			
-			computer.setId(this.id);
-			computer.setName(this.name);
-			computer.setIntroduced(this.introduced);
-			computer.setDiscontinued(this.discontinued);
-			computer.setCompany(this.company);
-			
-			return computer;
-		}
+  public long getId() {
+    return id;
+  }
 
-		public ComputerBuilder setId(long id) {
-			this.id = id;
-			return this;
-		}
+  public void setId(final long id) {
+    this.id = id;
+  }
 
-		public ComputerBuilder setName(String name) {
-			this.name = name;
-			return this;
-		}
+  public String getName() {
+    return name;
+  }
 
-		public ComputerBuilder setIntroduced(Date timestamp) {
-			this.introduced = timestamp;
-			return this;
-		}
+  public void setName(final String name) {
+    this.name = name;
+  }
 
-		public ComputerBuilder setDiscontinued(Date discontinued) {
-			this.discontinued = discontinued;
-			return this;
-		}
+  public void setIntroduced(final Date introduced) {
+    this.introduced = introduced;
+  }
 
-		public ComputerBuilder setCompany(Company company) {
-			this.company = company;
-			return this;
-		}
-	}
+  public Date getIntroduced() {
+    return introduced;
+  }
+
+  public Date getDiscontinued() {
+    return discontinued;
+  }
+
+  public void setDiscontinued(final Date discontinued) {
+    this.discontinued = discontinued;
+  }
+
+  public Company getCompany() {
+    return company;
+  }
+
+  public void setCompany(final Company company) {
+    this.company = company;
+  }
+
+  @Override
+  public String toString() {
+    return "Computer [id=" + id + ", name=" + name + ", introduced=" + introduced
+        + ", discontinued=" + discontinued + ", company=" + company + "]";
+  }
+
+  public static class ComputerBuilder {
+    private long id;
+    private String name;
+    private Date introduced;
+    private Date discontinued;
+    private Company company;
+
+    /**
+     * Build a Computer from the ComputerBuilder instance and returns it.
+     * @return The created Computer object
+     */
+    public Computer build() {
+      Computer computer = new Computer();
+
+      computer.setId(this.id);
+      computer.setName(this.name);
+      computer.setIntroduced(this.introduced);
+      computer.setDiscontinued(this.discontinued);
+      computer.setCompany(this.company);
+
+      return computer;
+    }
+
+    /**
+     * @param id The computer id
+     * @return The ComputerBuilder instance
+     */
+    public ComputerBuilder setId(long id) {
+      this.id = id;
+      return this;
+    }
+
+    /**
+     * @param name The computer name
+     * @return The ComputerBuilder instance
+     */
+    public ComputerBuilder setName(String name) {
+      this.name = name;
+      return this;
+    }
+
+    /**
+     * @param introduced The computer introduction date
+     * @return The ComputerBuilder instance
+     */
+    public ComputerBuilder setIntroduced(Date introduced) {
+      this.introduced = introduced;
+      return this;
+    }
+
+    /**
+     * @param discontinued The computer discontinution date
+     * @return The ComputerBuilder instance
+     */
+    public ComputerBuilder setDiscontinued(Date discontinued) {
+      this.discontinued = discontinued;
+      return this;
+    }
+
+    /**
+     * @param company The computer company
+     * @return The ComputerBuilder instance
+     */
+    public ComputerBuilder setCompany(Company company) {
+      this.company = company;
+      return this;
+    }
+  }
 }

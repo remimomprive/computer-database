@@ -17,7 +17,6 @@ import fr.excilys.rmomprive.exception.InvalidPageSizeException;
 import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.pagination.Page;
-import fr.excilys.rmomprive.service.CompanyService;
 
 public class ComputerDao implements IDao<Computer> {
   private static final String SELECT_BY_ID_QUERY = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON company.id = company_id  WHERE computer.id = ?";
@@ -38,12 +37,22 @@ public class ComputerDao implements IDao<Computer> {
 
   private static ComputerDao instance;
 
+  /**
+   * Private contructor for singleton.
+   */
   private ComputerDao() {
 
   }
 
   /// TODO : find computer by name
 
+  /**
+   * Create a Computer object from a ResultSet given by a database result.
+   * @param resultSet The ResultSet value
+   * @return The Computer object
+   * @throws SQLException if the columnLabel is not valid; if a database access error occurs or this
+   *                      method is called on a closed result set
+   */
   private Computer createFromResultSet(ResultSet resultSet) throws SQLException {
     int id = resultSet.getInt(FIELD_ID);
     String name = resultSet.getString(FIELD_NAME);
@@ -53,8 +62,9 @@ public class ComputerDao implements IDao<Computer> {
     String companyName = resultSet.getString(FIELD_COMPANY_NAME);
 
     Company company = null;
-    if (companyName != null)
+    if (companyName != null) {
       company = new Company(companyId, companyName);
+    }
 
     return new Computer(id, name, introduced, discontinued, company);
   }
@@ -164,11 +174,6 @@ public class ComputerDao implements IDao<Computer> {
     return (count != 0);
   }
 
-  /**
-   * Returns the number of computers inside the database
-   * 
-   * @throws SQLException
-   */
   @Override
   public int getRowCount() throws SQLException {
     int count = -1;
@@ -185,35 +190,24 @@ public class ComputerDao implements IDao<Computer> {
     return count;
   }
 
-  /**
-   * Returns the number of pages with the specified size
-   * 
-   * @throws SQLException
-   */
+  @Override
   public int getPageCount(int pageSize) throws SQLException {
     return (int) Math.round((1.0 * this.getRowCount()) / pageSize);
   }
 
-  /**
-   * Returns the specific page
-   * 
-   * @param pageId   the page id we want to retrieve
-   * @param pageSize
-   * @return The specified spage
-   * @throws SQLException
-   */
+  @Override
   public Page<Computer> getPage(int pageId, int pageSize)
       throws InvalidPageIdException, InvalidPageSizeException, SQLException {
     // Compute the page count
     int pageCount = getPageCount(pageSize);
 
     // The page size should not be < 1
-    if (pageSize <= 0)
+    if (pageSize <= 0) {
       throw new InvalidPageSizeException();
-    // The page id is between 1 and pageCount (a computed value)
-    else if (pageId <= 0 || pageId > pageCount)
+    } else if (pageId <= 0 || pageId > pageCount) { // The page id is between 1 and pageCount (a
+                                                    // computed value)
       throw new InvalidPageIdException();
-    else {
+    } else {
       int offset = (pageId - 1) * pageSize;
 
       List<Computer> computers = new ArrayList<>();
@@ -235,9 +229,13 @@ public class ComputerDao implements IDao<Computer> {
     }
   }
 
+  /**
+   * @return The instance of ComputerDao in memory.
+   */
   public static ComputerDao getInstance() {
-    if (instance == null)
+    if (instance == null) {
       instance = new ComputerDao();
+    }
     return instance;
   }
 }

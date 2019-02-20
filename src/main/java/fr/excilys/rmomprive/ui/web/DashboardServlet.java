@@ -2,9 +2,6 @@ package fr.excilys.rmomprive.ui.web;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -27,6 +24,13 @@ public class DashboardServlet extends HttpServlet {
 
   /// TODO : add dto
 
+  /**
+   * Processes the incoming request (retrieves data and passes them to the view).
+   * @param request object that represents the request the client makes of the servlet
+   * @param response object that represents the response the servlet returns to the client
+   * @throws ServletException if the view .jsp file throws an exception
+   * @throws IOException if the view .jsp file does not exist
+   */
   private void processRequest(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     String pageSizeParam = request.getParameter("page_size");
@@ -65,6 +69,11 @@ public class DashboardServlet extends HttpServlet {
     processRequest(request, response);
   }
 
+  /**
+   * Exposes the page count method from the ComputerService class to the jsp.
+   * @return The page count value
+   * @throws SQLException if an error while accessing to the database happened
+   */
   public int getPageCount() throws SQLException {
     return ComputerService.getInstance().getPageCount(pageSize);
   }

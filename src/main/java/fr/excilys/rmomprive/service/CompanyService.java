@@ -11,75 +11,82 @@ import fr.excilys.rmomprive.persistence.CompanyDao;
 
 public class CompanyService implements IService<Company> {
 
-	private static CompanyService instance;
-	
-	private CompanyService() {
-		
-	}
-	
-	@Override
-	public Optional<Company> getById(long id) throws SQLException {
-		return this.getCompanyDao().getById(id);
-	}
+  private static CompanyService instance;
 
-	@Override
-	public Collection<Company> getAll() throws SQLException {
-		return this.getCompanyDao().getAll();
-	}
+  /**
+   * Private constructor for singleton.
+   */
+  private CompanyService() {
 
-	@Override
-	public Optional<Company> add(Company object) {
-		return this.getCompanyDao().add(object);
-	}
+  }
 
-	@Override
-	public Collection<Company> addAll(Collection<Company> objects) {
-		return this.getCompanyDao().addAll(objects);
-	}
+  @Override
+  public Optional<Company> getById(long id) throws SQLException {
+    return this.getCompanyDao().getById(id);
+  }
 
-	@Override
-	public Company update(Company object) {
-		return this.getCompanyDao().update(object);
-	}
+  @Override
+  public Collection<Company> getAll() throws SQLException {
+    return this.getCompanyDao().getAll();
+  }
 
-	@Override
-	public boolean delete(Company object) {
-		return this.getCompanyDao().delete(object);
-	}
-	
-	@Override
-	public boolean deleteById(long id) throws SQLException {
-		return this.getCompanyDao().deleteById(id);
-	}
-	
-	@Override
-	public boolean checkExistenceById(long id) {
-		return this.getCompanyDao().checkExistenceById(id);
-	}
+  @Override
+  public Optional<Company> add(Company object) {
+    return this.getCompanyDao().add(object);
+  }
 
-	@Override
-	public int getRowCount() {
-		return this.getCompanyDao().getRowCount();
-	}
+  @Override
+  public Collection<Company> addAll(Collection<Company> objects) {
+    return this.getCompanyDao().addAll(objects);
+  }
 
-	@Override
-	public int getPageCount(int pageSize) {
-		return this.getCompanyDao().getPageCount(pageSize);
-	}
+  @Override
+  public Company update(Company object) {
+    return this.getCompanyDao().update(object);
+  }
 
-	@Override
-	public Page<Company> getPage(int pageId, int pageSize) throws InvalidPageIdException {
-		return this.getCompanyDao().getPage(pageId, pageSize);
-	}
-	
-	public static CompanyService getInstance() {
-		if (instance == null)
-			instance = new CompanyService();
-		
-		return instance;
-	}
+  @Override
+  public boolean delete(Company object) {
+    return this.getCompanyDao().delete(object);
+  }
 
-	public CompanyDao getCompanyDao() {
-		return CompanyDao.getInstance();
-	}
+  @Override
+  public boolean deleteById(long id) throws SQLException {
+    return this.getCompanyDao().deleteById(id);
+  }
+
+  @Override
+  public boolean checkExistenceById(long id) {
+    return this.getCompanyDao().checkExistenceById(id);
+  }
+
+  @Override
+  public int getRowCount() {
+    return this.getCompanyDao().getRowCount();
+  }
+
+  @Override
+  public int getPageCount(int pageSize) {
+    return this.getCompanyDao().getPageCount(pageSize);
+  }
+
+  @Override
+  public Page<Company> getPage(int pageId, int pageSize) throws InvalidPageIdException {
+    return this.getCompanyDao().getPage(pageId, pageSize);
+  }
+
+  /**
+   * @return The instance of CompanyService in memory.
+   */
+  public static CompanyService getInstance() {
+    if (instance == null) {
+      instance = new CompanyService();
+    }
+
+    return instance;
+  }
+
+  public CompanyDao getCompanyDao() {
+    return CompanyDao.getInstance();
+  }
 }
