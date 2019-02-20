@@ -18,9 +18,9 @@ public class ComputerService implements IService<Computer> {
   private static ComputerService instance;
 
   /**
-   * Private constructor for singleton.
+   * Public constructor for mockito.
    */
-  private ComputerService() {
+  public ComputerService() {
 
   }
 
