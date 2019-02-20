@@ -1,6 +1,10 @@
 package fr.excilys.rmomprive.pagination;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import fr.excilys.rmomprive.dto.IDto;
+import fr.excilys.rmomprive.mapper.IMapper;
 
 public class Page<T> {
   private List<T> content;
@@ -10,10 +14,10 @@ public class Page<T> {
 
   /**
    * Constructs a Page object with the parameters.
-   * @param content The page content (generally, a list of entities)
-   * @param pageId (the current page id)
+   * @param content  The page content (generally, a list of entities)
+   * @param pageId   (the current page id)
    * @param previous true if the page is not the first in the page list, false if not
-   * @param next true if the page is not the last in the page list, false if not
+   * @param next     true if the page is not the last in the page list, false if not
    */
   public Page(final List<T> content, final int pageId, final boolean previous, final boolean next) {
     this.content = content;
@@ -58,5 +62,19 @@ public class Page<T> {
   public String toString() {
     return "Page [content=" + content + ", pageId=" + pageId + ", previous=" + previous + ", next="
         + next + "]";
+  }
+
+  /**
+   * Create the dto page from a entity page.
+   * @param mapper The entity mapper
+   * @return The page
+   */
+  public Page<IDto<T>> createDtoPage(IMapper<T> mapper) {
+    List<IDto<T>> data = new ArrayList<>();
+    for (T entity : getContent()) {
+      data.add(mapper.mapFromEntity(entity));
+    }
+
+    return new Page<IDto<T>>(data, pageId, previous, next);
   }
 }

@@ -9,8 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import fr.excilys.rmomprive.dto.IDto;
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.exception.InvalidPageSizeException;
+import fr.excilys.rmomprive.mapper.ComputerMapper;
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.pagination.Page;
 import fr.excilys.rmomprive.service.ComputerService;
@@ -44,7 +46,7 @@ public class DashboardServlet extends HttpServlet {
     }
 
     try {
-      Page<Computer> page = ComputerService.getInstance().getPage(this.pageId, this.pageSize);
+      Page<IDto<Computer>> page = ComputerService.getInstance().getPage(this.pageId, this.pageSize).createDtoPage(ComputerMapper.getInstance());
       request.setAttribute("computers", page);
       request.setAttribute("computerCount", ComputerService.getInstance().getRowCount());
       request.setAttribute("pageSize", pageSize);

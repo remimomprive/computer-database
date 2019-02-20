@@ -1,11 +1,11 @@
 package fr.excilys.rmomprive.dto;
 
-import java.util.Date;
+import fr.excilys.rmomprive.model.Computer;
 
-public class ComputerDto {
+public class ComputerDto implements IDto<Computer> {
   private String name;
-  private Date introduced;
-  private Date discontinued;
+  private String introduced;
+  private String discontinued;
   private String companyName;
 
   /**
@@ -15,7 +15,7 @@ public class ComputerDto {
    * @param discontinued The Computer discontinution date
    * @param companyName The Computer company name
    */
-  public ComputerDto(String name, Date introduced, Date discontinued, String companyName) {
+  public ComputerDto(String name, String introduced, String discontinued, String companyName) {
     this.name = name;
     this.introduced = introduced;
     this.discontinued = discontinued;
@@ -30,19 +30,19 @@ public class ComputerDto {
     this.name = name;
   }
 
-  public Date getIntroduced() {
+  public String getIntroduced() {
     return introduced;
   }
 
-  public void setIntroduced(Date introduced) {
+  public void setIntroduced(String introduced) {
     this.introduced = introduced;
   }
 
-  public Date getDiscontinued() {
+  public String getDiscontinued() {
     return discontinued;
   }
 
-  public void setDiscontinued(Date discontinued) {
+  public void setDiscontinued(String discontinued) {
     this.discontinued = discontinued;
   }
 
@@ -52,5 +52,11 @@ public class ComputerDto {
 
   public void setCompanyName(String companyName) {
     this.companyName = companyName;
+  }
+
+  @Override
+  public String toString() {
+    return "ComputerDto [name=" + name + ", introduced=" + introduced + ", discontinued="
+        + discontinued + ", companyName=" + companyName + "]";
   }
 }
