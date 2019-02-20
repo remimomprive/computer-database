@@ -25,6 +25,15 @@ public class CompanyService implements IService<Company> {
     return this.getCompanyDao().getById(id);
   }
 
+  /**
+   * @param name The company name.
+   * @return The company if a company with the specified name exists, an empty object if not
+   * @throws SQLException if an error accessing the database happened
+   */
+  public Optional<Company> getByName(String name) throws SQLException {
+    return this.getCompanyDao().getByName(name);
+  }
+
   @Override
   public Collection<Company> getAll() throws SQLException {
     return this.getCompanyDao().getAll();

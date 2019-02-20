@@ -17,6 +17,7 @@ import fr.excilys.rmomprive.pagination.Page;
 
 public class CompanyDao implements IDao<Company> {
   private static final String SELECT_BY_ID_QUERY = "SELECT id, name FROM company WHERE ID = ?";
+  private static final String SELECT_BY_NAME_QUERY = "SELECT id, name FROM company WHERE name = ?";
   private static final String SELECT_ALL_QUERY = "SELECT id, name FROM company";
   private static final String CHECK_EXISTENCE_QUERY = "SELECT COUNT(id) AS count FROM company WHERE id = ?";
 
@@ -37,7 +38,8 @@ public class CompanyDao implements IDao<Company> {
    * Create a Company object from a ResultSet given by a database result.
    * @param resultSet The ResultSet value
    * @return The Company object
-   * @throws SQLException if the columnLabel is not valid; if a database access error occurs or this method is called on a closed result set
+   * @throws SQLException if the columnLabel is not valid; if a database access error occurs or this
+   *                      method is called on a closed result set
    */
   private Company createFromResultSet(ResultSet resultSet) throws SQLException {
     int id = resultSet.getInt(FIELD_ID);
@@ -51,6 +53,25 @@ public class CompanyDao implements IDao<Company> {
     try (Connection connection = Database.getConnection()) {
       PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID_QUERY);
       statement.setLong(1, objectId);
+      ResultSet resultSet = statement.executeQuery();
+
+      while (resultSet.next()) {
+        return Optional.of(createFromResultSet(resultSet));
+      }
+    }
+
+    return Optional.empty();
+  }
+
+  /**
+   * @param name The company name.
+   * @return The company if a company with the specified name exists, an empty object if not
+   * @throws SQLException if an error accessing the database happened
+   */
+  public Optional<Company> getByName(final String name) throws SQLException {
+    try (Connection connection = Database.getConnection()) {
+      PreparedStatement statement = connection.prepareStatement(SELECT_BY_NAME_QUERY);
+      statement.setString(1, name);
       ResultSet resultSet = statement.executeQuery();
 
       while (resultSet.next()) {
