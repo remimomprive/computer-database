@@ -13,28 +13,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import fr.excilys.rmomprive.dto.ComputerDto;
+import fr.excilys.rmomprive.exception.ValidationException;
 import fr.excilys.rmomprive.mapper.ComputerMapper;
 import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.service.CompanyService;
 import fr.excilys.rmomprive.service.ComputerService;
+import fr.excilys.rmomprive.validation.ComputerValidator;
 
 @WebServlet("/addComputer")
 public class AddComputerServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
 
-  private int pageSize = 10;
-  private int pageId = 1;
-
-  /**
-   * Processes the incoming request (retrieves data and passes them to the view).
-   *
-   * @param request  object that represents the request the client makes of the servlet
-   * @param response object that represents the response the servlet returns to the client
-   * @throws ServletException if the view .jsp file throws an exception
-   * @throws IOException      if the view .jsp file does not exist
-   */
-  private void processRequest(HttpServletRequest request, HttpServletResponse response)
+  @Override
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     try {
       Collection<Company> companies = CompanyService.getInstance().getAll();
@@ -48,54 +40,58 @@ public class AddComputerServlet extends HttpServlet {
   }
 
   @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
-
-    processRequest(request, response);
-  }
-
-  @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
+    // Retrieve the form parameters
     String computerName = request.getParameter("computerName");
     String introduced = (String) request.getParameter("introduced");
     String discontinued = (String) request.getParameter("discontinued");
-    Optional<Long> companyId = Optional.empty();
-
     String companyIdString = request.getParameter("companyId");
-    if (companyIdString != null) {
+
+    Long companyId = null;
+
+    // Parse the company id input
+    if (companyIdString != null && !companyIdString.equals("")) {
       try {
-        companyId = Optional.of(Long.parseLong(companyIdString));
+        companyId = Long.parseLong(companyIdString);
       } catch (NumberFormatException e) {
         e.printStackTrace();
       }
     }
 
-    /// TODO : replace with computer dto validation method
-    if (true) {
+    // Retrieve the company name, if a company has been set
+    Optional<Company> company = Optional.empty();
+    String companyName = null;
+    if (companyId != null) {
       try {
-        Optional<Company> company = companyId.isPresent()
-            ? CompanyService.getInstance().getById(companyId.get())
-            : Optional.empty();
-        Optional<String> companyName = company.isPresent() ? Optional.of(company.get().getName())
-            : Optional.empty();
-
-        ComputerDto computerDto = new ComputerDto(Optional.empty(), computerName, introduced,
-            discontinued, companyId, companyName);
-        response.getWriter().write(computerDto.toString());
-        try {
-          Optional<Computer> insertedComputer = ComputerService.getInstance()
-              .add(ComputerMapper.getInstance().mapFromDto(computerDto));
-
-          if (insertedComputer.isPresent()) {
-            response.getWriter().write(insertedComputer.toString());
-          }
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      } catch (SQLException e1) {
-        e1.printStackTrace();
+        company = CompanyService.getInstance().getById(companyId);
+        companyName = company.isPresent() ? company.get().getName() : null;
+      } catch (SQLException e) {
+        e.printStackTrace();
       }
+    }
+
+    // Create the DTO
+    ComputerDto computerDto = new ComputerDto(Optional.empty(), computerName, introduced,
+        discontinued, companyId, companyName);
+    // Get the entity thanks to the DTO
+    Computer computer = ComputerMapper.getInstance().mapFromDto(computerDto);
+
+    try {
+      // Validate the entity
+      ComputerValidator.validate(computer);
+      // Try to insert the entity
+      Optional<Computer> insertedComputer = ComputerService.getInstance().add(computer);
+
+      // Write data to the page
+      response.getWriter().write(computerDto.toString());
+      response.getWriter().write(insertedComputer.toString());
+    } catch (ValidationException e) {
+      // Show an error page
+      RequestDispatcher dispatcher = request.getRequestDispatcher("/views/500.jsp");
+      dispatcher.forward(request, response);
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
   }
 }

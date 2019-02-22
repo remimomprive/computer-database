@@ -9,8 +9,8 @@ public class ComputerDto implements IDto<Computer> {
   private String name;
   private String introduced;
   private String discontinued;
-  private Optional<Long> companyId;
-  private Optional<String> companyName;
+  private Long companyId;
+  private String companyName;
 
   /**
    * Constructs a ComputerDto object.
@@ -22,7 +22,7 @@ public class ComputerDto implements IDto<Computer> {
    * @param companyName  The Computer company name
    */
   public ComputerDto(Optional<Long> id, String name, String introduced, String discontinued,
-      Optional<Long> companyId, Optional<String> companyName) {
+      Long companyId, String companyName) {
     this.id = id;
     this.name = name;
     this.introduced = introduced;
@@ -63,19 +63,19 @@ public class ComputerDto implements IDto<Computer> {
     this.discontinued = discontinued;
   }
 
-  public Optional<Long> getCompanyId() {
+  public Long getCompanyId() {
     return companyId;
   }
 
-  public void setCompanyId(Optional<Long> companyId) {
+  public void setCompanyId(Long companyId) {
     this.companyId = companyId;
   }
 
-  public Optional<String> getCompanyName() {
+  public String getCompanyName() {
     return companyName;
   }
 
-  public void setCompanyName(Optional<String> companyName) {
+  public void setCompanyName(String companyName) {
     this.companyName = companyName;
   }
 

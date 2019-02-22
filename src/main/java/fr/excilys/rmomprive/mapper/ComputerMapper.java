@@ -23,10 +23,8 @@ public class ComputerMapper implements IMapper<Computer> {
   public ComputerDto mapFromEntity(Computer computer) {
     return new ComputerDto(Optional.of(computer.getId()), computer.getName(),
         parseDateToString(computer.getIntroduced()), parseDateToString(computer.getDiscontinued()),
-        computer.getCompany() != null ? Optional.of(computer.getCompany().getId())
-            : Optional.empty(),
-        computer.getCompany() != null ? Optional.of(computer.getCompany().getName())
-            : Optional.empty());
+        computer.getCompany() != null ? computer.getCompany().getId() : null,
+        computer.getCompany() != null ? computer.getCompany().getName() : null);
   }
 
   /**
@@ -49,8 +47,8 @@ public class ComputerMapper implements IMapper<Computer> {
         computerBuilder.setDiscontinued(Dates.parse(dto.getDiscontinued()));
       }
 
-      if (dto.getCompanyId().isPresent()) {
-        Optional<Company> company = CompanyService.getInstance().getById(dto.getCompanyId().get());
+      if (dto.getCompanyId() != null) {
+        Optional<Company> company = CompanyService.getInstance().getById(dto.getCompanyId());
         if (company.isPresent()) {
           computerBuilder.setCompany(company.get());
         }

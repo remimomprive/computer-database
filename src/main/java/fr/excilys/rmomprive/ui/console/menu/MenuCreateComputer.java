@@ -3,6 +3,7 @@ package fr.excilys.rmomprive.ui.console.menu;
 import java.sql.SQLException;
 import java.util.Optional;
 
+import fr.excilys.rmomprive.exception.ValidationException;
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.service.ComputerService;
 
@@ -32,6 +33,8 @@ public class MenuCreateComputer extends MenuComputerForm {
         getLogger().error("Error creating {}\n", computer);
       }
     } catch (SQLException e) {
+      e.printStackTrace();
+    } catch (ValidationException e) {
       e.printStackTrace();
     }
   }
