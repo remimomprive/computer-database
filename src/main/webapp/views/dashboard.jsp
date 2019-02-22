@@ -119,7 +119,7 @@
         <div class="btn-group btn-group-sm pull-right" role="group">
         	<c:set var="pageSizeValues">10,20,50</c:set>
         	<c:forTokens items="${pageSizeValues}" var="pageSizeValue" delims=",">
-	            <a role="button" type="button" class="btn btn-default" href="http://localhost:8080/computer-database/dashboard?page_id=${pageId}&page_size=${pageSizeValue}">
+	            <a role="button" type="button" class="btn btn-default" href="http://localhost:8080/computer-database/dashboard?page_id=1&page_size=${pageSizeValue}">
 	            	${pageSizeValue}
 	            </a>
             </c:forTokens>
