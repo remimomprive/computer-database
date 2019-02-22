@@ -13,14 +13,15 @@ public class ComputerValidator {
    */
   public static void validate(Computer computer) throws ValidationException {
     if (
-    // Empty computer name
-    (computer.getName() == null || computer.getName().equals("")) ||
-    // Introduced after discontinued
+      // Empty computer name
+      (computer.getName() == null || computer.getName().equals("")) ||
+      // Introduced after discontinued
         (computer.getIntroduced() != null && computer.getDiscontinued() != null
             && computer.getIntroduced().after(computer.getDiscontinued()))
         ||
         // Introduced empty but discontinued filled
-        (computer.getIntroduced() == null && computer.getDiscontinued() != null)) {
+        (computer.getIntroduced() == null && computer.getDiscontinued() != null)
+        ) {
       throw new ValidationException();
     }
   }
