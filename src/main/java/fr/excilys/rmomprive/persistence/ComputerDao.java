@@ -197,7 +197,7 @@ public class ComputerDao implements IDao<Computer> {
 
   @Override
   public int getPageCount(int pageSize) throws SQLException {
-    return (int) Math.round((1.0 * this.getRowCount()) / pageSize);
+    return (int) Math.ceil((1.0 * this.getRowCount()) / pageSize);
   }
 
   @Override
