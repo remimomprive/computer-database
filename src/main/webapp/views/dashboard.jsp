@@ -82,7 +82,7 @@
 	                            <input type="checkbox" name="cb" class="cb" value="0">
 	                        </td>
 	                        <td>
-	                            <a href="editComputer.jsp" onclick="">${computer.name}</a>
+	                            <a href="editComputer?computerId=${computer.id.get()}" onclick="">${computer.name}</a>
 	                        </td>
 	                        <td>${computer.introduced}</td>
 	                        <td>${computer.discontinued}</td>

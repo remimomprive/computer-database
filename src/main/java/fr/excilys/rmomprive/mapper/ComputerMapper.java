@@ -72,10 +72,8 @@ public class ComputerMapper implements IMapper<Computer> {
    */
   private String parseDateToString(Date date) {
     if (date != null) {
-      Calendar calendar = Calendar.getInstance();
-      calendar.setTime(date);
-      return String.format("%d/%d/%d", calendar.get(Calendar.DAY_OF_MONTH),
-          calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
+      DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.FRENCH);
+      return format.format(date);
     }
 
     return "";
@@ -89,7 +87,7 @@ public class ComputerMapper implements IMapper<Computer> {
    */
   private Date parseStringToDate(String dateString) {
     if (dateString != null && !dateString.equals("")) {
-      DateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
+      DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.FRENCH);
       try {
         return format.parse(dateString);
       } catch (ParseException e) {
