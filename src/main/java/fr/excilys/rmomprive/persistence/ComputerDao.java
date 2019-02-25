@@ -49,6 +49,7 @@ public class ComputerDao implements IDao<Computer> {
 
   /**
    * Create a Computer object from a ResultSet given by a database result.
+   * 
    * @param resultSet The ResultSet value
    * @return The Computer object
    * @throws SQLException if the columnLabel is not valid; if a database access error occurs or this
@@ -106,7 +107,8 @@ public class ComputerDao implements IDao<Computer> {
     try (Connection connection = Database.getConnection()) {
       PreparedStatement statement = (object.getCompany() != null)
           ? connection.prepareStatement(INSERT_QUERY, Statement.RETURN_GENERATED_KEYS)
-          : connection.prepareStatement(INSERT_QUERY_WITHOUT_COMPANY, Statement.RETURN_GENERATED_KEYS);
+          : connection.prepareStatement(INSERT_QUERY_WITHOUT_COMPANY,
+              Statement.RETURN_GENERATED_KEYS);
       statement.setString(1, object.getName());
       statement.setObject(2, object.getIntroduced());
       statement.setObject(3, object.getDiscontinued());
@@ -139,10 +141,9 @@ public class ComputerDao implements IDao<Computer> {
       statement.setString(1, object.getName());
       statement.setObject(2, object.getIntroduced());
       statement.setObject(3, object.getDiscontinued());
-      statement.setLong(4, object.getCompany().getId());
+      statement.setObject(4, (object.getCompany() != null) ? object.getCompany().getId() : null);
       statement.setLong(5, object.getId());
       statement.executeUpdate();
-
       return object;
     }
   }
