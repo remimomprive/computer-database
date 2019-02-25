@@ -35,12 +35,20 @@ public class DashboardServlet extends HttpServlet {
       throws ServletException, IOException {
     String pageSizeParam = request.getParameter("page_size");
     if (pageSizeParam != null) {
-      pageSize = Integer.valueOf(pageSizeParam);
+      try {
+        pageSize = Integer.valueOf(pageSizeParam);
+      } catch (NumberFormatException e) {
+        e.printStackTrace();
+      }
     }
 
     String pageIdParam = request.getParameter("page_id");
     if (pageIdParam != null) {
-      pageId = Integer.valueOf(pageIdParam);
+      try {
+        pageId = Integer.valueOf(pageIdParam);
+      } catch (NumberFormatException e) {
+        e.printStackTrace();
+      }
     }
 
     try {
