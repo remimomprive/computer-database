@@ -1,4 +1,4 @@
-package fr.excilys.rmomprive.test;
+package fr.excilys.rmomprive.test.unit;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
