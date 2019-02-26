@@ -93,12 +93,16 @@
 
 	<footer class="navbar-fixed-bottom">
 		<div class="container text-center">
-			<ul class="pagination">
-				<c:if test="${pageId > 1}">
-					<li><a href="?page_id=1" aria-label="Previous"> <span
-							aria-hidden="true">&laquo;</span>
-					</a></li>
-				</c:if>
+			<ul class="pagination">				
+				<c:choose>
+					<c:when test="${pageId > 1}">
+						<li><a href="?page_id=1" aria-label="Previous"> <span aria-hidden="true">&laquo;</span></a></li>
+					</c:when>
+					<c:otherwise>
+						<li class="page-item disabled"><span class="page-item" aria-hidden="true">&laquo;</span></li>
+					</c:otherwise>
+				</c:choose>
+				
 				<c:forEach var="i" begin="${pageId - 1}" end="${pageId + 1}"
 					step="1">
 					<c:if test="${(i ne 0) && (i ne pageCount + 1)}">
@@ -112,11 +116,15 @@
 						</c:choose>
 					</c:if>
 				</c:forEach>
-				<c:if test="${pageId < pageCount}">
-					<li><a href="?page_id=${pageCount}" aria-label="Next"> <span
-							aria-hidden="true">&raquo;</span>
-					</a></li>
-				</c:if>
+				
+				<c:choose>
+					<c:when test="${pageId < pageCount}">
+						<li><a href="?page_id=${pageCount}" aria-label="Next"> <span aria-hidden="true">&raquo;</span></a></li>
+					</c:when>
+					<c:otherwise>
+						<li class="page-item disabled"><span aria-hidden="true" class="page-link">&raquo;</span></li>
+					</c:otherwise>
+				</c:choose>
 			</ul>
 
 			<div class="btn-group btn-group-sm pull-right" role="group">
