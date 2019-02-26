@@ -49,7 +49,7 @@ public class ComputerDao implements IDao<Computer> {
 
   /**
    * Create a Computer object from a ResultSet given by a database result.
-   * 
+   *
    * @param resultSet The ResultSet value
    * @return The Computer object
    * @throws SQLException if the columnLabel is not valid; if a database access error occurs or this

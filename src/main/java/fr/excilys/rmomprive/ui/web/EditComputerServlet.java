@@ -32,7 +32,7 @@ public class EditComputerServlet extends HttpServlet {
     String computerId = request.getParameter("computerId");
     Optional<Computer> computer = Optional.empty();
     Collection<Company> companies = new ArrayList<>();
-    
+
     try {
       computer = ComputerService.getInstance().getById(Long.parseLong(computerId));
       companies = CompanyService.getInstance().getAll();
@@ -41,7 +41,7 @@ public class EditComputerServlet extends HttpServlet {
     } catch (SQLException e) {
       e.printStackTrace();
     }
-    
+
     if (computer.isPresent()) {
       ComputerDto computerDto = ComputerMapper.getInstance().mapFromEntity(computer.get());
       request.setAttribute("computer", computerDto);
