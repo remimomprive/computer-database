@@ -122,6 +122,11 @@ public class CompanyDao implements IDao<Company> {
   public boolean deleteById(long id) {
     throw new ImpossibleActionException();
   }
+  
+  @Override
+  public boolean deleteByIds(List<Long> ids) throws SQLException {
+    throw new ImpossibleActionException();
+  }
 
   @Override
   public boolean checkExistenceById(long id) {

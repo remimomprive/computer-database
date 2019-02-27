@@ -2,6 +2,7 @@ package fr.excilys.rmomprive.service;
 
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
@@ -62,6 +63,11 @@ public class CompanyService implements IService<Company> {
   @Override
   public boolean deleteById(long id) throws SQLException {
     return this.getCompanyDao().deleteById(id);
+  }
+
+  @Override
+  public boolean deleteByIds(List<Long> ids) throws SQLException {
+    return this.getCompanyDao().deleteByIds(ids);
   }
 
   @Override

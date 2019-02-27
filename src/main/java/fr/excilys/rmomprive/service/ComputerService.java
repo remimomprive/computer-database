@@ -2,6 +2,7 @@ package fr.excilys.rmomprive.service;
 
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
@@ -79,6 +80,11 @@ public class ComputerService implements IService<Computer> {
   @Override
   public boolean deleteById(long id) throws SQLException {
     return this.getComputerDao().deleteById(id);
+  }
+  
+  @Override
+  public boolean deleteByIds(List<Long> ids) throws SQLException {
+    return this.getComputerDao().deleteByIds(ids);
   }
 
   @Override

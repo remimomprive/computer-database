@@ -22,12 +22,14 @@ public class ComputerDao implements IDao<Computer> {
   private static final String SELECT_BY_ID_QUERY = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON company.id = company_id  WHERE computer.id = ?";
   private static final String SELECT_ALL_QUERY = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON company.id = company_id";
   private static final String DELETE_QUERY = "DELETE FROM computer where id = ?";
+  private static final String DELETE_LIST_QUERY = "DELETE FROM computer where id IN (?)";
   private static final String INSERT_QUERY = "INSERT INTO computer(name, introduced, discontinued, company_id) VALUES(?, ?, ?, ?)";
   private static final String INSERT_QUERY_WITHOUT_COMPANY = "INSERT INTO computer(name, introduced, discontinued) VALUES(?, ?, ?)";
   private static final String CHECK_EXISTENCE_QUERY = "SELECT COUNT(id) AS count FROM computer WHERE id = ?";
   private static final String UPDATE_QUERY = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?";
   private static final String COUNT_QUERY = "SELECT COUNT(id) AS count FROM computer";
   private static final String SELECT_PAGE_QUERY = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON company.id = company_id LIMIT ? OFFSET ?";
+
   private static final String FIELD_ID = "computer.id";
   private static final String FIELD_NAME = "computer.name";
   private static final String FIELD_INTRODUCED = "computer.introduced";
@@ -158,6 +160,30 @@ public class ComputerDao implements IDao<Computer> {
     try (Connection connection = Database.getConnection()) {
       PreparedStatement statement = connection.prepareStatement(DELETE_QUERY);
       statement.setLong(1, id);
+      return (statement.executeUpdate() != 0);
+    }
+  }
+
+  @Override
+  public boolean deleteByIds(List<Long> ids) throws SQLException {
+    try (Connection connection = Database.getConnection()) {
+      // Get the amount of ?s
+      StringBuilder idStringBuilder = new StringBuilder();
+      for (int i = 0; i < ids.size() - 1; i++) {
+        idStringBuilder.append("?, ");
+      }
+      idStringBuilder.append("?");
+      
+      // Create the query string
+      String deleteListQueryWithParams = DELETE_LIST_QUERY.replace("?", idStringBuilder.toString());
+
+      // Prepare the query
+      PreparedStatement statement = connection.prepareStatement(deleteListQueryWithParams);
+      for (int i = 0; i < ids.size(); i++) {
+        statement.setLong(i + 1, ids.get(i));
+      }
+
+      // Execute the query
       return (statement.executeUpdate() != 0);
     }
   }

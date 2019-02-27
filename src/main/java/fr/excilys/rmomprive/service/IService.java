@@ -2,6 +2,7 @@ package fr.excilys.rmomprive.service;
 
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
@@ -56,6 +57,13 @@ public interface IService<T> {
    * @throws SQLException if an error accessing the database happened
    */
   boolean deleteById(long id) throws SQLException;
+  
+  /**
+   * @param ids The ids of the entities we want to remove
+   * @return true if the entities were successfully deleted, false if not
+   * @throws SQLException if an error accessing the database happened
+   */
+  boolean deleteByIds(List<Long> ids) throws SQLException;
 
   /**
    * @param id The entity id
