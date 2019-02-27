@@ -158,7 +158,6 @@ public class ComputerDao implements IDao<Computer> {
     try (Connection connection = Database.getConnection()) {
       PreparedStatement statement = connection.prepareStatement(DELETE_QUERY);
       statement.setLong(1, id);
-
       return (statement.executeUpdate() != 0);
     }
   }
