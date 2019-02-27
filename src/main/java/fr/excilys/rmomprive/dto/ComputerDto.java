@@ -85,6 +85,4 @@ public class ComputerDto implements IDto<Computer> {
         + ", discontinued=" + discontinued + ", companyId=" + companyId + ", companyName="
         + companyName + "]";
   }
-
-  /// TODO : add validation method
 }

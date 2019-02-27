@@ -51,43 +51,52 @@
 		</form>
 
 		<div class="container" style="margin-top: 10px;">
-			<table class="table table-striped table-bordered">
-				<thead>
-					<tr>
-						<!-- Variable declarations for passing labels as parameters -->
-						<!-- Table header for Computer Name -->
-
-						<th class="editMode" style="width: 60px; height: 22px;"><input
-							type="checkbox" id="selectall" /> <span
-							style="vertical-align: top;"> - <a href="#"
-								id="deleteSelected" onclick="$.fn.deleteSelected();"> <i
-									class="fa fa-trash-o fa-lg"></i>
-							</a>
-						</span></th>
-						<th>Computer name</th>
-						<th>Introduced date</th>
-						<!-- Table header for Discontinued Date -->
-						<th>Discontinued date</th>
-						<!-- Table header for Company -->
-						<th>Company</th>
-
-					</tr>
-				</thead>
-				<!-- Browse attribute computers -->
-				<tbody id="results">
-					<c:forEach items="${computers.content}" var="computer">
-						<tr>
-							<td class="editMode"><input type="checkbox" name="cb"
-								class="cb" value="0"></td>
-							<td><a href="editComputer?computerId=${computer.id.get()}"
-								onclick="">${computer.name}</a></td>
-							<td>${computer.introduced}</td>
-							<td>${computer.discontinued}</td>
-							<td>${computer.companyName}</td>
-						</tr>
-					</c:forEach>
-				</tbody>
-			</table>
+			<c:choose>
+				<c:when test="${computers.content.size() > 0}">
+					<table class="table table-striped table-bordered">
+						<thead>
+							<tr>
+								<!-- Variable declarations for passing labels as parameters -->
+								<!-- Table header for Computer Name -->
+		
+								<th class="editMode" style="width: 60px; height: 22px;"><input
+									type="checkbox" id="selectall" /> <span
+									style="vertical-align: top;"> - <a href="#"
+										id="deleteSelected" onclick="$.fn.deleteSelected();"> <i
+											class="fa fa-trash-o fa-lg"></i>
+									</a>
+								</span></th>
+								<th>Computer name</th>
+								<th>Introduced date</th>
+								<!-- Table header for Discontinued Date -->
+								<th>Discontinued date</th>
+								<!-- Table header for Company -->
+								<th>Company</th>
+		
+							</tr>
+						</thead>
+						<!-- Browse attribute computers -->
+						<tbody id="results">
+							<c:forEach items="${computers.content}" var="computer">
+								<tr>
+									<td class="editMode"><input type="checkbox" name="cb"
+										class="cb" value="0"></td>
+									<td><a href="editComputer?computerId=${computer.id.get()}"
+										onclick="">${computer.name}</a></td>
+									<td>${computer.introduced}</td>
+									<td>${computer.discontinued}</td>
+									<td>${computer.companyName}</td>
+								</tr>
+							</c:forEach>
+						</tbody>
+					</table>
+				</c:when>
+				<c:otherwise>
+					<p>
+						Invalid page parameters
+					</p>
+				</c:otherwise>
+			</c:choose>
 		</div>
 	</section>
 
@@ -103,19 +112,21 @@
 					</c:otherwise>
 				</c:choose>
 				
-				<c:forEach var="i" begin="${pageId - 1}" end="${pageId + 1}"
-					step="1">
-					<c:if test="${(i ne 0) && (i ne pageCount + 1)}">
-						<c:choose>
-							<c:when test="${i eq pageId}">
-								<li class="page-item disabled"><a href="#">${i}</a></li>
-							</c:when>
-							<c:otherwise>
-								<li><a href="?page_id=${i}&page_size=${pageSize}">${i}</a></li>
-							</c:otherwise>
-						</c:choose>
-					</c:if>
-				</c:forEach>
+				<c:if test="${pageId - 1 >= 0}">
+					<c:forEach var="i" begin="${pageId - 1}" end="${pageId + 1}"
+						step="1">
+						<c:if test="${(i ne 0) && (i ne pageCount + 1)}">
+							<c:choose>
+								<c:when test="${i eq pageId}">
+									<li class="page-item disabled"><a href="#">${i}</a></li>
+								</c:when>
+								<c:otherwise>
+									<li><a href="?page_id=${i}&page_size=${pageSize}">${i}</a></li>
+								</c:otherwise>
+							</c:choose>
+						</c:if>
+					</c:forEach>
+				</c:if>
 				
 				<c:choose>
 					<c:when test="${pageId < pageCount}">

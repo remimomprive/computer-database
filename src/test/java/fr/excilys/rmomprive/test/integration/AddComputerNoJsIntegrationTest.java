@@ -12,6 +12,8 @@ import fr.excilys.rmomprive.persistence.Database;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Optional;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 

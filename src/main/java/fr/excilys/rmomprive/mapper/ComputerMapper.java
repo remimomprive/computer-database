@@ -21,7 +21,7 @@ public class ComputerMapper implements IMapper<Computer> {
   @Override
   public ComputerDto mapFromEntity(Computer computer) {
     return new ComputerDto(Optional.of(computer.getId()), computer.getName(),
-        parseDateToString(computer.getIntroduced()), parseDateToString(computer.getDiscontinued()),
+        Dates.parse(computer.getIntroduced()), Dates.parse(computer.getDiscontinued()),
         computer.getCompany() != null ? computer.getCompany().getId() : null,
         computer.getCompany() != null ? computer.getCompany().getName() : null);
   }
@@ -61,21 +61,6 @@ public class ComputerMapper implements IMapper<Computer> {
     }
 
     return computerBuilder.build();
-  }
-
-  /**
-   * Parse a date object for printing.
-   *
-   * @param date The date object
-   * @return The output string
-   */
-  private String parseDateToString(Date date) {
-    if (date != null) {
-      DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.FRENCH);
-      return format.format(date);
-    }
-
-    return "";
   }
 
   /**
