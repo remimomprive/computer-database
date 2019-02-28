@@ -61,12 +61,10 @@ public class DashboardServlet extends HttpServlet {
     int rowCount = 0;
     int pageCount = 0;
 
-    String search = "";
-    
-    try {
-      if (!"".equals(request.getParameter("search"))) {
-        search = request.getParameter("search");
+    String search = request.getParameter("search");
 
+    try {
+      if (search != null && !search.equals("")) {
         page = ComputerService.getInstance()
             .getByNameOrCompanyName(this.pageId, this.pageSize, search)
             .createDtoPage(ComputerMapper.getInstance());

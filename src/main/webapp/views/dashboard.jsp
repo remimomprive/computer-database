@@ -29,8 +29,9 @@
 			<h1 id="homeTitle">${computerCount} Computers found</h1>
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
-					<form id="searchForm" action="#" method="GET" class="form-inline">
-
+					<form id="searchForm" action="${pageContext.request.contextPath}/dashboard" method="GET" class="form-inline">
+						<input type="hidden" name="page_size" value="${pageSize}"/>
+						<input type="hidden" name="page_id" value="1"/>
 						<input type="search" id="searchbox" name="search"
 							class="form-control" placeholder="Search name" /> <input
 							type="submit" id="searchsubmit" value="Filter by name"
