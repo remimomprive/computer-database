@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.exception.InvalidPageSizeException;
+import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.pagination.Page;
 
 public interface IService<T> {
@@ -16,6 +17,13 @@ public interface IService<T> {
    * @throws SQLException if an error accessing the database happened
    */
   Optional<T> getById(long id) throws SQLException;
+  
+  /**
+   * @param name id The entity name.
+   * @return The companies if some match the name, an empty list if not
+   * @throws SQLException if an error accessing the database happened
+   */
+  public List<T> getByName(String name) throws SQLException;
 
   /**
    * @return A collection of all the entities in the table

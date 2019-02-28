@@ -7,6 +7,7 @@ import fr.excilys.rmomprive.ui.console.menu.MenuDeleteComputer;
 import fr.excilys.rmomprive.ui.console.menu.MenuChoice;
 import fr.excilys.rmomprive.ui.console.menu.MenuCreateComputer;
 import fr.excilys.rmomprive.ui.console.menu.MenuDisplayComputerDetails;
+import fr.excilys.rmomprive.ui.console.menu.MenuFindCompany;
 import fr.excilys.rmomprive.ui.console.menu.MenuListCompanies;
 import fr.excilys.rmomprive.ui.console.menu.MenuListComputers;
 import fr.excilys.rmomprive.ui.console.menu.MenuListPageComputers;
@@ -38,6 +39,7 @@ public class Console {
     System.out.printf("%d - Create a computer\n", MenuChoice.CREATE_COMPUTER.getId());
     System.out.printf("%d - Update a computer\n", MenuChoice.UPDATE_COMPUTER.getId());
     System.out.printf("%d - Delete a computer\n", MenuChoice.DELETE_COMPUTER.getId());
+    System.out.printf("%d - Find a company by name\n", MenuChoice.FIND_COMPANY_BY_NAME.getId());
     System.out.printf("%d - Exit\n", MenuChoice.EXIT.getId());
     System.out.println("=====");
   }
@@ -111,7 +113,12 @@ public class Console {
       case DELETE_COMPUTER:
         MenuDeleteComputer.getInstance().show();
         break;
-
+      
+      // Find a company by its name
+      case FIND_COMPANY_BY_NAME:
+        MenuFindCompany.getInstance().show();
+        break;
+        
       // Exit the program
       case EXIT:
         System.out.println("Bye");

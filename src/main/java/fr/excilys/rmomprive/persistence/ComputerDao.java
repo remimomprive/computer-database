@@ -20,7 +20,10 @@ import fr.excilys.rmomprive.pagination.Page;
 
 public class ComputerDao implements IDao<Computer> {
   private static final String SELECT_BY_ID_QUERY = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON company.id = company_id  WHERE computer.id = ?";
-  private static final String SELECT_ALL_QUERY = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON company.id = company_id";
+  private static final String SELECT_BY_NAME_QUERY = "SELECT id, name FROM computer WHERE name LIKE ?";
+  private static final String SELECT_BY_NAME_OR_COMPANY_QUERY = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON company.id = company_id WHERE computer.name LIKE ? OR company.name LIKE ? "
+      + "LIMIT ? OFFSET ?";
+  private static final String SELECT_ALL_QUERY = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, company.id, company.name FROM computer LEFT JOIN company ON company.id = company_id";
   private static final String DELETE_QUERY = "DELETE FROM computer where id = ?";
   private static final String DELETE_LIST_QUERY = "DELETE FROM computer where id IN (?)";
   private static final String INSERT_QUERY = "INSERT INTO computer(name, introduced, discontinued, company_id) VALUES(?, ?, ?, ?)";
@@ -28,6 +31,7 @@ public class ComputerDao implements IDao<Computer> {
   private static final String CHECK_EXISTENCE_QUERY = "SELECT COUNT(id) AS count FROM computer WHERE id = ?";
   private static final String UPDATE_QUERY = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?";
   private static final String COUNT_QUERY = "SELECT COUNT(id) AS count FROM computer";
+  private static final String COUNT_QUERY_SEARCH = "SELECT COUNT(computer.id) AS count FROM computer LEFT JOIN company ON company.id = company_id WHERE computer.name LIKE ? OR company.name LIKE ?";
   private static final String SELECT_PAGE_QUERY = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON company.id = company_id LIMIT ? OFFSET ?";
 
   private static final String FIELD_ID = "computer.id";
@@ -86,6 +90,25 @@ public class ComputerDao implements IDao<Computer> {
     }
 
     return Optional.empty();
+  }
+
+  @Override
+  public List<Computer> getByName(String name) throws SQLException {
+    List<Computer> computers = new ArrayList<>();
+
+    try (Connection connection = Database.getConnection()) {
+      name = "%" + name + "%";
+
+      PreparedStatement statement = connection.prepareStatement(SELECT_BY_NAME_QUERY);
+      statement.setString(1, name);
+      ResultSet resultSet = statement.executeQuery();
+
+      while (resultSet.next()) {
+        computers.add(createFromResultSet(resultSet));
+      }
+    }
+
+    return computers;
   }
 
   @Override
@@ -173,7 +196,7 @@ public class ComputerDao implements IDao<Computer> {
         idStringBuilder.append("?, ");
       }
       idStringBuilder.append("?");
-      
+
       // Create the query string
       String deleteListQueryWithParams = DELETE_LIST_QUERY.replace("?", idStringBuilder.toString());
 
@@ -220,44 +243,87 @@ public class ComputerDao implements IDao<Computer> {
 
     return count;
   }
+  
+  public int getRowCount(String search) throws SQLException {
+    int count = -1;
+
+    try (Connection connection = Database.getConnection()) {
+      PreparedStatement statement = connection.prepareStatement(COUNT_QUERY_SEARCH);
+      search = "%" + search + "%";
+      statement.setString(1, search);
+      statement.setString(2, search);
+      ResultSet resultSet = statement.executeQuery();
+
+      while (resultSet.next()) {
+        count = resultSet.getInt(FIELD_COUNT);
+      }
+    }
+
+    return count;
+  }
 
   @Override
   public int getPageCount(int pageSize) throws SQLException {
     return (int) Math.ceil((1.0 * this.getRowCount()) / pageSize);
   }
+  
+  public int getPageCount(int pageSize, String search) throws SQLException {
+    return (int) Math.ceil((1.0 * this.getRowCount(search)) / pageSize);
+  }
+
+  private Page<Computer> getPage(Page page, String query, String[] parameters)
+      throws SQLException, InvalidPageSizeException, InvalidPageIdException {
+    if (page != null) {
+      // Compute the page count
+      int pageCount = getPageCount(page.getPageSize());
+
+      // The page size should not be < 1
+      if (page.getPageSize() <= 0) {
+        throw new InvalidPageSizeException();
+      } else if (page.getPageId() <= 0 || page.getPageId() > pageCount) { // The page id is between
+                                                                          // 1 and pageCount (a
+        // computed value)
+        throw new InvalidPageIdException();
+      } else {
+        int offset = (page.getPageId() - 1) * page.getPageSize();
+
+        List<Computer> computers = new ArrayList<>();
+
+        try (Connection connection = Database.getConnection()) {
+          // Retrieve the page content
+          PreparedStatement statement = connection.prepareStatement(query);
+          for (int i = 1; i <= parameters.length; i++) {
+            statement.setString(i, parameters[i - 1]);
+          }
+          statement.setInt(parameters.length + 1, page.getPageSize());
+          statement.setInt(parameters.length + 2, offset);
+          ResultSet resultSet = statement.executeQuery();
+
+          while (resultSet.next()) {
+            computers.add(createFromResultSet(resultSet));
+          }
+        }
+
+        // Return the page
+        return new Page<Computer>(computers, page.getPageId(), page.getPageSize(),
+            page.getPageId() > 1, page.getPageId() < pageCount);
+      }
+    }
+
+    return new Page<Computer>();
+  }
 
   @Override
-  public Page<Computer> getPage(int pageId, int pageSize)
+  public Page<Computer> getPage(Page page)
       throws InvalidPageIdException, InvalidPageSizeException, SQLException {
-    // Compute the page count
-    int pageCount = getPageCount(pageSize);
+    return this.getPage(page, SELECT_PAGE_QUERY, new String[] {});
+  }
 
-    // The page size should not be < 1
-    if (pageSize <= 0) {
-      throw new InvalidPageSizeException();
-    } else if (pageId <= 0 || pageId > pageCount) { // The page id is between 1 and pageCount (a
-                                                    // computed value)
-      throw new InvalidPageIdException();
-    } else {
-      int offset = (pageId - 1) * pageSize;
-
-      List<Computer> computers = new ArrayList<>();
-
-      try (Connection connection = Database.getConnection()) {
-        // Retrieve the page content
-        PreparedStatement statement = connection.prepareStatement(SELECT_PAGE_QUERY);
-        statement.setInt(1, pageSize);
-        statement.setInt(2, offset);
-        ResultSet resultSet = statement.executeQuery();
-
-        while (resultSet.next()) {
-          computers.add(createFromResultSet(resultSet));
-        }
-      }
-
-      // Return the page
-      return new Page<Computer>(computers, pageId, pageId > 1, pageId < pageCount);
-    }
+  public Page<Computer> getByNameOrCompanyName(Page page, String name)
+      throws SQLException, InvalidPageSizeException, InvalidPageIdException {
+    name = "%" + name + "%";
+    
+    return this.getPage(page, SELECT_BY_NAME_OR_COMPANY_QUERY, new String[] {name, name});
   }
 
   /**

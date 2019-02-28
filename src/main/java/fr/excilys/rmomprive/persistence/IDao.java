@@ -18,6 +18,13 @@ public interface IDao<T> {
   Optional<T> getById(long id) throws SQLException;
 
   /**
+   * @param name id The entity name.
+   * @return The companies if some match the name, an empty list if not
+   * @throws SQLException if an error accessing the database happened
+   */
+  public List<T> getByName(String name) throws SQLException;
+  
+  /**
    * @return A collection of all the entities in the table
    * @throws SQLException if an error accessing the database happened
    */
@@ -86,13 +93,12 @@ public interface IDao<T> {
   int getPageCount(int pageSize) throws SQLException;
 
   /**
-   * @param pageId The page id
-   * @param pageSize The page size
+   * @param page The page containing the parameters (size and number)
    * @return The page we asked for (containing a list of entities)
    * @throws InvalidPageIdException if the page id is not valid (<1 or too large)
    * @throws InvalidPageSizeException (if the page size is not valid (<1)
    * @throws SQLException if an error accessing the database happened
    */
-  Page<T> getPage(int pageId, int pageSize)
+  Page<T> getPage(Page page)
       throws InvalidPageIdException, InvalidPageSizeException, SQLException;
 }

@@ -9,19 +9,33 @@ import fr.excilys.rmomprive.mapper.IMapper;
 public class Page<T> {
   private List<T> content;
   private int pageId;
+  private int pageSize;
   private boolean previous;
   private boolean next;
 
+  public Page() {
+    this.content = new ArrayList<>();
+  }
+  
+  public Page(final int pageId, final int pageSize) {
+    this.content = new ArrayList<>();
+    this.pageId = pageId;
+    this.pageSize = pageSize;
+  }
+  
   /**
    * Constructs a Page object with the parameters.
+   * 
    * @param content  The page content (generally, a list of entities)
-   * @param pageId   (the current page id)
+   * @param pageId   The current page id
+   * @param pageSize The page size
    * @param previous true if the page is not the first in the page list, false if not
    * @param next     true if the page is not the last in the page list, false if not
    */
-  public Page(final List<T> content, final int pageId, final boolean previous, final boolean next) {
+  public Page(final List<T> content, final int pageId, final int pageSize, final boolean previous, final boolean next) {
     this.content = content;
     this.pageId = pageId;
+    this.pageSize = pageSize;
     this.previous = previous;
     this.next = next;
   }
@@ -42,6 +56,13 @@ public class Page<T> {
     this.pageId = pageId;
   }
 
+  public final int getPageSize() {
+    return pageSize;
+  }
+
+  public final void setPageSize(final int pageSize) {
+    this.pageSize = pageSize;
+  }
   public final boolean isPrevious() {
     return previous;
   }
@@ -60,12 +81,13 @@ public class Page<T> {
 
   @Override
   public String toString() {
-    return "Page [content=" + content + ", pageId=" + pageId + ", previous=" + previous + ", next="
+    return "Page [content=" + content + ", pageId=" + pageId + ", pageSize=" + pageSize + ", previous=" + previous + ", next="
         + next + "]";
   }
 
   /**
    * Create the dto page from a entity page.
+   * 
    * @param mapper The entity mapper
    * @return The page
    */
@@ -75,6 +97,6 @@ public class Page<T> {
       data.add(mapper.mapFromEntity(entity));
     }
 
-    return new Page<IDto<T>>(data, pageId, previous, next);
+    return new Page<IDto<T>>(data, pageId, pageSize, previous, next);
   }
 }

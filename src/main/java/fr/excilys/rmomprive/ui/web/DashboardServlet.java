@@ -57,21 +57,41 @@ public class DashboardServlet extends HttpServlet {
       }
     }
 
+    Page<IDto<Computer>> page = null;
+    int rowCount = 0;
+    int pageCount = 0;
+
+    String search = "";
+    
     try {
-      Page<IDto<Computer>> page = ComputerService.getInstance().getPage(this.pageId, this.pageSize)
-          .createDtoPage(ComputerMapper.getInstance());
-      request.setAttribute("computers", page);
-      request.setAttribute("computerCount", ComputerService.getInstance().getRowCount());
-      request.setAttribute("pageSize", pageSize);
-      request.setAttribute("pageId", pageId);
-      request.setAttribute("pageCount", getPageCount());
-    } catch (SQLException e) {
-      e.printStackTrace();
+      if (!"".equals(request.getParameter("search"))) {
+        search = request.getParameter("search");
+
+        page = ComputerService.getInstance()
+            .getByNameOrCompanyName(this.pageId, this.pageSize, search)
+            .createDtoPage(ComputerMapper.getInstance());
+        rowCount = ComputerService.getInstance().getRowCount(search);
+        pageCount = getPageCount(search);
+      } else {
+        page = ComputerService.getInstance().getPage(this.pageId, this.pageSize)
+            .createDtoPage(ComputerMapper.getInstance());
+        rowCount = ComputerService.getInstance().getRowCount();
+        pageCount = getPageCount();
+      }
     } catch (InvalidPageIdException e) {
       e.printStackTrace();
     } catch (InvalidPageSizeException e) {
       e.printStackTrace();
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
+
+    request.setAttribute("computers", page);
+    request.setAttribute("computerCount", rowCount);
+    request.setAttribute("pageSize", pageSize);
+    request.setAttribute("pageId", pageId);
+    request.setAttribute("pageCount", pageCount);
+    request.setAttribute("search", search);
 
     RequestDispatcher dispatcher = request.getRequestDispatcher("/views/dashboard.jsp");
     dispatcher.forward(request, response);
@@ -93,6 +113,10 @@ public class DashboardServlet extends HttpServlet {
     } catch (SQLException e) {
       logger.error("An error happened while trying to delete computers {}", idsString);
     }
+  }
+
+  public int getPageCount(String search) throws SQLException {
+    return ComputerService.getInstance().getPageCount(pageSize, search);
   }
 
   /**

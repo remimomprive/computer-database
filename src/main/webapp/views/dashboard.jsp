@@ -51,67 +51,61 @@
 		</form>
 
 		<div class="container" style="margin-top: 10px;">
-			<c:choose>
-				<c:when test="${computers.content.size() > 0}">
-					<table class="table table-striped table-bordered">
-						<thead>
-							<tr>
-								<!-- Variable declarations for passing labels as parameters -->
-								<!-- Table header for Computer Name -->
-		
-								<th class="editMode" style="width: 60px; height: 22px;"><input
-									type="checkbox" id="selectall" /> <span
-									style="vertical-align: top;"> - <a href="#"
-										id="deleteSelected" onclick="$.fn.deleteSelected();"> <i
-											class="fa fa-trash-o fa-lg"></i>
-									</a>
-								</span></th>
-								<th>Computer name</th>
-								<th>Introduced date</th>
-								<!-- Table header for Discontinued Date -->
-								<th>Discontinued date</th>
-								<!-- Table header for Company -->
-								<th>Company</th>
-		
-							</tr>
-						</thead>
-						<!-- Browse attribute computers -->
-						<tbody id="results">
-							<c:forEach items="${computers.content}" var="computer">
-								<tr>
-									<td class="editMode"><input type="checkbox" name="cb"
-										class="cb" value="${computer.id.get()}"></td>
-									<td><a href="editComputer?computerId=${computer.id.get()}"
-										onclick="">${computer.name}</a></td>
-									<td>${computer.introduced}</td>
-									<td>${computer.discontinued}</td>
-									<td>${computer.companyName}</td>
-								</tr>
-							</c:forEach>
-						</tbody>
-					</table>
-				</c:when>
-				<c:otherwise>
-					<p>
-						Invalid page parameters
-					</p>
-				</c:otherwise>
-			</c:choose>
+
+			<table class="table table-striped table-bordered">
+				<thead>
+					<tr>
+						<!-- Variable declarations for passing labels as parameters -->
+						<!-- Table header for Computer Name -->
+
+						<th class="editMode" style="width: 60px; height: 22px;"><input
+							type="checkbox" id="selectall" /> <span
+							style="vertical-align: top;"> - <a href="#"
+								id="deleteSelected" onclick="$.fn.deleteSelected();"> <i
+									class="fa fa-trash-o fa-lg"></i>
+							</a>
+						</span></th>
+						<th>Computer name</th>
+						<th>Introduced date</th>
+						<!-- Table header for Discontinued Date -->
+						<th>Discontinued date</th>
+						<!-- Table header for Company -->
+						<th>Company</th>
+
+					</tr>
+				</thead>
+				<!-- Browse attribute computers -->
+				<tbody id="results">
+					<c:forEach items="${computers.content}" var="computer">
+						<tr>
+							<td class="editMode"><input type="checkbox" name="cb"
+								class="cb" value="${computer.id.get()}"></td>
+							<td><a href="editComputer?computerId=${computer.id.get()}"
+								onclick="">${computer.name}</a></td>
+							<td>${computer.introduced}</td>
+							<td>${computer.discontinued}</td>
+							<td>${computer.companyName}</td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
 		</div>
 	</section>
 
 	<footer class="navbar-fixed-bottom">
 		<div class="container text-center">
-			<ul class="pagination">				
+			<ul class="pagination">
 				<c:choose>
 					<c:when test="${pageId > 1}">
-						<li><a href="?page_id=1" aria-label="Previous"> <span aria-hidden="true">&laquo;</span></a></li>
+						<li><a href="?page_id=1&search=${search}" aria-label="Previous"> <span
+								aria-hidden="true">&laquo;</span></a></li>
 					</c:when>
 					<c:otherwise>
-						<li class="page-item disabled"><span class="page-item" aria-hidden="true">&laquo;</span></li>
+						<li class="page-item disabled"><span class="page-item"
+							aria-hidden="true">&laquo;</span></li>
 					</c:otherwise>
 				</c:choose>
-				
+
 				<c:if test="${pageId - 1 >= 0}">
 					<c:forEach var="i" begin="${pageId - 1}" end="${pageId + 1}"
 						step="1">
@@ -121,19 +115,21 @@
 									<li class="page-item disabled"><a href="#">${i}</a></li>
 								</c:when>
 								<c:otherwise>
-									<li><a href="?page_id=${i}&page_size=${pageSize}">${i}</a></li>
+									<li><a href="?page_id=${i}&page_size=${pageSize}&search=${search}">${i}</a></li>
 								</c:otherwise>
 							</c:choose>
 						</c:if>
 					</c:forEach>
 				</c:if>
-				
+
 				<c:choose>
 					<c:when test="${pageId < pageCount}">
-						<li><a href="?page_id=${pageCount}" aria-label="Next"> <span aria-hidden="true">&raquo;</span></a></li>
+						<li><a href="?page_id=${pageCount}&search=${search}" aria-label="Next"> <span
+								aria-hidden="true">&raquo;</span></a></li>
 					</c:when>
 					<c:otherwise>
-						<li class="page-item disabled"><span aria-hidden="true" class="page-link">&raquo;</span></li>
+						<li class="page-item disabled"><span aria-hidden="true"
+							class="page-link">&raquo;</span></li>
 					</c:otherwise>
 				</c:choose>
 			</ul>
@@ -143,7 +139,7 @@
 				<c:forTokens items="${pageSizeValues}" var="pageSizeValue"
 					delims=",">
 					<a role="button" type="button" class="btn btn-default"
-						href="http://localhost:8080/computer-database/dashboard?page_id=1&page_size=${pageSizeValue}">
+						href="http://localhost:8080/computer-database/dashboard?page_id=1&page_size=${pageSizeValue}&search=${search}">
 						${pageSizeValue} </a>
 				</c:forTokens>
 			</div>

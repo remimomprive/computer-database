@@ -17,7 +17,7 @@ import fr.excilys.rmomprive.pagination.Page;
 
 public class CompanyDao implements IDao<Company> {
   private static final String SELECT_BY_ID_QUERY = "SELECT id, name FROM company WHERE ID = ?";
-  private static final String SELECT_BY_NAME_QUERY = "SELECT id, name FROM company WHERE name = ?";
+  private static final String SELECT_BY_NAME_QUERY = "SELECT id, name FROM company WHERE name LIKE ?";
   private static final String SELECT_ALL_QUERY = "SELECT id, name FROM company";
   private static final String CHECK_EXISTENCE_QUERY = "SELECT COUNT(id) AS count FROM company WHERE id = ?";
 
@@ -63,23 +63,23 @@ public class CompanyDao implements IDao<Company> {
     return Optional.empty();
   }
 
-  /**
-   * @param name The company name.
-   * @return The company if a company with the specified name exists, an empty object if not
-   * @throws SQLException if an error accessing the database happened
-   */
-  public Optional<Company> getByName(final String name) throws SQLException {
+  @Override
+  public List<Company> getByName(String name) throws SQLException {
+    List<Company> companies = new ArrayList<>();
+    
     try (Connection connection = Database.getConnection()) {
+      name = "%" + name + "%";
+      
       PreparedStatement statement = connection.prepareStatement(SELECT_BY_NAME_QUERY);
       statement.setString(1, name);
       ResultSet resultSet = statement.executeQuery();
 
       while (resultSet.next()) {
-        return Optional.of(createFromResultSet(resultSet));
+        companies.add(createFromResultSet(resultSet));
       }
     }
 
-    return Optional.empty();
+    return companies;
   }
 
   @Override
@@ -158,7 +158,7 @@ public class CompanyDao implements IDao<Company> {
   }
 
   @Override
-  public Page<Company> getPage(int pageId, int pageSize) throws InvalidPageIdException {
+  public Page<Company> getPage(Page page) throws InvalidPageIdException {
     throw new ImpossibleActionException();
   }
 

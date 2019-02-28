@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import fr.excilys.rmomprive.dto.IDto;
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.exception.InvalidPageSizeException;
 import fr.excilys.rmomprive.model.Company;
@@ -28,6 +29,11 @@ public class ComputerService implements IService<Computer> {
   @Override
   public Optional<Computer> getById(long id) throws SQLException {
     return this.getComputerDao().getById(id);
+  }
+
+  @Override
+  public List<Computer> getByName(String name) throws SQLException {
+    return this.getComputerDao().getByName(name);
   }
 
   /**
@@ -81,7 +87,7 @@ public class ComputerService implements IService<Computer> {
   public boolean deleteById(long id) throws SQLException {
     return this.getComputerDao().deleteById(id);
   }
-  
+
   @Override
   public boolean deleteByIds(List<Long> ids) throws SQLException {
     return this.getComputerDao().deleteByIds(ids);
@@ -97,15 +103,28 @@ public class ComputerService implements IService<Computer> {
     return this.getComputerDao().getRowCount();
   }
 
+  public int getRowCount(String search) throws SQLException {
+    return this.getComputerDao().getRowCount(search);
+  }
+
   @Override
   public int getPageCount(int pageSize) throws SQLException {
     return this.getComputerDao().getPageCount(pageSize);
+  }
+  
+  public int getPageCount(int pageSize, String search) throws SQLException {
+    return this.getComputerDao().getPageCount(pageSize, search);
   }
 
   @Override
   public Page<Computer> getPage(int pageId, int pageSize)
       throws InvalidPageIdException, InvalidPageSizeException, SQLException {
-    return this.getComputerDao().getPage(pageId, pageSize);
+    return this.getComputerDao().getPage(new Page<Computer>(pageId, pageSize));
+  }
+
+  public Page<Computer> getByNameOrCompanyName(int pageId, int pageSize, String name)
+      throws SQLException, InvalidPageSizeException, InvalidPageIdException {
+    return this.getComputerDao().getByNameOrCompanyName(new Page<Computer>(pageId, pageSize), name);
   }
 
   /**

@@ -26,12 +26,8 @@ public class CompanyService implements IService<Company> {
     return this.getCompanyDao().getById(id);
   }
 
-  /**
-   * @param name The company name.
-   * @return The company if a company with the specified name exists, an empty object if not
-   * @throws SQLException if an error accessing the database happened
-   */
-  public Optional<Company> getByName(String name) throws SQLException {
+  @Override
+  public List<Company> getByName(String name) throws SQLException {
     return this.getCompanyDao().getByName(name);
   }
 
@@ -87,7 +83,7 @@ public class CompanyService implements IService<Company> {
 
   @Override
   public Page<Company> getPage(int pageId, int pageSize) throws InvalidPageIdException {
-    return this.getCompanyDao().getPage(pageId, pageSize);
+    return this.getCompanyDao().getPage(new Page<Company>(pageId, pageSize));
   }
 
   /**
