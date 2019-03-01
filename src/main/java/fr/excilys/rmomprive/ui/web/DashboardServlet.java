@@ -28,8 +28,11 @@ import fr.excilys.rmomprive.service.ComputerService;
 public class DashboardServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
 
-  private int pageSize = 10;
-  private int pageId = 1;
+  private static int DEFAULT_PAGE_SIZE = 10;
+  private static int DEFAULT_PAGE_ID = 1;
+  
+  private int pageSize = DEFAULT_PAGE_SIZE;
+  private int pageId = DEFAULT_PAGE_ID;
   private Logger logger;
 
   public void init(ServletConfig config) throws ServletException {
@@ -46,6 +49,8 @@ public class DashboardServlet extends HttpServlet {
       } catch (NumberFormatException e) {
         e.printStackTrace();
       }
+    } else {
+      pageSize = DEFAULT_PAGE_SIZE;
     }
 
     String pageIdParam = request.getParameter("page_id");
@@ -55,6 +60,8 @@ public class DashboardServlet extends HttpServlet {
       } catch (NumberFormatException e) {
         e.printStackTrace();
       }
+    } else {
+      pageId = DEFAULT_PAGE_ID;
     }
 
     Page<IDto<Computer>> page = null;
@@ -64,18 +71,14 @@ public class DashboardServlet extends HttpServlet {
     String search = request.getParameter("search");
 
     try {
-      if (search != null && !search.equals("")) {
-        page = ComputerService.getInstance()
-            .getByNameOrCompanyName(this.pageId, this.pageSize, search)
-            .createDtoPage(ComputerMapper.getInstance());
-        rowCount = ComputerService.getInstance().getRowCount(search);
-        pageCount = getPageCount(search);
-      } else {
-        page = ComputerService.getInstance().getPage(this.pageId, this.pageSize)
-            .createDtoPage(ComputerMapper.getInstance());
-        rowCount = ComputerService.getInstance().getRowCount();
-        pageCount = getPageCount();
+      if (search == null || search.equals("")) {
+        search = "";
       }
+      page = ComputerService.getInstance()
+          .getByNameOrCompanyName(this.pageId, this.pageSize, search)
+          .createDtoPage(ComputerMapper.getInstance());
+      rowCount = ComputerService.getInstance().getRowCount(search);
+      pageCount = getPageCount(search);
     } catch (InvalidPageIdException e) {
       e.printStackTrace();
     } catch (InvalidPageSizeException e) {
