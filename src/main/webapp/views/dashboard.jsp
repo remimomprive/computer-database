@@ -165,7 +165,7 @@
 				<c:forTokens items="${pageSizeValues}" var="pageSizeValue"
 					delims=",">
 					<a role="button" type="button" class="btn btn-default"
-						href="http://localhost:8080/computer-database/dashboard?page_id=1&page_size=${pageSizeValue}&search=${search}}&order_by=${orderBy}&order_direction=${orderDirection}">
+						href="http://localhost:8080/computer-database/dashboard?page_id=1&page_size=${pageSizeValue}&search=${search}&order_by=${orderBy}&order_direction=${orderDirection}">
 						${pageSizeValue} </a>
 				</c:forTokens>
 			</div>
