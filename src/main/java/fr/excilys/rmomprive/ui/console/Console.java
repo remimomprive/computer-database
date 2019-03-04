@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import fr.excilys.rmomprive.ui.console.menu.MenuDeleteComputer;
 import fr.excilys.rmomprive.ui.console.menu.MenuChoice;
 import fr.excilys.rmomprive.ui.console.menu.MenuCreateComputer;
+import fr.excilys.rmomprive.ui.console.menu.MenuDeleteCompany;
 import fr.excilys.rmomprive.ui.console.menu.MenuDisplayComputerDetails;
 import fr.excilys.rmomprive.ui.console.menu.MenuFindCompany;
 import fr.excilys.rmomprive.ui.console.menu.MenuListCompanies;
@@ -40,12 +41,14 @@ public class Console {
     System.out.printf("%d - Update a computer\n", MenuChoice.UPDATE_COMPUTER.getId());
     System.out.printf("%d - Delete a computer\n", MenuChoice.DELETE_COMPUTER.getId());
     System.out.printf("%d - Find a company by name\n", MenuChoice.FIND_COMPANY_BY_NAME.getId());
+    System.out.printf("%d - Delete a company by its id\n", MenuChoice.DELETE_COMPANY_BY_ID.getId());
     System.out.printf("%d - Exit\n", MenuChoice.EXIT.getId());
     System.out.println("=====");
   }
 
   /**
    * Asks a choice until its value is correct.
+   * 
    * @return The value of the choice
    */
   private static MenuChoice askChoice() {
@@ -113,12 +116,17 @@ public class Console {
       case DELETE_COMPUTER:
         MenuDeleteComputer.getInstance().show();
         break;
-      
+
       // Find a company by its name
       case FIND_COMPANY_BY_NAME:
         MenuFindCompany.getInstance().show();
         break;
-        
+
+      // Delete a company by its company
+      case DELETE_COMPANY_BY_ID:
+        MenuDeleteCompany.getInstance().show();
+        break;
+
       // Exit the program
       case EXIT:
         System.out.println("Bye");

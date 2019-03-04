@@ -52,7 +52,7 @@ public class CompanyService implements IService<Company> {
   }
 
   @Override
-  public boolean delete(Company object) {
+  public boolean delete(Company object) throws SQLException {
     return this.getCompanyDao().delete(object);
   }
 

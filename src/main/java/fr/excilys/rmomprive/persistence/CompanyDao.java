@@ -20,6 +20,8 @@ public class CompanyDao implements IDao<Company> {
   private static final String SELECT_BY_NAME_QUERY = "SELECT id, name FROM company WHERE name LIKE ?";
   private static final String SELECT_ALL_QUERY = "SELECT id, name FROM company";
   private static final String CHECK_EXISTENCE_QUERY = "SELECT COUNT(id) AS count FROM company WHERE id = ?";
+  private static final String DELETE_COMPANY_BY_ID_QUERY = "DELETE FROM company WHERE company.id = ?";
+  private static final String DELETE_COMPUTERS_BY_COMPANY_ID_QUERY = "DELETE FROM computer WHERE computer.company_id = ?";
 
   private static final String FIELD_ID = "id";
   private static final String FIELD_NAME = "name";
@@ -114,13 +116,29 @@ public class CompanyDao implements IDao<Company> {
   }
 
   @Override
-  public boolean delete(Company object) {
-    throw new ImpossibleActionException();
+  public boolean delete(Company object) throws SQLException {
+    return deleteById(object.getId());
   }
 
   @Override
-  public boolean deleteById(long id) {
-    throw new ImpossibleActionException();
+  public boolean deleteById(long id) throws SQLException {
+    try (Connection connection = Database.getConnection()) {
+      connection.setAutoCommit(false);
+      
+      PreparedStatement deleteComputers = connection.prepareStatement(DELETE_COMPUTERS_BY_COMPANY_ID_QUERY);
+      deleteComputers.setLong(1, id);
+      deleteComputers.executeUpdate();
+      
+      PreparedStatement deleteCompany = connection.prepareStatement(DELETE_COMPANY_BY_ID_QUERY);
+      deleteCompany.setLong(1, id);
+      deleteCompany.executeUpdate();
+      
+      connection.commit();
+      
+      connection.setAutoCommit(true);
+      
+      return true;
+    }
   }
   
   @Override
