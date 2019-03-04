@@ -19,55 +19,82 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<checkstyle.config.location>checkstyle.xml</checkstyle.config.location>
+		
+		<!-- Depencencies -->
+	  	<junit.version>4.11</junit.version>
+	  	<mysql.connector.version>8.0.15</mysql.connector.version>
+	  	<slf4j.version>1.8.0-beta2</slf4j.version>
+	  	<mockito.version>2.24.0</mockito.version>
+	  	<servlet.version>3.1.0</servlet.version>
+	  	<jstl.version>1.2</jstl.version>
+	  	<selenium.version>2.52.0</selenium.version>
+	  	<hikari-cp.version>3.3.1</hikari-cp.version>
+	  	
+	  	<!-- Plugins -->
+	  	<tomcat.version>2.2</tomcat.version>
+	  	<maven-failsafe.version>2.22.1</maven-failsafe.version>
+	  	<maven-surefire.version>2.22.1</maven-surefire.version>
+	  	
+	  	<!-- Phase Pugins -->
+	  	<maven-clean.version>3.1.0</maven-clean.version>
+		<maven-resources.version>3.0.2</maven-resources.version>
+		<maven-compiler.version>3.8.0</maven-compiler.version>
+		<maven-surefire.version>2.22.1</maven-surefire.version>
+		<maven-jar.version>3.0.2</maven-jar.version>
+		<maven-install.version>2.5.2</maven-install.version>
+		<maven-deploy.version>2.8.2</maven-deploy.version>
+		<maven-site.version>3.7.1</maven-site.version>
+		<maven-project-info.version>3.0.0</maven-project-info.version>
+		<maven-checkstyle.version>3.0.0</maven-checkstyle.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.11</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.15</version>
+			<version>${mysql.connector.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-jdk14</artifactId>
-			<version>1.8.0-beta2</version>
+			<version>${slf4j.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>2.24.0</version>
+			<version>${mockito.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
+			<version>${servlet.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
-			<version>1.2</version>
+			<version>${jstl.version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.seleniumhq.selenium</groupId>
 		    <artifactId>selenium-java</artifactId>
-		    <version>2.52.0</version>
+		    <version>${selenium.version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.seleniumhq.selenium</groupId>
 		    <artifactId>selenium-htmlunit-driver</artifactId>
-		    <version>2.52.0</version>
+		    <version>${selenium.version}</version>
 		</dependency>
 	    <dependency>
 	        <groupId>com.zaxxer</groupId>
 	        <artifactId>HikariCP</artifactId>
-	        <version>3.3.1</version>
+	        <version>${hikari-cp.version}</version>
     	</dependency>
 	</dependencies>
 
@@ -76,7 +103,7 @@
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
-				<version>2.2</version>
+				<version>${tomcat.version}</version>
 				<configuration>
 					<port>8080</port>
 					<path>/computer-database</path>
@@ -105,7 +132,7 @@
 			<plugin>
 			  <groupId>org.apache.maven.plugins</groupId>
 			  <artifactId>maven-failsafe-plugin</artifactId>
-			  <version>2.22.1</version>
+			  <version>${maven-failsafe.version}</version>
 			  <configuration>
 			    <includes>
 			      <include>integration/*</include>
@@ -123,7 +150,7 @@
 			<plugin>
 			  <groupId>org.apache.maven.plugins</groupId>
 			  <artifactId>maven-surefire-plugin</artifactId>
-			  <version>2.22.1</version>
+			  <version>${maven-surefire.version}</version>
 			  <configuration>
 			    <excludes>
 			      <exclude>integration/*</exclude>
@@ -159,46 +186,46 @@
 				<!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
 				<plugin>
 					<artifactId>maven-clean-plugin</artifactId>
-					<version>3.1.0</version>
+					<version>${maven-clean.version}</version>
 				</plugin>
 				<!-- default lifecycle, jar packaging: see https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
 				<plugin>
 					<artifactId>maven-resources-plugin</artifactId>
-					<version>3.0.2</version>
+					<version>${maven-resources.version}</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.8.0</version>
+					<version>${maven-compiler.version}</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.22.1</version>
+					<version>${maven-surefire.version}</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>3.0.2</version>
+					<version>${maven-jar.version}</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-install-plugin</artifactId>
-					<version>2.5.2</version>
+					<version>${maven-install.version}</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-deploy-plugin</artifactId>
-					<version>2.8.2</version>
+					<version>${maven-deploy.version}</version>
 				</plugin>
 				<!-- site lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle -->
 				<plugin>
 					<artifactId>maven-site-plugin</artifactId>
-					<version>3.7.1</version>
+					<version>${maven-site.version}</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-project-info-reports-plugin</artifactId>
-					<version>3.0.0</version>
+					<version>${maven-project-info.version}</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-checkstyle-plugin</artifactId>
-					<version>3.0.0</version>
+					<version>${maven-checkstyle.version}</version>
 					<executions>
 						<execution>
 							<id>validate</id>
