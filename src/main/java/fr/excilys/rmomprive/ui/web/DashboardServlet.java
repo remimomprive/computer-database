@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
 
 import fr.excilys.rmomprive.dto.IDto;
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
@@ -24,15 +23,22 @@ import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.pagination.Page;
 import fr.excilys.rmomprive.service.ComputerService;
 
+import org.slf4j.Logger;
+
 @WebServlet("/dashboard")
 public class DashboardServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
 
   private static int DEFAULT_PAGE_SIZE = 10;
   private static int DEFAULT_PAGE_ID = 1;
-  
   private int pageSize = DEFAULT_PAGE_SIZE;
   private int pageId = DEFAULT_PAGE_ID;
+  
+  private static String DEFAULT_ORDER_BY = "name";
+  private static String DEFAULT_ORDER_DIRECTION = "asc";
+  private String orderBy = DEFAULT_ORDER_BY;
+  private String orderDirection = DEFAULT_ORDER_DIRECTION;
+  
   private Logger logger;
 
   public void init(ServletConfig config) throws ServletException {
@@ -63,6 +69,20 @@ public class DashboardServlet extends HttpServlet {
     } else {
       pageId = DEFAULT_PAGE_ID;
     }
+    
+    String orderByParam = request.getParameter("order_by");
+    if (orderByParam != null) {
+      orderBy = orderByParam;
+    } else {
+      orderBy = DEFAULT_ORDER_BY;
+    }
+    
+    String orderDirectionParam = request.getParameter("order_direction");
+    if (orderDirectionParam != null) {
+      orderDirection = orderDirectionParam;
+    } else {
+      orderDirection = DEFAULT_ORDER_DIRECTION;
+    }
 
     Page<IDto<Computer>> page = null;
     int rowCount = 0;
@@ -75,7 +95,7 @@ public class DashboardServlet extends HttpServlet {
         search = "";
       }
       page = ComputerService.getInstance()
-          .getByNameOrCompanyName(this.pageId, this.pageSize, search)
+          .getByNameOrCompanyName(this.pageId, this.pageSize, search, this.orderBy, this.orderDirection)
           .createDtoPage(ComputerMapper.getInstance());
       rowCount = ComputerService.getInstance().getRowCount(search);
       pageCount = getPageCount(search);
@@ -93,6 +113,8 @@ public class DashboardServlet extends HttpServlet {
     request.setAttribute("pageId", pageId);
     request.setAttribute("pageCount", pageCount);
     request.setAttribute("search", search);
+    request.setAttribute("orderBy", orderBy);
+    request.setAttribute("orderDirection", orderDirection);
 
     RequestDispatcher dispatcher = request.getRequestDispatcher("/views/dashboard.jsp");
     dispatcher.forward(request, response);

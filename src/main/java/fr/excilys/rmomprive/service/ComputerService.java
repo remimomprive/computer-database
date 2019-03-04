@@ -121,14 +121,13 @@ public class ComputerService implements IService<Computer> {
       throws InvalidPageIdException, InvalidPageSizeException, SQLException {
     return this.getComputerDao().getPage(new Page<Computer>(pageId, pageSize));
   }
-
-  public Page<Computer> getByNameOrCompanyName(int pageId, int pageSize, String name)
-      throws SQLException, InvalidPageSizeException, InvalidPageIdException {
-    return this.getComputerDao().getByNameOrCompanyName(new Page<Computer>(pageId, pageSize), name);
+  
+  public Page<Computer> getByNameOrCompanyName(int pageId, int pageSize, String name,
+      String orderBy, String orderDirection) throws SQLException, InvalidPageSizeException, InvalidPageIdException {
+    return this.getComputerDao().getByNameOrCompanyName(new Page<Computer>(pageId, pageSize), name, orderBy, orderDirection);
   }
 
   /**
-   * @return The ComputerService instance in memory.
    */
   public static ComputerService getInstance() {
     if (instance == null) {

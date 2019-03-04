@@ -8,7 +8,9 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import fr.excilys.rmomprive.exception.ImpossibleActionException;
@@ -22,7 +24,7 @@ public class ComputerDao implements IDao<Computer> {
   private static final String SELECT_BY_ID_QUERY = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON company.id = company_id  WHERE computer.id = ?";
   private static final String SELECT_BY_NAME_QUERY = "SELECT id, name FROM computer WHERE name LIKE ?";
   private static final String SELECT_BY_NAME_OR_COMPANY_QUERY = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON company.id = company_id WHERE computer.name LIKE ? OR company.name LIKE ? "
-      + "LIMIT ? OFFSET ?";
+      + "ORDER BY :order_by: :order_direction: LIMIT ? OFFSET ?";
   private static final String SELECT_ALL_QUERY = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, company.id, company.name FROM computer LEFT JOIN company ON company.id = company_id";
   private static final String DELETE_QUERY = "DELETE FROM computer where id = ?";
   private static final String DELETE_LIST_QUERY = "DELETE FROM computer where id IN (?)";
@@ -41,8 +43,26 @@ public class ComputerDao implements IDao<Computer> {
   private static final String FIELD_COMPANY_ID = "computer.company_id";
   private static final String FIELD_COMPANY_NAME = "company.name";
   private static final String FIELD_COUNT = "count";
-
+  
+  public static Map<String, String> orderColumns;
+  public static Map<String, String> orderDirections;
+  private static String DEFAULT_ORDER_BY = "computer.name";
+  private static String DEFAULT_ORDER_DIRECTION = "ASC";
+  
   private static ComputerDao instance;
+  
+  static {
+    orderColumns = new HashMap();
+    orderDirections = new HashMap();
+    
+    orderColumns.put("name", FIELD_NAME);
+    orderColumns.put("introduced", FIELD_INTRODUCED);
+    orderColumns.put("discontinued", FIELD_DISCONTINUED);
+    orderColumns.put("company_name", FIELD_COMPANY_NAME);
+    
+    orderDirections.put("asc", "ASC");
+    orderDirections.put("desc", "DESC");
+  }
 
   /**
    * Private contructor for singleton.
@@ -319,11 +339,18 @@ public class ComputerDao implements IDao<Computer> {
     return this.getPage(page, SELECT_PAGE_QUERY, new String[] {});
   }
 
-  public Page<Computer> getByNameOrCompanyName(Page page, String name)
+  public Page<Computer> getByNameOrCompanyName(Page page, String name, String orderBy, String orderDirection)
       throws SQLException, InvalidPageSizeException, InvalidPageIdException {
     name = "%" + name + "%";
     
-    return this.getPage(page, SELECT_BY_NAME_OR_COMPANY_QUERY, new String[] {name, name});
+    String orderByMap = ComputerDao.orderColumns.get(orderBy);
+    String orderDirectionMap = ComputerDao.orderDirections.get(orderDirection);
+    
+    String selectByNameOrCompany = SELECT_BY_NAME_OR_COMPANY_QUERY
+        .replace(":order_by:", orderByMap != null ? orderByMap : DEFAULT_ORDER_BY)
+        .replace(":order_direction:", orderDirectionMap != null ? orderDirectionMap : DEFAULT_ORDER_DIRECTION);
+    
+    return this.getPage(page, selectByNameOrCompany, new String[] {name, name});
   }
 
   /**
