@@ -122,7 +122,10 @@ public class CompanyDao implements IDao<Company> {
 
   @Override
   public boolean deleteById(long id) throws SQLException {
-    try (Connection connection = Database.getConnection()) {
+    Connection connection = null;
+    
+    try {
+      connection = Database.getConnection();
       connection.setAutoCommit(false);
       
       PreparedStatement deleteComputers = connection.prepareStatement(DELETE_COMPUTERS_BY_COMPANY_ID_QUERY);
@@ -134,11 +137,20 @@ public class CompanyDao implements IDao<Company> {
       deleteCompany.executeUpdate();
       
       connection.commit();
-      
       connection.setAutoCommit(true);
+    } catch (SQLException e) {
+      if (connection != null) {
+        connection.rollback();
+      }
       
-      return true;
+      throw new SQLException();
+    } finally {
+      if (connection != null) {
+        connection.close();
+      }
     }
+    
+    return true;
   }
   
   @Override

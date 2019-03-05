@@ -1,6 +1,7 @@
 package fr.excilys.rmomprive.ui.console.menu;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
 
@@ -19,9 +20,9 @@ public abstract class MenuComputerForm extends Menu {
     String name = Menus.readComputerName();
 
     System.out.println("What's the computer introduction date (YYYY-mm-dd) or null?");
-    Optional<Date> introduced = Menus.readDate(true);
+    Optional<LocalDate> introduced = Menus.readDate(true);
 
-    Optional<Date> discontinued = Optional.empty();
+    Optional<LocalDate> discontinued = Optional.empty();
     if (introduced.isPresent()) {
       System.out.println("What's the computer discontinuation date (YYYY-mm-dd) or null?");
       boolean validDiscontinuedDate = false;
@@ -29,7 +30,7 @@ public abstract class MenuComputerForm extends Menu {
       do {
         discontinued = Menus.readDate(true);
         validDiscontinuedDate = (discontinued.isPresent())
-            ? introduced.get().before(discontinued.get())
+            ? introduced.get().isBefore(discontinued.get())
             : true;
 
         if (!validDiscontinuedDate) {

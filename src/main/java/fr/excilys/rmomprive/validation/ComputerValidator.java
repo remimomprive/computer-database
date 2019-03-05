@@ -1,6 +1,6 @@
 package fr.excilys.rmomprive.validation;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import fr.excilys.rmomprive.exception.ValidationException;
 import fr.excilys.rmomprive.model.Computer;
@@ -38,9 +38,9 @@ public class ComputerValidator {
    * @param discontinued The second date
    * @throws InvalidDatePrecedenceException If the constraint is violated
    */
-  private static void validateDatePrecedence(Date introduced, Date discontinued)
+  private static void validateDatePrecedence(LocalDate introduced, LocalDate discontinued)
       throws ValidationException {
-    if (introduced != null && discontinued != null && introduced.after(discontinued)) {
+    if (introduced != null && discontinued != null && introduced.isAfter(discontinued)) {
       throw new ValidationException(ValidationException.ValidationType.INVALID_DATE_PRECEDENCE);
     }
   }
@@ -52,7 +52,7 @@ public class ComputerValidator {
    * @param discontinued T
    * @throws EmptyDateException If the constraint is violated
    */
-  private static void validateEmptyDates(Date introduced, Date discontinued)
+  private static void validateEmptyDates(LocalDate introduced, LocalDate discontinued)
       throws ValidationException {
     if (introduced == null && discontinued != null) {
       throw new ValidationException(ValidationException.ValidationType.EMPTY_DATE);

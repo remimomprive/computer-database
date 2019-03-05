@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -25,7 +26,7 @@ public class ComputerDao implements IDao<Computer> {
   private static final String SELECT_BY_NAME_QUERY = "SELECT id, name FROM computer WHERE name LIKE ?";
   private static final String SELECT_BY_NAME_OR_COMPANY_QUERY = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON company.id = company_id WHERE computer.name LIKE ? OR company.name LIKE ? "
       + "ORDER BY :order_by: :order_direction: LIMIT ? OFFSET ?";
-  private static final String SELECT_ALL_QUERY = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, company.id, company.name FROM computer LEFT JOIN company ON company.id = company_id";
+  private static final String SELECT_ALL_QUERY = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON company.id = company_id";
   private static final String DELETE_QUERY = "DELETE FROM computer where id = ?";
   private static final String DELETE_LIST_QUERY = "DELETE FROM computer where id IN (?)";
   private static final String INSERT_QUERY = "INSERT INTO computer(name, introduced, discontinued, company_id) VALUES(?, ?, ?, ?)";
@@ -84,10 +85,13 @@ public class ComputerDao implements IDao<Computer> {
   private Computer createFromResultSet(ResultSet resultSet) throws SQLException {
     int id = resultSet.getInt(FIELD_ID);
     String name = resultSet.getString(FIELD_NAME);
-    Timestamp introduced = resultSet.getTimestamp(FIELD_INTRODUCED);
-    Timestamp discontinued = resultSet.getTimestamp(FIELD_DISCONTINUED);
+    Timestamp introducedTimestamp = resultSet.getTimestamp(FIELD_INTRODUCED);
+    Timestamp discontinuedTimestamp = resultSet.getTimestamp(FIELD_DISCONTINUED);
     int companyId = resultSet.getInt(FIELD_COMPANY_ID);
     String companyName = resultSet.getString(FIELD_COMPANY_NAME);
+    
+    LocalDate introduced = (introducedTimestamp != null) ? introducedTimestamp.toLocalDateTime().toLocalDate(): null;
+    LocalDate discontinued = (discontinuedTimestamp != null) ? discontinuedTimestamp.toLocalDateTime().toLocalDate(): null;
 
     Company company = null;
     if (companyName != null) {

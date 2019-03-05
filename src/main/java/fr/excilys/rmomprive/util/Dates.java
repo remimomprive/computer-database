@@ -1,13 +1,12 @@
 package fr.excilys.rmomprive.util;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class Dates {
-  private static final DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+  private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
   /**
    * Parse the given date to a Date object.
@@ -16,8 +15,8 @@ public class Dates {
    * @return The Date output
    * @throws ParseException if the String format is not correct (yyyy-MM-dd)
    */
-  public static Date parse(final String dateString) throws ParseException {
-    return format.parse(dateString);
+  public static LocalDate parse(final String dateString) throws DateTimeParseException {
+    return LocalDate.parse(dateString, formatter);
   }
 
   /**
@@ -26,9 +25,9 @@ public class Dates {
    * @param date The date object
    * @return The output string
    */
-  public static String parse(Date date) {
+  public static String parse(LocalDate date) {
     if (date != null) {
-      return format.format(date);
+      return date.format(formatter);
     }
 
     return "";
@@ -42,8 +41,8 @@ public class Dates {
    */
   public static boolean isValidDate(final String dateString) {
     try {
-      format.parse(dateString);
-    } catch (ParseException e) {
+      LocalDate.parse(dateString, formatter);
+    } catch (DateTimeParseException e) {
       return false;
     }
 

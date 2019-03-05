@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Optional;
@@ -52,7 +53,7 @@ public class ComputerMapper implements IMapper<Computer> {
           computerBuilder.setCompany(company.get());
         }
       }
-    } catch (ParseException e) {
+    } catch (DateTimeParseException e) {
       e.printStackTrace();
     } catch (NumberFormatException e) {
       e.printStackTrace();

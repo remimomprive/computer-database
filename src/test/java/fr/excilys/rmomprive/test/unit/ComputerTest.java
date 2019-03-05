@@ -1,11 +1,9 @@
 package fr.excilys.rmomprive.test.unit;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import org.junit.Test;
@@ -22,7 +20,7 @@ public class ComputerTest {
 	@Test
 	public void validCreation() throws SQLException {
 		Company company = new Company(1, "company");
-		Computer computer = new Computer(1, "ABC", new Date(100), null, company);
+		Computer computer = new Computer(1, "ABC", LocalDate.now(), null, company);
 		Optional<Computer> expectedData = Optional.of(computer);
 		
 		ComputerDao computerDao = Mockito.mock(ComputerDao.class);
@@ -46,7 +44,7 @@ public class ComputerTest {
 	@Test(expected = ValidationException.class)
 	public void invalidComputerName() throws SQLException {
 		Company company = new Company(1, "company");
-		Computer computer = new Computer(1, "", new Date(100), null, company);
+		Computer computer = new Computer(1, "", LocalDate.now(), null, company);
 		Optional<Computer> expectedData = Optional.of(computer);
 		
 		ComputerDao computerDao = Mockito.mock(ComputerDao.class);
@@ -64,7 +62,7 @@ public class ComputerTest {
 	@Test(expected = ValidationException.class)
 	public void invalidDates() throws SQLException {
 		Company company = new Company(1, "company");
-		Computer computer = new Computer(1, "ABC", new Date(100), new Date(50), company);
+		Computer computer = new Computer(1, "ABC", LocalDate.of(2010,  1, 10), LocalDate.of(2002,  1, 10), company);
 		Optional<Computer> expectedData = Optional.of(computer);
 		
 		ComputerDao computerDao = Mockito.mock(ComputerDao.class);
@@ -82,7 +80,7 @@ public class ComputerTest {
 	@Test
 	public void invalidCompanyId() throws SQLException {
 		Company company = new Company(1, "company");
-		Computer computer = new Computer(1, "ABC", new Date(50), new Date(500), company);
+		Computer computer = new Computer(1, "ABC", LocalDate.of(2010,  1, 10), LocalDate.of(2012,  1, 10), company);
 		
 		ComputerDao computerDao = Mockito.mock(ComputerDao.class);
 		CompanyDao companyDao = Mockito.mock(CompanyDao.class);

@@ -1,12 +1,12 @@
 package fr.excilys.rmomprive.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Computer {
   private long id;
   private String name;
-  private Date introduced;
-  private Date discontinued;
+  private LocalDate introduced;
+  private LocalDate discontinued;
   private Company company;
 
   /**
@@ -24,7 +24,7 @@ public class Computer {
    * @param discontinued The computer discontinution date.
    * @param company The computer company.
    */
-  public Computer(final long id, final String name, final Date introduced, final Date discontinued,
+  public Computer(final long id, final String name, final LocalDate introduced, final LocalDate discontinued,
       final Company company) {
     this.id = id;
     this.name = name;
@@ -49,19 +49,19 @@ public class Computer {
     this.name = name;
   }
 
-  public void setIntroduced(final Date introduced) {
+  public void setIntroduced(final LocalDate introduced) {
     this.introduced = introduced;
   }
 
-  public Date getIntroduced() {
+  public LocalDate getIntroduced() {
     return introduced;
   }
 
-  public Date getDiscontinued() {
+  public LocalDate getDiscontinued() {
     return discontinued;
   }
 
-  public void setDiscontinued(final Date discontinued) {
+  public void setDiscontinued(final LocalDate discontinued) {
     this.discontinued = discontinued;
   }
 
@@ -82,8 +82,8 @@ public class Computer {
   public static class ComputerBuilder {
     private long id;
     private String name;
-    private Date introduced;
-    private Date discontinued;
+    private LocalDate introduced;
+    private LocalDate discontinued;
     private Company company;
 
     /**
@@ -124,7 +124,7 @@ public class Computer {
      * @param introduced The computer introduction date
      * @return The ComputerBuilder instance
      */
-    public ComputerBuilder setIntroduced(Date introduced) {
+    public ComputerBuilder setIntroduced(LocalDate introduced) {
       this.introduced = introduced;
       return this;
     }
@@ -133,7 +133,7 @@ public class Computer {
      * @param discontinued The computer discontinution date
      * @return The ComputerBuilder instance
      */
-    public ComputerBuilder setDiscontinued(Date discontinued) {
+    public ComputerBuilder setDiscontinued(LocalDate discontinued) {
       this.discontinued = discontinued;
       return this;
     }

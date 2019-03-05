@@ -1,8 +1,8 @@
 package fr.excilys.rmomprive.util;
 
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -89,7 +89,7 @@ public class Menus {
    * @param nullable true if the user can set NULL to return a null Date
    * @return The String date converted into a Date object
    */
-  public static Optional<Date> readDate(boolean nullable) {
+  public static Optional<LocalDate> readDate(boolean nullable) {
     String dateString;
 
     do {
@@ -104,7 +104,7 @@ public class Menus {
       } else { // Else, the String format is not valid
         try {
           return Optional.of(Dates.parse(dateString));
-        } catch (ParseException e) {
+        } catch (DateTimeParseException e) {
           e.printStackTrace();
         }
       }
@@ -117,7 +117,7 @@ public class Menus {
    * Ask a date String, preventing the user to set null value.
    * @return The String date converted into a Date object
    */
-  public static Optional<Date> readDate() {
+  public static Optional<LocalDate> readDate() {
     return Menus.readDate(false);
   }
 
