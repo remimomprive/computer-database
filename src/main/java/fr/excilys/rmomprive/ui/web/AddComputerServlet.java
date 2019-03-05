@@ -6,11 +6,15 @@ import java.util.Collection;
 import java.util.Optional;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import fr.excilys.rmomprive.dto.ComputerDto;
 import fr.excilys.rmomprive.exception.ValidationException;
@@ -24,6 +28,12 @@ import fr.excilys.rmomprive.validation.ComputerValidator;
 @WebServlet("/addComputer")
 public class AddComputerServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
+
+  private Logger logger;
+
+  public void init(ServletConfig config) throws ServletException {
+    this.logger = LoggerFactory.getLogger(AddComputerServlet.class);
+  }
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -87,6 +97,19 @@ public class AddComputerServlet extends HttpServlet {
       response.getWriter().write(computerDto.toString());
       response.getWriter().write(insertedComputer.toString());
     } catch (ValidationException e) {
+      // Log the error
+      switch (e.getType()) {
+        case EMPTY_DATE:
+          logger.error("If disconution date is valid, introduction date must be provided");
+          break;
+        case INVALID_NAME:
+          logger.error("The computer name should not be null");
+          break;
+        case INVALID_DATE_PRECEDENCE:
+          logger.error("The introduction date shoud be before the discontinution date");
+          break;
+      }
+      
       // Show an error page
       RequestDispatcher dispatcher = request.getRequestDispatcher("/views/500.jsp");
       dispatcher.forward(request, response);

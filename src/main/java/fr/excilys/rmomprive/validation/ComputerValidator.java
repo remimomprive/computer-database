@@ -1,5 +1,7 @@
 package fr.excilys.rmomprive.validation;
 
+import java.util.Date;
+
 import fr.excilys.rmomprive.exception.ValidationException;
 import fr.excilys.rmomprive.model.Computer;
 
@@ -9,20 +11,51 @@ public class ComputerValidator {
    * not.
    *
    * @param computer The computer object we want to verify
-   * @throws ValidationException if the computer object is not valid
+   * @throws A child of ValidationException if the computer object is not valid
    */
   public static void validate(Computer computer) throws ValidationException {
-    if (
-      // Empty computer name
-      (computer.getName() == null || computer.getName().equals("")) ||
-      // Introduced after discontinued
-        (computer.getIntroduced() != null && computer.getDiscontinued() != null
-            && computer.getIntroduced().after(computer.getDiscontinued()))
-        ||
-        // Introduced empty but discontinued filled
-        (computer.getIntroduced() == null && computer.getDiscontinued() != null)
-        ) {
-      throw new ValidationException();
+    validateComputerName(computer.getName());
+    validateDatePrecedence(computer.getIntroduced(), computer.getDiscontinued());
+    validateEmptyDates(computer.getIntroduced(), computer.getDiscontinued());
+  }
+
+  /**
+   * Checks if the name is not null or empty
+   *
+   * @param name The computer name
+   * @throws InvalidNameException If the constraint is violated
+   */
+  private static void validateComputerName(String name) throws ValidationException {
+    if (name == null || name.equals("")) {
+      throw new ValidationException(ValidationException.ValidationType.INVALID_NAME);
+    }
+  }
+
+  /**
+   * Checks if discontinued is before discontinued
+   *
+   * @param introduced   The first date
+   * @param discontinued The second date
+   * @throws InvalidDatePrecedenceException If the constraint is violated
+   */
+  private static void validateDatePrecedence(Date introduced, Date discontinued)
+      throws ValidationException {
+    if (introduced != null && discontinued != null && introduced.after(discontinued)) {
+      throw new ValidationException(ValidationException.ValidationType.INVALID_DATE_PRECEDENCE);
+    }
+  }
+
+  /**
+   * Checks if introduced is not null when discontinued is not null
+   *
+   * @param introduced   The first date
+   * @param discontinued T
+   * @throws EmptyDateException If the constraint is violated
+   */
+  private static void validateEmptyDates(Date introduced, Date discontinued)
+      throws ValidationException {
+    if (introduced == null && discontinued != null) {
+      throw new ValidationException(ValidationException.ValidationType.EMPTY_DATE);
     }
   }
 }
