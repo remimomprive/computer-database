@@ -9,7 +9,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 public class Database {
-  private static HikariConfig hikariConfig = new HikariConfig("hikari.properties");
+  private static HikariConfig hikariConfig = new HikariConfig("src/main/resources/hikari.properties");
   private static DataSource dataSource = new HikariDataSource(hikariConfig);
   private static Connection connection;
 

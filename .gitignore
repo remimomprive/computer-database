@@ -9,4 +9,5 @@ log/
 target/
 /bin/
 
-hikari.properties
+src/main/resources/hikari.properties
+src/main/resources/application.properties

@@ -19,24 +19,27 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<checkstyle.config.location>checkstyle.xml</checkstyle.config.location>
-		
+
 		<!-- Depencencies -->
-	  	<junit.version>4.11</junit.version>
-	  	<mysql.connector.version>8.0.15</mysql.connector.version>
-	  	<slf4j.version>1.8.0-beta2</slf4j.version>
-	  	<mockito.version>2.24.0</mockito.version>
-	  	<servlet.version>3.1.0</servlet.version>
-	  	<jstl.version>1.2</jstl.version>
-	  	<selenium.version>2.52.0</selenium.version>
-	  	<hikari-cp.version>3.3.1</hikari-cp.version>
-	  	
-	  	<!-- Plugins -->
-	  	<tomcat.version>2.2</tomcat.version>
-	  	<maven-failsafe.version>2.22.1</maven-failsafe.version>
-	  	<maven-surefire.version>2.22.1</maven-surefire.version>
-	  	
-	  	<!-- Phase Pugins -->
-	  	<maven-clean.version>3.1.0</maven-clean.version>
+		<junit.version>4.11</junit.version>
+		<mysql.connector.version>8.0.15</mysql.connector.version>
+		<slf4j.version>1.8.0-beta2</slf4j.version>
+		<mockito.version>2.24.0</mockito.version>
+		<servlet.version>3.1.0</servlet.version>
+		<jstl.version>1.2</jstl.version>
+		<selenium.version>2.52.0</selenium.version>
+		<hikari-cp.version>3.3.1</hikari-cp.version>
+		<spring.version>5.1.5.RELEASE</spring.version>
+		<logback.version>1.2.3</logback.version>
+		<jcl-over-slf4j.version>1.7.26</jcl-over-slf4j.version>
+
+		<!-- Plugins -->
+		<tomcat.version>2.2</tomcat.version>
+		<maven-failsafe.version>2.22.1</maven-failsafe.version>
+		<maven-surefire.version>2.22.1</maven-surefire.version>
+
+		<!-- Phase Pugins -->
+		<maven-clean.version>3.1.0</maven-clean.version>
 		<maven-resources.version>3.0.2</maven-resources.version>
 		<maven-compiler.version>3.8.0</maven-compiler.version>
 		<maven-surefire.version>2.22.1</maven-surefire.version>
@@ -61,11 +64,6 @@
 			<version>${mysql.connector.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-jdk14</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
 			<version>${mockito.version}</version>
@@ -82,20 +80,53 @@
 			<version>${jstl.version}</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.seleniumhq.selenium</groupId>
-		    <artifactId>selenium-java</artifactId>
-		    <version>${selenium.version}</version>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>${selenium.version}</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.seleniumhq.selenium</groupId>
-		    <artifactId>selenium-htmlunit-driver</artifactId>
-		    <version>${selenium.version}</version>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-htmlunit-driver</artifactId>
+			<version>${selenium.version}</version>
 		</dependency>
-	    <dependency>
-	        <groupId>com.zaxxer</groupId>
-	        <artifactId>HikariCP</artifactId>
-	        <version>${hikari-cp.version}</version>
-    	</dependency>
+		<dependency>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+			<version>${hikari-cp.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>${jcl-over-slf4j.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -109,53 +140,53 @@
 					<path>/computer-database</path>
 				</configuration>
 				<executions>
-			        <execution>
-			            <id>start-tomcat</id>
-			            <phase>pre-integration-test</phase>
-			            <goals>
-			                <goal>run-war-only</goal>
-			            </goals>
-			            <configuration>
-			                <port>9090</port>
-			                <fork>true</fork>
-			            </configuration>
-			        </execution>
-			        <execution>
-			            <id>stop-tomcat</id>
-			            <phase>post-integration-test</phase>
-			            <goals>
-			                <goal>shutdown</goal>
-			            </goals>
-			        </execution>
-		    	</executions>
+					<execution>
+						<id>start-tomcat</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>run-war-only</goal>
+						</goals>
+						<configuration>
+							<port>9090</port>
+							<fork>true</fork>
+						</configuration>
+					</execution>
+					<execution>
+						<id>stop-tomcat</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>shutdown</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
-			  <groupId>org.apache.maven.plugins</groupId>
-			  <artifactId>maven-failsafe-plugin</artifactId>
-			  <version>${maven-failsafe.version}</version>
-			  <configuration>
-			    <includes>
-			      <include>integration/*</include>
-			    </includes>
-			  </configuration>
-			  <executions>
-			    <execution>
-			      <goals>
-			        <goal>integration-test</goal>
-			        <goal>verify</goal>
-			      </goals>
-			    </execution>
-			  </executions>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>${maven-failsafe.version}</version>
+				<configuration>
+					<includes>
+						<include>integration/*</include>
+					</includes>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
-			  <groupId>org.apache.maven.plugins</groupId>
-			  <artifactId>maven-surefire-plugin</artifactId>
-			  <version>${maven-surefire.version}</version>
-			  <configuration>
-			    <excludes>
-			      <exclude>integration/*</exclude>
-			    </excludes>
-			  </configuration>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${maven-surefire.version}</version>
+				<configuration>
+					<excludes>
+						<exclude>integration/*</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
