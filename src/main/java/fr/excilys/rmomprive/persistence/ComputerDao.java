@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.stereotype.Component;
+
 import fr.excilys.rmomprive.exception.ImpossibleActionException;
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.exception.InvalidPageSizeException;
@@ -21,6 +23,7 @@ import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.pagination.Page;
 
+@Component
 public class ComputerDao implements IDao<Computer> {
   private static final String SELECT_BY_ID_QUERY = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON company.id = company_id  WHERE computer.id = ?";
   private static final String SELECT_BY_NAME_QUERY = "SELECT id, name FROM computer WHERE name LIKE ?";
@@ -49,8 +52,6 @@ public class ComputerDao implements IDao<Computer> {
   public static Map<String, String> orderDirections;
   private static String DEFAULT_ORDER_BY = "computer.name";
   private static String DEFAULT_ORDER_DIRECTION = "ASC";
-  
-  private static ComputerDao instance;
   
   static {
     orderColumns = new HashMap();
@@ -355,15 +356,5 @@ public class ComputerDao implements IDao<Computer> {
         .replace(":order_direction:", orderDirectionMap != null ? orderDirectionMap : DEFAULT_ORDER_DIRECTION);
     
     return this.getPage(page, selectByNameOrCompany, new String[] {name, name});
-  }
-
-  /**
-   * @return The instance of ComputerDao in memory.
-   */
-  public static ComputerDao getInstance() {
-    if (instance == null) {
-      instance = new ComputerDao();
-    }
-    return instance;
   }
 }

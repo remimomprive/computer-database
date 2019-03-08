@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import fr.excilys.rmomprive.dto.IDto;
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
@@ -21,6 +24,7 @@ import fr.excilys.rmomprive.exception.InvalidPageSizeException;
 import fr.excilys.rmomprive.mapper.ComputerMapper;
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.pagination.Page;
+import fr.excilys.rmomprive.service.CompanyService;
 import fr.excilys.rmomprive.service.ComputerService;
 
 import org.slf4j.Logger;
@@ -33,16 +37,25 @@ public class DashboardServlet extends HttpServlet {
   private static int DEFAULT_PAGE_ID = 1;
   private int pageSize = DEFAULT_PAGE_SIZE;
   private int pageId = DEFAULT_PAGE_ID;
-  
+
   private static String DEFAULT_ORDER_BY = "name";
   private static String DEFAULT_ORDER_DIRECTION = "asc";
   private String orderBy = DEFAULT_ORDER_BY;
   private String orderDirection = DEFAULT_ORDER_DIRECTION;
-  
+
   private Logger logger;
 
-  public void init(ServletConfig config) throws ServletException {
+  @Autowired
+  private CompanyService companyService;
+
+  @Autowired
+  private ComputerService computerService;
+
+  @Override
+  public void init() throws ServletException {
+    super.init();
     this.logger = LoggerFactory.getLogger(DashboardServlet.class);
+    SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
   }
 
   @Override
@@ -69,14 +82,14 @@ public class DashboardServlet extends HttpServlet {
     } else {
       pageId = DEFAULT_PAGE_ID;
     }
-    
+
     String orderByParam = request.getParameter("order_by");
     if (orderByParam != null) {
       orderBy = orderByParam;
     } else {
       orderBy = DEFAULT_ORDER_BY;
     }
-    
+
     String orderDirectionParam = request.getParameter("order_direction");
     if (orderDirectionParam != null) {
       orderDirection = orderDirectionParam;
@@ -94,10 +107,9 @@ public class DashboardServlet extends HttpServlet {
       if (search == null || search.equals("")) {
         search = "";
       }
-      page = ComputerService.getInstance()
-          .getByNameOrCompanyName(this.pageId, this.pageSize, search, this.orderBy, this.orderDirection)
-          .createDtoPage(ComputerMapper.getInstance());
-      rowCount = ComputerService.getInstance().getRowCount(search);
+      page = computerService.getByNameOrCompanyName(this.pageId, this.pageSize, search,
+          this.orderBy, this.orderDirection).createDtoPage(ComputerMapper.getInstance());
+      rowCount = computerService.getRowCount(search);
       pageCount = getPageCount(search);
     } catch (InvalidPageIdException e) {
       e.printStackTrace();
@@ -131,7 +143,7 @@ public class DashboardServlet extends HttpServlet {
     }
 
     try {
-      ComputerService.getInstance().deleteByIds(ids);
+      computerService.deleteByIds(ids);
       logger.info("Successfully deleted computers {}", idsString);
     } catch (SQLException e) {
       logger.error("An error happened while trying to delete computers {}", idsString);
@@ -139,7 +151,7 @@ public class DashboardServlet extends HttpServlet {
   }
 
   public int getPageCount(String search) throws SQLException {
-    return ComputerService.getInstance().getPageCount(pageSize, search);
+    return computerService.getPageCount(pageSize, search);
   }
 
   /**
@@ -149,6 +161,6 @@ public class DashboardServlet extends HttpServlet {
    * @throws SQLException if an error while accessing to the database happened
    */
   public int getPageCount() throws SQLException {
-    return ComputerService.getInstance().getPageCount(pageSize);
+    return computerService.getPageCount(pageSize);
   }
 }

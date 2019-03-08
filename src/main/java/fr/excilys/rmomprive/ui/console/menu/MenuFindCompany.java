@@ -27,7 +27,7 @@ public class MenuFindCompany extends Menu {
     String companyName = Menus.readString();
 
     try {
-      List<Company> companies = CompanyService.getInstance().getByName(companyName);
+      List<Company> companies = this.companyService.getByName(companyName);
       System.out.println(companies);
     } catch (SQLException e) {
       e.printStackTrace();

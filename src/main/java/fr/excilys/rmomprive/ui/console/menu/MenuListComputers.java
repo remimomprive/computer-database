@@ -19,7 +19,7 @@ public class MenuListComputers extends Menu {
   @Override
   public void show() {
     try {
-      Collection<Computer> computers = ComputerService.getInstance().getAll();
+      Collection<Computer> computers = this.computerService.getAll();
 
       if (computers != null) {
         System.out.println(computers);

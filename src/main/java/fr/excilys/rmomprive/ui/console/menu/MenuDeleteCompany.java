@@ -23,7 +23,7 @@ public class MenuDeleteCompany extends Menu {
     int companyId = Menus.readInteger("The company id should be an integer").get();
 
     try {
-      if (CompanyService.getInstance().deleteById(companyId)) {
+      if (this.companyService.deleteById(companyId)) {
         getLogger().info("Successfully deleted company {} and its computers\n", companyId);
       } else {
         getLogger().error("An error happened while trying to delete company {}\n", companyId);

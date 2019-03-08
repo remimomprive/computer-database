@@ -26,7 +26,7 @@ public class MenuDisplayComputerDetails extends Menu {
 
     // Retrieve the computer details
     try {
-      Optional<ComputerDetails> computerDetails = ComputerService.getInstance()
+      Optional<ComputerDetails> computerDetails = this.computerService
           .getDetailsByComputerId(computerId);
 
       if (computerDetails.isPresent()) {

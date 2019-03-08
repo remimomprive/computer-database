@@ -20,7 +20,7 @@ public class MenuListCompanies extends Menu {
   @Override
   public void show() {
     try {
-      Collection<Company> companies = CompanyService.getInstance().getAll();
+      Collection<Company> companies = this.companyService.getAll();
       System.out.println(companies);
     } catch (SQLException e) {
       e.printStackTrace();

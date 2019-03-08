@@ -11,22 +11,12 @@ import com.zaxxer.hikari.HikariDataSource;
 public class Database {
   private static HikariConfig hikariConfig = new HikariConfig("src/main/resources/hikari.properties");
   private static DataSource dataSource = new HikariDataSource(hikariConfig);
-  private static Connection connection;
-
-  /**
-   * This class only provides static method.
-   */
-  private Database() {
-  }
 
   /**
    * @return The instance of Connection in memory.
    * @throws SQLException If an error accessing the database happened.
    */
   public static Connection getConnection() throws SQLException {
-    if (connection == null || connection.isClosed()) {
-      connection = dataSource.getConnection();
-    }
-    return connection;
+   return dataSource.getConnection();
   }
 }

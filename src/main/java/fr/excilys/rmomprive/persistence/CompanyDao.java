@@ -10,11 +10,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Component;
+
 import fr.excilys.rmomprive.exception.ImpossibleActionException;
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.pagination.Page;
 
+@Component
 public class CompanyDao implements IDao<Company> {
   private static final String SELECT_BY_ID_QUERY = "SELECT id, name FROM company WHERE ID = ?";
   private static final String SELECT_BY_NAME_QUERY = "SELECT id, name FROM company WHERE name LIKE ?";
@@ -26,8 +29,6 @@ public class CompanyDao implements IDao<Company> {
   private static final String FIELD_ID = "id";
   private static final String FIELD_NAME = "name";
   private static final String FIELD_COUNT = "count";
-
-  private static CompanyDao instance;
 
   /**
    * Constructor for singleton.
@@ -190,15 +191,5 @@ public class CompanyDao implements IDao<Company> {
   @Override
   public Page<Company> getPage(Page page) throws InvalidPageIdException {
     throw new ImpossibleActionException();
-  }
-
-  /**
-   * @return The instance of CompanyDao in the database.
-   */
-  public static CompanyDao getInstance() {
-    if (instance == null) {
-      instance = new CompanyDao();
-    }
-    return instance;
   }
 }

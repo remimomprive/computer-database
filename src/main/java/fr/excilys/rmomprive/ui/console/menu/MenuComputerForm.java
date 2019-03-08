@@ -2,18 +2,31 @@ package fr.excilys.rmomprive.ui.console.menu;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Optional;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import fr.excilys.rmomprive.configuration.AppConfiguration;
 import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.model.Computer.ComputerBuilder;
 import fr.excilys.rmomprive.service.CompanyService;
+import fr.excilys.rmomprive.service.ComputerService;
 import fr.excilys.rmomprive.util.Menus;
 
 public abstract class MenuComputerForm extends Menu {
+  protected CompanyService companyService;
+  protected ComputerService computerService;
+
+  public MenuComputerForm() {
+    this.companyService = super.companyService;
+    this.computerService = super.computerService;
+  }
+
   /**
    * This method displays a form in order to fill a Computer.
+   * 
    * @return The filled computer
    */
   protected Computer form() {
@@ -47,7 +60,7 @@ public abstract class MenuComputerForm extends Menu {
     if (companyId.isPresent()) {
       Optional<Company> company;
       try {
-        company = CompanyService.getInstance().getById(companyId.get());
+        company = companyService.getById(companyId.get());
         if (company.isPresent()) {
           computerBuilder.setCompany(company.get());
         }

@@ -5,6 +5,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import fr.excilys.rmomprive.dto.IDto;
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.exception.InvalidPageSizeException;
@@ -16,8 +19,14 @@ import fr.excilys.rmomprive.persistence.CompanyDao;
 import fr.excilys.rmomprive.persistence.ComputerDao;
 import fr.excilys.rmomprive.validation.ComputerValidator;
 
+@Service
 public class ComputerService implements IService<Computer> {
-  private static ComputerService instance;
+
+  @Autowired
+  private ComputerDao computerDao;
+  
+  @Autowired
+  private CompanyDao companyDao;  
 
   /**
    * Public constructor for mockito.
@@ -28,12 +37,12 @@ public class ComputerService implements IService<Computer> {
 
   @Override
   public Optional<Computer> getById(long id) throws SQLException {
-    return this.getComputerDao().getById(id);
+    return computerDao.getById(id);
   }
 
   @Override
   public List<Computer> getByName(String name) throws SQLException {
-    return this.getComputerDao().getByName(name);
+    return computerDao.getByName(name);
   }
 
   /**
@@ -42,12 +51,12 @@ public class ComputerService implements IService<Computer> {
    * @throws SQLException If an error accessing the database happened
    */
   public Optional<ComputerDetails> getDetailsByComputerId(final int id) throws SQLException {
-    Optional<Computer> computer = this.getComputerDao().getById(id);
+    Optional<Computer> computer = computerDao.getById(id);
 
     if (!computer.isPresent()) {
       return Optional.empty();
     } else {
-      Optional<Company> company = this.getCompanyDao().getById(computer.get().getCompany().getId());
+      Optional<Company> company = companyDao.getById(computer.get().getCompany().getId());
 
       if (company.isPresent()) {
         return Optional.of(new ComputerDetails(computer.get(), company.get()));
@@ -59,89 +68,79 @@ public class ComputerService implements IService<Computer> {
 
   @Override
   public Collection<Computer> getAll() throws SQLException {
-    return this.getComputerDao().getAll();
+    return computerDao.getAll();
   }
 
   @Override
   public Optional<Computer> add(Computer object) throws SQLException {
     ComputerValidator.validate(object);
-    return this.getComputerDao().add(object);
+    return computerDao.add(object);
   }
 
   @Override
   public Collection<Computer> addAll(Collection<Computer> objects) {
-    return this.getComputerDao().addAll(objects);
+    return computerDao.addAll(objects);
   }
 
   @Override
   public Computer update(Computer object) throws SQLException {
-    return this.getComputerDao().update(object);
+    return computerDao.update(object);
   }
 
   @Override
   public boolean delete(Computer object) throws SQLException {
-    return this.getComputerDao().delete(object);
+    return computerDao.delete(object);
   }
 
   @Override
   public boolean deleteById(long id) throws SQLException {
-    return this.getComputerDao().deleteById(id);
+    return computerDao.deleteById(id);
   }
 
   @Override
   public boolean deleteByIds(List<Long> ids) throws SQLException {
-    return this.getComputerDao().deleteByIds(ids);
+    return computerDao.deleteByIds(ids);
   }
 
   @Override
   public boolean checkExistenceById(long id) throws SQLException {
-    return this.getComputerDao().checkExistenceById(id);
+    return computerDao.checkExistenceById(id);
   }
 
   @Override
   public int getRowCount() throws SQLException {
-    return this.getComputerDao().getRowCount();
+    return computerDao.getRowCount();
   }
 
   public int getRowCount(String search) throws SQLException {
-    return this.getComputerDao().getRowCount(search);
+    return computerDao.getRowCount(search);
   }
 
   @Override
   public int getPageCount(int pageSize) throws SQLException {
-    return this.getComputerDao().getPageCount(pageSize);
+    return computerDao.getPageCount(pageSize);
   }
   
   public int getPageCount(int pageSize, String search) throws SQLException {
-    return this.getComputerDao().getPageCount(pageSize, search);
+    return computerDao.getPageCount(pageSize, search);
   }
 
   @Override
   public Page<Computer> getPage(int pageId, int pageSize)
       throws InvalidPageIdException, InvalidPageSizeException, SQLException {
-    return this.getComputerDao().getPage(new Page<Computer>(pageId, pageSize));
+    return computerDao.getPage(new Page<Computer>(pageId, pageSize));
   }
   
   public Page<Computer> getByNameOrCompanyName(int pageId, int pageSize, String name,
       String orderBy, String orderDirection) throws SQLException, InvalidPageSizeException, InvalidPageIdException {
-    return this.getComputerDao().getByNameOrCompanyName(new Page<Computer>(pageId, pageSize), name, orderBy, orderDirection);
+    return computerDao.getByNameOrCompanyName(new Page<Computer>(pageId, pageSize), name, orderBy, orderDirection);
   }
 
-  /**
-   */
-  public static ComputerService getInstance() {
-    if (instance == null) {
-      instance = new ComputerService();
-    }
-
-    return instance;
+  public Object getComputerDao() {
+    return null;
   }
 
-  public CompanyDao getCompanyDao() {
-    return CompanyDao.getInstance();
-  }
-
-  public ComputerDao getComputerDao() {
-    return ComputerDao.getInstance();
+  public Object getCompanyDao() {
+    return null;
   }
 }

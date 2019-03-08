@@ -15,6 +15,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import fr.excilys.rmomprive.dto.ComputerDto;
 import fr.excilys.rmomprive.exception.ValidationException;
@@ -30,16 +33,25 @@ public class AddComputerServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
 
   private Logger logger;
+  
+  @Autowired
+  private CompanyService companyService;
+  
+  @Autowired
+  private ComputerService computerService;
 
-  public void init(ServletConfig config) throws ServletException {
+  @Override
+  public void init() throws ServletException {
+    super.init();
     this.logger = LoggerFactory.getLogger(AddComputerServlet.class);
+    SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
   }
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     try {
-      Collection<Company> companies = CompanyService.getInstance().getAll();
+      Collection<Company> companies = companyService.getAll();
       request.setAttribute("companies", companies);
     } catch (SQLException e) {
       e.printStackTrace();
@@ -74,7 +86,7 @@ public class AddComputerServlet extends HttpServlet {
     String companyName = null;
     if (companyId != null) {
       try {
-        company = CompanyService.getInstance().getById(companyId);
+        company = companyService.getById(companyId);
         companyName = company.isPresent() ? company.get().getName() : null;
       } catch (SQLException e) {
         e.printStackTrace();
@@ -91,7 +103,7 @@ public class AddComputerServlet extends HttpServlet {
       // Validate the entity
       ComputerValidator.validate(computer);
       // Try to insert the entity
-      Optional<Computer> insertedComputer = ComputerService.getInstance().add(computer);
+      Optional<Computer> insertedComputer = computerService.add(computer);
 
       // Write data to the page
       response.getWriter().write(computerDto.toString());

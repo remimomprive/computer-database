@@ -13,6 +13,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+
 import fr.excilys.rmomprive.dto.ComputerDto;
 import fr.excilys.rmomprive.exception.ValidationException;
 import fr.excilys.rmomprive.mapper.ComputerMapper;
@@ -25,6 +30,18 @@ import fr.excilys.rmomprive.validation.ComputerValidator;
 @WebServlet("/editComputer")
 public class EditComputerServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
+  
+  @Autowired
+  private CompanyService companyService;
+  
+  @Autowired
+  private ComputerService computerService;
+  
+  @Override
+  public void init() throws ServletException {
+    super.init();
+    SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+  }
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -34,8 +51,8 @@ public class EditComputerServlet extends HttpServlet {
     Collection<Company> companies = new ArrayList<>();
 
     try {
-      computer = ComputerService.getInstance().getById(Long.parseLong(computerId));
-      companies = CompanyService.getInstance().getAll();
+      computer = computerService.getById(Long.parseLong(computerId));
+      companies = companyService.getAll();
     } catch (NumberFormatException e) {
       e.printStackTrace();
     } catch (SQLException e) {
@@ -78,7 +95,7 @@ public class EditComputerServlet extends HttpServlet {
     String companyName = null;
     if (companyId != null) {
       try {
-        company = CompanyService.getInstance().getById(companyId);
+        company = companyService.getById(companyId);
         companyName = company.isPresent() ? company.get().getName() : null;
       } catch (SQLException e) {
         e.printStackTrace();
@@ -95,7 +112,7 @@ public class EditComputerServlet extends HttpServlet {
       // Validate the entity
       ComputerValidator.validate(computer);
       // Try to insert the entity
-      Computer updatedComputer = ComputerService.getInstance().update(computer);
+      Computer updatedComputer = computerService.update(computer);
 
       // Write data to the page
       response.getWriter().write(computerDto.toString());

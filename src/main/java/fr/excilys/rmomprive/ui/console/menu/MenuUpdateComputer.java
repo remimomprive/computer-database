@@ -7,16 +7,8 @@ import fr.excilys.rmomprive.service.ComputerService;
 import fr.excilys.rmomprive.util.Menus;
 
 public class MenuUpdateComputer extends MenuComputerForm {
-
   private static MenuUpdateComputer instance;
-
-  /**
-   * Private constructor for singleton.
-   */
-  private MenuUpdateComputer() {
-
-  }
-
+  
   @Override
   public void show() {
     int computerId;
@@ -29,7 +21,7 @@ public class MenuUpdateComputer extends MenuComputerForm {
     computer.setId(computerId);
 
     try {
-      Computer createdComputer = ComputerService.getInstance().update(computer);
+      Computer createdComputer = this.computerService.update(computer);
 
       if (createdComputer != null) {
         System.out.println("Successfullly updated " + createdComputer);

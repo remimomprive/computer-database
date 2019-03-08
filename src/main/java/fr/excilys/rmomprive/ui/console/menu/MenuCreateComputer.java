@@ -14,7 +14,7 @@ public class MenuCreateComputer extends MenuComputerForm {
    * Private constructor for singleton.
    */
   private MenuCreateComputer() {
-
+    super();
   }
 
   @Override
@@ -24,7 +24,7 @@ public class MenuCreateComputer extends MenuComputerForm {
 
     // Insert the computer into the database
     try {
-      Optional<Computer> createdComputer = ComputerService.getInstance().add(computer);
+      Optional<Computer> createdComputer = this.computerService.add(computer);
 
       // If the computer was inserted successfully
       if (createdComputer.isPresent()) {

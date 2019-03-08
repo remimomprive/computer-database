@@ -31,7 +31,7 @@ public class MenuListPageComputers extends Menu {
     int pageId = Menus.readInteger("The page id should be an int").get();
 
     try {
-      Page<Computer> computers = ComputerService.getInstance().getPage(pageId, pageSize);
+      Page<Computer> computers = this.computerService.getPage(pageId, pageSize);
 
       if (computers != null) {
         System.out.println(computers);

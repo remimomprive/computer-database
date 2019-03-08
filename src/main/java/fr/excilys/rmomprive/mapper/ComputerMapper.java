@@ -9,15 +9,26 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Optional;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import fr.excilys.rmomprive.configuration.AppConfiguration;
 import fr.excilys.rmomprive.dto.ComputerDto;
 import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.model.Computer.ComputerBuilder;
 import fr.excilys.rmomprive.service.CompanyService;
 import fr.excilys.rmomprive.util.Dates;
+import fr.excilys.rmomprive.util.Menus;
 
 public class ComputerMapper implements IMapper<Computer> {
   private static ComputerMapper instance;
+  private static CompanyService companyService;
+  
+  static {
+    ApplicationContext context = new AnnotationConfigApplicationContext(AppConfiguration.class);
+    ComputerMapper.companyService =  context.getBean(CompanyService.class);
+  }
 
   @Override
   public ComputerDto mapFromEntity(Computer computer) {
@@ -48,7 +59,7 @@ public class ComputerMapper implements IMapper<Computer> {
       }
 
       if (dto.getCompanyId() != null) {
-        Optional<Company> company = CompanyService.getInstance().getById(dto.getCompanyId());
+        Optional<Company> company = companyService.getById(dto.getCompanyId());
         if (company.isPresent()) {
           computerBuilder.setCompany(company.get());
         }

@@ -8,14 +8,22 @@ import java.util.Scanner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.web.context.ContextLoader;
 
+import fr.excilys.rmomprive.configuration.AppConfiguration;
 import fr.excilys.rmomprive.service.CompanyService;
 
 public class Menus {
   private static Logger logger;
+  private static CompanyService companyService;
 
   static {
     Menus.logger = LoggerFactory.getLogger(Menus.class);
+    
+    ApplicationContext context = new AnnotationConfigApplicationContext(AppConfiguration.class);
+    Menus.companyService =  context.getBean(CompanyService.class);
   }
 
   /**
@@ -134,11 +142,11 @@ public class Menus {
       companyId = Menus.readInteger(true, "The company id should be an integer");
 
       if (companyId.isPresent()
-          && !CompanyService.getInstance().checkExistenceById(companyId.get())) {
+          && !companyService.checkExistenceById(companyId.get())) {
         logger.error("The company does not exist\n");
       }
     } while (companyId.isPresent()
-        && !CompanyService.getInstance().checkExistenceById(companyId.get()));
+        && !companyService.checkExistenceById(companyId.get()));
 
     return companyId;
   }
