@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import fr.excilys.rmomprive.exception.ImpossibleActionException;
@@ -30,11 +31,11 @@ public class CompanyDao implements IDao<Company> {
   private static final String FIELD_NAME = "name";
   private static final String FIELD_COUNT = "count";
 
-  /**
-   * Constructor for singleton.
-   */
-  private CompanyDao() {
+  private Database database;
 
+  @Autowired
+  public CompanyDao(Database database) {
+    this.database = database;
   }
 
   /**
@@ -53,7 +54,7 @@ public class CompanyDao implements IDao<Company> {
 
   @Override
   public Optional<Company> getById(long objectId) throws SQLException {
-    try (Connection connection = Database.getConnection()) {
+    try (Connection connection = database.getConnection()) {
       PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID_QUERY);
       statement.setLong(1, objectId);
       ResultSet resultSet = statement.executeQuery();
@@ -70,7 +71,7 @@ public class CompanyDao implements IDao<Company> {
   public List<Company> getByName(String name) throws SQLException {
     List<Company> companies = new ArrayList<>();
     
-    try (Connection connection = Database.getConnection()) {
+    try (Connection connection = database.getConnection()) {
       name = "%" + name + "%";
       
       PreparedStatement statement = connection.prepareStatement(SELECT_BY_NAME_QUERY);
@@ -89,7 +90,7 @@ public class CompanyDao implements IDao<Company> {
   public Collection<Company> getAll() throws SQLException {
     List<Company> result = new ArrayList<>();
 
-    try (Connection connection = Database.getConnection()) {
+    try (Connection connection = database.getConnection()) {
       Statement statement = connection.createStatement();
       ResultSet resultSet = statement.executeQuery(SELECT_ALL_QUERY);
 
@@ -126,7 +127,7 @@ public class CompanyDao implements IDao<Company> {
     Connection connection = null;
     
     try {
-      connection = Database.getConnection();
+      connection = database.getConnection();
       connection.setAutoCommit(false);
       
       PreparedStatement deleteComputers = connection.prepareStatement(DELETE_COMPUTERS_BY_COMPANY_ID_QUERY);
@@ -163,7 +164,7 @@ public class CompanyDao implements IDao<Company> {
   public boolean checkExistenceById(long id) {
     int count = 0;
 
-    try (Connection connection = Database.getConnection()) {
+    try (Connection connection = database.getConnection()) {
       PreparedStatement statement = connection.prepareStatement(CHECK_EXISTENCE_QUERY);
       statement.setLong(1, id);
       ResultSet resultSet = statement.executeQuery();

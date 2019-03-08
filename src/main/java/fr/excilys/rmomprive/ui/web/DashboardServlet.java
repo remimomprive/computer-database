@@ -56,6 +56,7 @@ public class DashboardServlet extends HttpServlet {
     super.init();
     this.logger = LoggerFactory.getLogger(DashboardServlet.class);
     SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+    System.out.print("SERVLET INIT");
   }
 
   @Override

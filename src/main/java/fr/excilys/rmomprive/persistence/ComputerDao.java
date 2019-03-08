@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import fr.excilys.rmomprive.exception.ImpossibleActionException;
@@ -53,6 +54,8 @@ public class ComputerDao implements IDao<Computer> {
   private static String DEFAULT_ORDER_BY = "computer.name";
   private static String DEFAULT_ORDER_DIRECTION = "ASC";
   
+  private Database database;
+  
   static {
     orderColumns = new HashMap();
     orderDirections = new HashMap();
@@ -66,14 +69,10 @@ public class ComputerDao implements IDao<Computer> {
     orderDirections.put("desc", "DESC");
   }
 
-  /**
-   * Private contructor for singleton.
-   */
-  private ComputerDao() {
-
+  @Autowired
+  private ComputerDao(Database database) {
+    this.database = database;
   }
-
-  /// TODO : find computer by name
 
   /**
    * Create a Computer object from a ResultSet given by a database result.
@@ -104,7 +103,7 @@ public class ComputerDao implements IDao<Computer> {
 
   @Override
   public Optional<Computer> getById(long objectId) throws SQLException {
-    try (Connection connection = Database.getConnection()) {
+    try (Connection connection = database.getConnection()) {
       PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID_QUERY);
       statement.setLong(1, objectId);
       ResultSet resultSet = statement.executeQuery();
@@ -121,7 +120,7 @@ public class ComputerDao implements IDao<Computer> {
   public List<Computer> getByName(String name) throws SQLException {
     List<Computer> computers = new ArrayList<>();
 
-    try (Connection connection = Database.getConnection()) {
+    try (Connection connection = database.getConnection()) {
       name = "%" + name + "%";
 
       PreparedStatement statement = connection.prepareStatement(SELECT_BY_NAME_QUERY);
@@ -140,7 +139,7 @@ public class ComputerDao implements IDao<Computer> {
   public Collection<Computer> getAll() throws SQLException {
     List<Computer> result = new ArrayList<>();
 
-    try (Connection connection = Database.getConnection()) {
+    try (Connection connection = database.getConnection()) {
       Statement statement = connection.createStatement();
       ResultSet resultSet = statement.executeQuery(SELECT_ALL_QUERY);
 
@@ -154,7 +153,7 @@ public class ComputerDao implements IDao<Computer> {
 
   @Override
   public Optional<Computer> add(Computer object) throws SQLException {
-    try (Connection connection = Database.getConnection()) {
+    try (Connection connection = database.getConnection()) {
       PreparedStatement statement = (object.getCompany() != null)
           ? connection.prepareStatement(INSERT_QUERY, Statement.RETURN_GENERATED_KEYS)
           : connection.prepareStatement(INSERT_QUERY_WITHOUT_COMPANY,
@@ -186,7 +185,7 @@ public class ComputerDao implements IDao<Computer> {
 
   @Override
   public Computer update(Computer object) throws SQLException {
-    try (Connection connection = Database.getConnection()) {
+    try (Connection connection = database.getConnection()) {
       PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY);
       statement.setString(1, object.getName());
       statement.setObject(2, object.getIntroduced());
@@ -205,7 +204,7 @@ public class ComputerDao implements IDao<Computer> {
 
   @Override
   public boolean deleteById(long id) throws SQLException {
-    try (Connection connection = Database.getConnection()) {
+    try (Connection connection = database.getConnection()) {
       PreparedStatement statement = connection.prepareStatement(DELETE_QUERY);
       statement.setLong(1, id);
       return (statement.executeUpdate() != 0);
@@ -214,7 +213,7 @@ public class ComputerDao implements IDao<Computer> {
 
   @Override
   public boolean deleteByIds(List<Long> ids) throws SQLException {
-    try (Connection connection = Database.getConnection()) {
+    try (Connection connection = database.getConnection()) {
       // Get the amount of ?s
       StringBuilder idStringBuilder = new StringBuilder();
       for (int i = 0; i < ids.size() - 1; i++) {
@@ -240,7 +239,7 @@ public class ComputerDao implements IDao<Computer> {
   public boolean checkExistenceById(long id) throws SQLException {
     int count = 0;
 
-    try (Connection connection = Database.getConnection()) {
+    try (Connection connection = database.getConnection()) {
       PreparedStatement statement = connection.prepareStatement(CHECK_EXISTENCE_QUERY);
       statement.setLong(1, id);
       ResultSet resultSet = statement.executeQuery();
@@ -257,7 +256,7 @@ public class ComputerDao implements IDao<Computer> {
   public int getRowCount() throws SQLException {
     int count = -1;
 
-    try (Connection connection = Database.getConnection()) {
+    try (Connection connection = database.getConnection()) {
       Statement statement = connection.createStatement();
       ResultSet resultSet = statement.executeQuery(COUNT_QUERY);
 
@@ -272,7 +271,7 @@ public class ComputerDao implements IDao<Computer> {
   public int getRowCount(String search) throws SQLException {
     int count = -1;
 
-    try (Connection connection = Database.getConnection()) {
+    try (Connection connection = database.getConnection()) {
       PreparedStatement statement = connection.prepareStatement(COUNT_QUERY_SEARCH);
       search = "%" + search + "%";
       statement.setString(1, search);
@@ -314,7 +313,7 @@ public class ComputerDao implements IDao<Computer> {
 
         List<Computer> computers = new ArrayList<>();
 
-        try (Connection connection = Database.getConnection()) {
+        try (Connection connection = database.getConnection()) {
           // Retrieve the page content
           PreparedStatement statement = connection.prepareStatement(query);
           for (int i = 1; i <= parameters.length; i++) {

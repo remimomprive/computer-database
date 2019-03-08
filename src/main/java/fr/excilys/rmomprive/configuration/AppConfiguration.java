@@ -1,19 +1,22 @@
 package fr.excilys.rmomprive.configuration;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import javax.sql.DataSource;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
-@ComponentScan({"fr.excilys.rmomprive.service", "fr.excilys.rmomprive.persistence"})
+@ComponentScan({ "fr.excilys.rmomprive.service", "fr.excilys.rmomprive.persistence" })
 public class AppConfiguration {
   @Bean
-  @ConfigurationProperties("app.datasource")
   public DataSource dataSource() {
-    return DataSourceBuilder.create().build();
+    HikariConfig config = new HikariConfig("/hikari.properties");
+    return new HikariDataSource(config);
   }
 }

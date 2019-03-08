@@ -6,19 +6,19 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
-
+@Service
 public class Database {
+  private DataSource dataSource;
+  
   @Autowired
-  private static DataSource dataSource;
+  public Database(DataSource dataSource) {
+    this.dataSource = dataSource;
+  }
 
-  /**
-   * @return The instance of Connection in memory.
-   * @throws SQLException If an error accessing the database happened.
-   */
-  public static Connection getConnection() throws SQLException {
+  public Connection getConnection() throws SQLException {
    return dataSource.getConnection();
   }
 }

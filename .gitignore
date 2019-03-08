@@ -10,4 +10,3 @@ target/
 /bin/
 
 src/main/resources/hikari.properties
-src/main/resources/application.properties
