@@ -5,12 +5,14 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 public class Database {
-  private static HikariConfig hikariConfig = new HikariConfig("src/main/resources/hikari.properties");
-  private static DataSource dataSource = new HikariDataSource(hikariConfig);
+  @Autowired
+  private static DataSource dataSource;
 
   /**
    * @return The instance of Connection in memory.
