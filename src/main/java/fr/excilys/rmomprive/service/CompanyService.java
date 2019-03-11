@@ -14,11 +14,11 @@ import fr.excilys.rmomprive.pagination.Page;
 import fr.excilys.rmomprive.persistence.CompanyDao;
 
 @Service
-public class CompanyService implements IService<Company> {
+public class CompanyService implements ICompanyService {
 
   @Autowired
   private CompanyDao companyDao;
-  
+
   /**
    * Private constructor for singleton.
    */

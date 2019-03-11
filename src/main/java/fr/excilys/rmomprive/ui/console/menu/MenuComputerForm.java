@@ -13,11 +13,13 @@ import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.model.Computer.ComputerBuilder;
 import fr.excilys.rmomprive.service.CompanyService;
 import fr.excilys.rmomprive.service.ComputerService;
+import fr.excilys.rmomprive.service.ICompanyService;
+import fr.excilys.rmomprive.service.IComputerService;
 import fr.excilys.rmomprive.util.Menus;
 
 public abstract class MenuComputerForm extends Menu {
-  protected CompanyService companyService;
-  protected ComputerService computerService;
+  protected ICompanyService companyService;
+  protected IComputerService computerService;
 
   public MenuComputerForm() {
     this.companyService = super.companyService;

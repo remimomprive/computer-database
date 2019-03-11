@@ -8,7 +8,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import fr.excilys.rmomprive.dto.IDto;
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.exception.InvalidPageSizeException;
 import fr.excilys.rmomprive.model.Company;
@@ -20,7 +19,7 @@ import fr.excilys.rmomprive.persistence.ComputerDao;
 import fr.excilys.rmomprive.validation.ComputerValidator;
 
 @Service
-public class ComputerService implements IService<Computer> {
+public class ComputerService implements IComputerService {
 
   @Autowired
   private ComputerDao computerDao;
@@ -45,11 +44,7 @@ public class ComputerService implements IService<Computer> {
     return computerDao.getByName(name);
   }
 
-  /**
-   * @param id The computer id
-   * @return The computer details of a specific computer
-   * @throws SQLException If an error accessing the database happened
-   */
+  @Override
   public Optional<ComputerDetails> getDetailsByComputerId(final int id) throws SQLException {
     Optional<Computer> computer = computerDao.getById(id);
 
@@ -112,6 +107,7 @@ public class ComputerService implements IService<Computer> {
     return computerDao.getRowCount();
   }
 
+  @Override
   public int getRowCount(String search) throws SQLException {
     return computerDao.getRowCount(search);
   }
@@ -121,6 +117,7 @@ public class ComputerService implements IService<Computer> {
     return computerDao.getPageCount(pageSize);
   }
   
+  @Override
   public int getPageCount(int pageSize, String search) throws SQLException {
     return computerDao.getPageCount(pageSize, search);
   }
@@ -131,15 +128,24 @@ public class ComputerService implements IService<Computer> {
     return computerDao.getPage(new Page<Computer>(pageId, pageSize));
   }
   
+  @Override
   public Page<Computer> getByNameOrCompanyName(int pageId, int pageSize, String name,
       String orderBy, String orderDirection) throws SQLException, InvalidPageSizeException, InvalidPageIdException {
     return computerDao.getByNameOrCompanyName(new Page<Computer>(pageId, pageSize), name, orderBy, orderDirection);
   }
 
+  /**
+   * Only used for mock
+   * @return
+   */
   public Object getComputerDao() {
     return null;
   }
 
+  /**
+   * Only used for mock
+   * @return
+   */
   public Object getCompanyDao() {
     return null;
   }

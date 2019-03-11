@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.Optional;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import fr.excilys.rmomprive.dto.ComputerDto;
@@ -24,8 +22,8 @@ import fr.excilys.rmomprive.exception.ValidationException;
 import fr.excilys.rmomprive.mapper.ComputerMapper;
 import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.model.Computer;
-import fr.excilys.rmomprive.service.CompanyService;
-import fr.excilys.rmomprive.service.ComputerService;
+import fr.excilys.rmomprive.service.ICompanyService;
+import fr.excilys.rmomprive.service.IComputerService;
 import fr.excilys.rmomprive.validation.ComputerValidator;
 
 @WebServlet("/addComputer")
@@ -35,10 +33,10 @@ public class AddComputerServlet extends HttpServlet {
   private Logger logger;
   
   @Autowired
-  private CompanyService companyService;
+  private ICompanyService companyService;
   
   @Autowired
-  private ComputerService computerService;
+  private IComputerService computerService;
 
   @Override
   public void init() throws ServletException {

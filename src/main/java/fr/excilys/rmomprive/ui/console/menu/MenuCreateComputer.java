@@ -14,7 +14,7 @@ public class MenuCreateComputer extends MenuComputerForm {
    * Private constructor for singleton.
    */
   private MenuCreateComputer() {
-    super();
+
   }
 
   @Override

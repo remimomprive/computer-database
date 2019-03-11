@@ -48,23 +48,23 @@ public class ComputerDao implements IDao<Computer> {
   private static final String FIELD_COMPANY_ID = "computer.company_id";
   private static final String FIELD_COMPANY_NAME = "company.name";
   private static final String FIELD_COUNT = "count";
-  
+
   public static Map<String, String> orderColumns;
   public static Map<String, String> orderDirections;
   private static String DEFAULT_ORDER_BY = "computer.name";
   private static String DEFAULT_ORDER_DIRECTION = "ASC";
-  
+
   private Database database;
-  
+
   static {
     orderColumns = new HashMap();
     orderDirections = new HashMap();
-    
+
     orderColumns.put("name", FIELD_NAME);
     orderColumns.put("introduced", FIELD_INTRODUCED);
     orderColumns.put("discontinued", FIELD_DISCONTINUED);
     orderColumns.put("company_name", FIELD_COMPANY_NAME);
-    
+
     orderDirections.put("asc", "ASC");
     orderDirections.put("desc", "DESC");
   }
@@ -89,9 +89,13 @@ public class ComputerDao implements IDao<Computer> {
     Timestamp discontinuedTimestamp = resultSet.getTimestamp(FIELD_DISCONTINUED);
     int companyId = resultSet.getInt(FIELD_COMPANY_ID);
     String companyName = resultSet.getString(FIELD_COMPANY_NAME);
-    
-    LocalDate introduced = (introducedTimestamp != null) ? introducedTimestamp.toLocalDateTime().toLocalDate(): null;
-    LocalDate discontinued = (discontinuedTimestamp != null) ? discontinuedTimestamp.toLocalDateTime().toLocalDate(): null;
+
+    LocalDate introduced = (introducedTimestamp != null)
+        ? introducedTimestamp.toLocalDateTime().toLocalDate()
+        : null;
+    LocalDate discontinued = (discontinuedTimestamp != null)
+        ? discontinuedTimestamp.toLocalDateTime().toLocalDate()
+        : null;
 
     Company company = null;
     if (companyName != null) {
@@ -267,7 +271,7 @@ public class ComputerDao implements IDao<Computer> {
 
     return count;
   }
-  
+
   public int getRowCount(String search) throws SQLException {
     int count = -1;
 
@@ -290,7 +294,7 @@ public class ComputerDao implements IDao<Computer> {
   public int getPageCount(int pageSize) throws SQLException {
     return (int) Math.ceil((1.0 * this.getRowCount()) / pageSize);
   }
-  
+
   public int getPageCount(int pageSize, String search) throws SQLException {
     return (int) Math.ceil((1.0 * this.getRowCount(search)) / pageSize);
   }
@@ -343,17 +347,18 @@ public class ComputerDao implements IDao<Computer> {
     return this.getPage(page, SELECT_PAGE_QUERY, new String[] {});
   }
 
-  public Page<Computer> getByNameOrCompanyName(Page page, String name, String orderBy, String orderDirection)
-      throws SQLException, InvalidPageSizeException, InvalidPageIdException {
+  public Page<Computer> getByNameOrCompanyName(Page page, String name, String orderBy,
+      String orderDirection) throws SQLException, InvalidPageSizeException, InvalidPageIdException {
     name = "%" + name + "%";
-    
+
     String orderByMap = ComputerDao.orderColumns.get(orderBy);
     String orderDirectionMap = ComputerDao.orderDirections.get(orderDirection);
-    
+
     String selectByNameOrCompany = SELECT_BY_NAME_OR_COMPANY_QUERY
         .replace(":order_by:", orderByMap != null ? orderByMap : DEFAULT_ORDER_BY)
-        .replace(":order_direction:", orderDirectionMap != null ? orderDirectionMap : DEFAULT_ORDER_DIRECTION);
-    
-    return this.getPage(page, selectByNameOrCompany, new String[] {name, name});
+        .replace(":order_direction:",
+            orderDirectionMap != null ? orderDirectionMap : DEFAULT_ORDER_DIRECTION);
+
+    return this.getPage(page, selectByNameOrCompany, new String[]{ name, name });
   }
 }
