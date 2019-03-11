@@ -11,6 +11,8 @@ import fr.excilys.rmomprive.pagination.Page;
 
 public interface IComputerService extends IService<Computer> {
   /**
+   * Get the details for the specified computer.
+   *
    * @param id The computer id
    * @return The computer details of a specific computer
    * @throws DaoException If an error accessing the database happened
@@ -18,33 +20,36 @@ public interface IComputerService extends IService<Computer> {
   Optional<ComputerDetails> getDetailsByComputerId(final int id) throws DaoException;
 
   /**
-   * Get the number of rows for the specificied search query
+   * Get the number of rows for the specificied search query.
+   *
    * @param search The search query
    * @return The number of rows
    * @throws DaoException If an error accessing the database happened
    */
   int getRowCount(String search) throws DaoException;
-  
+
   /**
-   * Get the number of pages for the specified search query and page size
+   * Get the number of pages for the specified search query and page size.
+   *
    * @param pageSize The page size
-   * @param search The search query
+   * @param search   The search query
    * @return The page count
    * @throws DaoException If an error accessing the database happened
    */
   int getPageCount(int pageSize, String search) throws DaoException;
-  
+
   /**
-   * Query a specific page with its parameters 
-   * @param pageId The page id
-   * @param pageSize The page size
-   * @param name The search query
-   * @param orderBy The column to order by
+   * Query a specific page with its parameters.
+   *
+   * @param pageId         The page id
+   * @param pageSize       The page size
+   * @param name           The search query
+   * @param orderBy        The column to order by
    * @param orderDirection The order direction
    * @return The page content
-   * @throws DaoException If an error accessing the database happened
+   * @throws DaoException             If an error accessing the database happened
    * @throws InvalidPageSizeException The the page size is not valid
-   * @throws InvalidPageIdException If the page id is not valid
+   * @throws InvalidPageIdException   If the page id is not valid
    */
   Page<Computer> getByNameOrCompanyName(int pageId, int pageSize, String name, String orderBy,
       String orderDirection) throws DaoException, InvalidPageSizeException, InvalidPageIdException;

@@ -75,25 +75,6 @@ public class ComputerMapper implements IMapper<Computer> {
   }
 
   /**
-   * Parse a date object for printing.
-   *
-   * @param dateString The date object
-   * @return The output string
-   */
-  private Date parseStringToDate(String dateString) {
-    if (dateString != null && !dateString.equals("")) {
-      DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.FRENCH);
-      try {
-        return format.parse(dateString);
-      } catch (ParseException e) {
-        e.printStackTrace();
-      }
-    }
-
-    return null;
-  }
-
-  /**
    * @return The instance of ComputerMapper in memory
    */
   public static ComputerMapper getInstance() {

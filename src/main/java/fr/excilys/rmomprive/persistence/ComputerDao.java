@@ -58,8 +58,8 @@ public class ComputerDao implements IDao<Computer> {
   private Database database;
 
   static {
-    orderColumns = new HashMap();
-    orderDirections = new HashMap();
+    orderColumns = new HashMap<>();
+    orderDirections = new HashMap<>();
 
     orderColumns.put("name", FIELD_NAME);
     orderColumns.put("introduced", FIELD_INTRODUCED);
@@ -183,6 +183,7 @@ public class ComputerDao implements IDao<Computer> {
       statement.executeUpdate();
 
       ResultSet rs = statement.getGeneratedKeys();
+      statement.close();
       if (rs.next()) {
         computer.setId(rs.getInt(1));
         return Optional.of(computer);
@@ -323,7 +324,7 @@ public class ComputerDao implements IDao<Computer> {
     return (int) Math.ceil((1.0 * this.getRowCount(search)) / pageSize);
   }
 
-  private Page<Computer> getPage(Page page, String query, String[] parameters)
+  private Page<Computer> getPage(Page<Computer> page, String query, String[] parameters)
       throws DaoException, InvalidPageSizeException, InvalidPageIdException {
     if (page != null) {
       // Compute the page count
@@ -368,12 +369,12 @@ public class ComputerDao implements IDao<Computer> {
   }
 
   @Override
-  public Page<Computer> getPage(Page page)
+  public Page<Computer> getPage(Page<Computer> page)
       throws InvalidPageIdException, InvalidPageSizeException, DaoException {
     return this.getPage(page, SELECT_PAGE_QUERY, new String[] {});
   }
 
-  public Page<Computer> getByNameOrCompanyName(Page page, String name, String orderBy,
+  public Page<Computer> getByNameOrCompanyName(Page<Computer> page, String name, String orderBy,
       String orderDirection) throws DaoException, InvalidPageSizeException, InvalidPageIdException {
     name = "%" + name.toUpperCase() + "%";
 

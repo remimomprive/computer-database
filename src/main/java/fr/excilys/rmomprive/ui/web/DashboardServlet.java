@@ -1,7 +1,6 @@
 package fr.excilys.rmomprive.ui.web;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +22,6 @@ import fr.excilys.rmomprive.exception.InvalidPageSizeException;
 import fr.excilys.rmomprive.mapper.ComputerMapper;
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.pagination.Page;
-import fr.excilys.rmomprive.service.ICompanyService;
 import fr.excilys.rmomprive.service.IComputerService;
 
 import org.slf4j.Logger;
@@ -42,10 +40,7 @@ public class DashboardServlet extends HttpServlet {
   private String orderBy = DEFAULT_ORDER_BY;
   private String orderDirection = DEFAULT_ORDER_DIRECTION;
 
-  private Logger logger;
-
-  @Autowired
-  private ICompanyService companyService;
+  private Logger LOGGER;
 
   @Autowired
   private IComputerService computerService;
@@ -53,7 +48,7 @@ public class DashboardServlet extends HttpServlet {
   @Override
   public void init() throws ServletException {
     super.init();
-    this.logger = LoggerFactory.getLogger(DashboardServlet.class);
+    this.LOGGER = LoggerFactory.getLogger(DashboardServlet.class);
     SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
   }
 
@@ -136,16 +131,16 @@ public class DashboardServlet extends HttpServlet {
       throws ServletException, IOException {
     String selection = request.getParameter("selection");
     String[] idsString = selection.split(",");
-    List<Long> ids = new ArrayList();
+    List<Long> ids = new ArrayList<>();
     for (String id : idsString) {
       ids.add(Long.valueOf(id));
     }
 
     try {
       computerService.deleteByIds(ids);
-      logger.info("Successfully deleted computers {}", idsString);
+      LOGGER.info("Successfully deleted computers {}", idsString.toString());
     } catch (DaoException e) {
-      logger.error("An error happened while trying to delete computers {}", idsString);
+      LOGGER.error("An error happened while trying to delete computers {}", idsString.toString());
     }
   }
 

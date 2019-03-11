@@ -207,7 +207,7 @@ public class CompanyDao implements IDao<Company> {
   }
 
   @Override
-  public Page<Company> getPage(Page page) throws InvalidPageIdException {
+  public Page<Company> getPage(Page<Company> page) throws InvalidPageIdException {
     throw new ImpossibleActionException();
   }
 }

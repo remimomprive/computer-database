@@ -11,7 +11,7 @@ import fr.excilys.rmomprive.service.IComputerService;
 import fr.excilys.rmomprive.ui.console.Console;
 
 public abstract class Menu {
-  private Logger logger;
+  private final Logger LOGGER;
   protected ICompanyService companyService;
   protected IComputerService computerService;
 
@@ -19,7 +19,7 @@ public abstract class Menu {
    * Protected constructor for abstract class.
    */
   protected Menu() {
-    this.logger = LoggerFactory.getLogger(Console.class);
+    this.LOGGER = LoggerFactory.getLogger(Console.class);
     ApplicationContext context = new AnnotationConfigApplicationContext(AppConfiguration.class);
     this.companyService = context.getBean(ICompanyService.class);
     this.computerService = context.getBean(IComputerService.class);
@@ -31,6 +31,6 @@ public abstract class Menu {
   public abstract void show();
 
   protected Logger getLogger() {
-    return logger;
+    return LOGGER;
   }
 }

@@ -1,8 +1,5 @@
 package fr.excilys.rmomprive.configuration;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;

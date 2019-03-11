@@ -87,5 +87,5 @@ public interface IDao<T> {
    * @throws InvalidPageIdException   if the page id is not valid (<1 or too large)
    * @throws InvalidPageSizeException (if the page size is not valid (<1)
    */
-  Page<T> getPage(Page page) throws InvalidPageIdException, InvalidPageSizeException, DaoException;
+  Page<T> getPage(Page<T> page) throws InvalidPageIdException, InvalidPageSizeException, DaoException;
 }
