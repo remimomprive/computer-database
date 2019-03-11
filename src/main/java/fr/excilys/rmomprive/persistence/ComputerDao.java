@@ -183,7 +183,6 @@ public class ComputerDao implements IDao<Computer> {
       statement.executeUpdate();
 
       ResultSet rs = statement.getGeneratedKeys();
-      statement.close();
       if (rs.next()) {
         computer.setId(rs.getInt(1));
         return Optional.of(computer);
