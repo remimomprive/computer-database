@@ -359,6 +359,6 @@ public class ComputerDao implements IDao<Computer> {
         .replace(":order_direction:",
             orderDirectionMap != null ? orderDirectionMap : DEFAULT_ORDER_DIRECTION);
 
-    return this.getPage(page, selectByNameOrCompany, new String[]{ name, name });
+    return this.getPage(page, selectByNameOrCompany, new String[] { name, name });
   }
 }

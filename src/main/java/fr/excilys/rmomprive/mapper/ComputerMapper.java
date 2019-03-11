@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -17,17 +19,18 @@ import fr.excilys.rmomprive.dto.ComputerDto;
 import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.model.Computer.ComputerBuilder;
-import fr.excilys.rmomprive.service.CompanyService;
+import fr.excilys.rmomprive.service.ICompanyService;
 import fr.excilys.rmomprive.util.Dates;
-import fr.excilys.rmomprive.util.Menus;
 
 public class ComputerMapper implements IMapper<Computer> {
   private static ComputerMapper instance;
-  private static CompanyService companyService;
+  private static ICompanyService companyService;
+  private static Logger LOGGER;
   
   static {
     ApplicationContext context = new AnnotationConfigApplicationContext(AppConfiguration.class);
-    ComputerMapper.companyService =  context.getBean(CompanyService.class);
+    ComputerMapper.companyService =  context.getBean(ICompanyService.class);
+    ComputerMapper.LOGGER = LoggerFactory.getLogger(ComputerMapper.class);
   }
 
   @Override
@@ -64,12 +67,8 @@ public class ComputerMapper implements IMapper<Computer> {
           computerBuilder.setCompany(company.get());
         }
       }
-    } catch (DateTimeParseException e) {
-      e.printStackTrace();
-    } catch (NumberFormatException e) {
-      e.printStackTrace();
-    } catch (SQLException e) {
-      e.printStackTrace();
+    } catch (DateTimeParseException | NumberFormatException | SQLException e) {
+      LOGGER.error(e.getMessage());
     }
 
     return computerBuilder.build();
