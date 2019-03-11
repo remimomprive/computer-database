@@ -13,10 +13,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import fr.excilys.rmomprive.dto.ComputerDto;
+import fr.excilys.rmomprive.exception.DaoException;
 import fr.excilys.rmomprive.exception.ValidationException;
 import fr.excilys.rmomprive.mapper.ComputerMapper;
 import fr.excilys.rmomprive.model.Company;
@@ -35,10 +38,13 @@ public class EditComputerServlet extends HttpServlet {
   @Autowired
   private IComputerService computerService;
   
+  private Logger LOGGER;
+  
   @Override
   public void init() throws ServletException {
     super.init();
     SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+    this.LOGGER = LoggerFactory.getLogger(EditComputerServlet.class);
   }
 
   @Override
@@ -53,7 +59,7 @@ public class EditComputerServlet extends HttpServlet {
       companies = companyService.getAll();
     } catch (NumberFormatException e) {
       e.printStackTrace();
-    } catch (SQLException e) {
+    } catch (DaoException e) {
       e.printStackTrace();
     }
 
@@ -95,7 +101,7 @@ public class EditComputerServlet extends HttpServlet {
       try {
         company = companyService.getById(companyId);
         companyName = company.isPresent() ? company.get().getName() : null;
-      } catch (SQLException e) {
+      } catch (DaoException e) {
         e.printStackTrace();
       }
     }
@@ -119,7 +125,9 @@ public class EditComputerServlet extends HttpServlet {
       // Show an error page
       RequestDispatcher dispatcher = request.getRequestDispatcher("/views/500.jsp");
       dispatcher.forward(request, response);
-    } catch (SQLException e) {
+      
+      LOGGER.error(e.getMessage());
+    } catch (DaoException e) {
       e.printStackTrace();
     }
   }

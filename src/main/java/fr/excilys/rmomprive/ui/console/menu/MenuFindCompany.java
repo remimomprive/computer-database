@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+import fr.excilys.rmomprive.exception.DaoException;
 import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.service.CompanyService;
 import fr.excilys.rmomprive.service.ComputerService;
@@ -29,7 +30,7 @@ public class MenuFindCompany extends Menu {
     try {
       List<Company> companies = this.companyService.getByName(companyName);
       System.out.println(companies);
-    } catch (SQLException e) {
+    } catch (DaoException e) {
       e.printStackTrace();
     }
   }

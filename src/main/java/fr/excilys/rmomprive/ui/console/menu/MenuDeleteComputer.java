@@ -1,8 +1,6 @@
 package fr.excilys.rmomprive.ui.console.menu;
 
-import java.sql.SQLException;
-
-import fr.excilys.rmomprive.service.ComputerService;
+import fr.excilys.rmomprive.exception.DaoException;
 import fr.excilys.rmomprive.util.Menus;
 
 public class MenuDeleteComputer extends Menu {
@@ -28,7 +26,7 @@ public class MenuDeleteComputer extends Menu {
       } else {
         getLogger().error("An error happened while trying to delete computer {}\n", computerId);
       }
-    } catch (SQLException e) {
+    } catch (DaoException e) {
       e.printStackTrace();
     }
   }

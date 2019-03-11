@@ -1,10 +1,9 @@
 package fr.excilys.rmomprive.ui.console.menu;
 
-import java.sql.SQLException;
 import java.util.Collection;
 
+import fr.excilys.rmomprive.exception.DaoException;
 import fr.excilys.rmomprive.model.Company;
-import fr.excilys.rmomprive.service.CompanyService;
 
 public class MenuListCompanies extends Menu {
 
@@ -22,7 +21,7 @@ public class MenuListCompanies extends Menu {
     try {
       Collection<Company> companies = this.companyService.getAll();
       System.out.println(companies);
-    } catch (SQLException e) {
+    } catch (DaoException e) {
       e.printStackTrace();
     }
   }

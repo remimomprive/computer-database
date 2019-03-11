@@ -1,18 +1,12 @@
 package fr.excilys.rmomprive.ui.console.menu;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
-import fr.excilys.rmomprive.configuration.AppConfiguration;
+import fr.excilys.rmomprive.exception.DaoException;
 import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.model.Computer.ComputerBuilder;
-import fr.excilys.rmomprive.service.CompanyService;
-import fr.excilys.rmomprive.service.ComputerService;
 import fr.excilys.rmomprive.service.ICompanyService;
 import fr.excilys.rmomprive.service.IComputerService;
 import fr.excilys.rmomprive.util.Menus;
@@ -66,7 +60,7 @@ public abstract class MenuComputerForm extends Menu {
         if (company.isPresent()) {
           computerBuilder.setCompany(company.get());
         }
-      } catch (SQLException e) {
+      } catch (DaoException e) {
         e.printStackTrace();
       }
 

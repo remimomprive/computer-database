@@ -17,6 +17,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import fr.excilys.rmomprive.exception.DaoException;
 import fr.excilys.rmomprive.exception.ImpossibleActionException;
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.exception.InvalidPageSizeException;
@@ -28,7 +29,7 @@ import fr.excilys.rmomprive.pagination.Page;
 public class ComputerDao implements IDao<Computer> {
   private static final String SELECT_BY_ID_QUERY = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON company.id = company_id  WHERE computer.id = ?";
   private static final String SELECT_BY_NAME_QUERY = "SELECT id, name FROM computer WHERE name LIKE ?";
-  private static final String SELECT_BY_NAME_OR_COMPANY_QUERY = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON company.id = company_id WHERE computer.name LIKE ? OR company.name LIKE ? "
+  private static final String SELECT_BY_NAME_OR_COMPANY_QUERY = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON company.id = company_id WHERE UPPER(computer.name) LIKE ? OR UPPER(company.name) LIKE ? "
       + "ORDER BY :order_by: :order_direction: LIMIT ? OFFSET ?";
   private static final String SELECT_ALL_QUERY = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON company.id = company_id";
   private static final String DELETE_QUERY = "DELETE FROM computer where id = ?";
@@ -79,14 +80,17 @@ public class ComputerDao implements IDao<Computer> {
    *
    * @param resultSet The ResultSet value
    * @return The Computer object
-   * @throws SQLException if the columnLabel is not valid; if a database access error occurs or this
-   *                      method is called on a closed result set
+   * @throws SQLException if the column Label is not valid; if a database access error occurs or
+   *                      this method is called on a closed result set
    */
   private Computer createFromResultSet(ResultSet resultSet) throws SQLException {
     int id = resultSet.getInt(FIELD_ID);
     String name = resultSet.getString(FIELD_NAME);
     Timestamp introducedTimestamp = resultSet.getTimestamp(FIELD_INTRODUCED);
-    Timestamp discontinuedTimestamp = resultSet.getTimestamp(FIELD_DISCONTINUED);
+    Timestamp discontinuedTimestamp;
+
+    discontinuedTimestamp = resultSet.getTimestamp(FIELD_DISCONTINUED);
+
     int companyId = resultSet.getInt(FIELD_COMPANY_ID);
     String companyName = resultSet.getString(FIELD_COMPANY_NAME);
 
@@ -106,22 +110,24 @@ public class ComputerDao implements IDao<Computer> {
   }
 
   @Override
-  public Optional<Computer> getById(long objectId) throws SQLException {
+  public Optional<Computer> getById(long id) throws DaoException {
     try (Connection connection = database.getConnection()) {
       PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID_QUERY);
-      statement.setLong(1, objectId);
+      statement.setLong(1, id);
       ResultSet resultSet = statement.executeQuery();
 
       while (resultSet.next()) {
         return Optional.of(createFromResultSet(resultSet));
       }
+    } catch (SQLException e) {
+      throw new DaoException();
     }
 
     return Optional.empty();
   }
 
   @Override
-  public List<Computer> getByName(String name) throws SQLException {
+  public List<Computer> getByName(String name) throws DaoException {
     List<Computer> computers = new ArrayList<>();
 
     try (Connection connection = database.getConnection()) {
@@ -134,13 +140,15 @@ public class ComputerDao implements IDao<Computer> {
       while (resultSet.next()) {
         computers.add(createFromResultSet(resultSet));
       }
+    } catch (SQLException e) {
+      throw new DaoException();
     }
 
     return computers;
   }
 
   @Override
-  public Collection<Computer> getAll() throws SQLException {
+  public Collection<Computer> getAll() throws DaoException {
     List<Computer> result = new ArrayList<>();
 
     try (Connection connection = database.getConnection()) {
@@ -150,33 +158,37 @@ public class ComputerDao implements IDao<Computer> {
       while (resultSet.next()) {
         result.add(createFromResultSet(resultSet));
       }
+    } catch (SQLException e) {
+      throw new DaoException();
     }
 
     return result;
   }
 
   @Override
-  public Optional<Computer> add(Computer object) throws SQLException {
+  public Optional<Computer> add(Computer computer) throws DaoException {
     try (Connection connection = database.getConnection()) {
-      PreparedStatement statement = (object.getCompany() != null)
+      PreparedStatement statement = (computer.getCompany() != null)
           ? connection.prepareStatement(INSERT_QUERY, Statement.RETURN_GENERATED_KEYS)
           : connection.prepareStatement(INSERT_QUERY_WITHOUT_COMPANY,
               Statement.RETURN_GENERATED_KEYS);
-      statement.setString(1, object.getName());
-      statement.setObject(2, object.getIntroduced());
-      statement.setObject(3, object.getDiscontinued());
+      statement.setString(1, computer.getName());
+      statement.setObject(2, computer.getIntroduced());
+      statement.setObject(3, computer.getDiscontinued());
 
-      if (object.getCompany() != null) {
-        statement.setLong(4, object.getCompany().getId());
+      if (computer.getCompany() != null) {
+        statement.setLong(4, computer.getCompany().getId());
       }
 
       statement.executeUpdate();
 
       ResultSet rs = statement.getGeneratedKeys();
       if (rs.next()) {
-        object.setId(rs.getInt(1));
-        return Optional.of(object);
+        computer.setId(rs.getInt(1));
+        return Optional.of(computer);
       }
+    } catch (SQLException e) {
+      throw new DaoException();
     }
 
     return Optional.empty();
@@ -188,35 +200,39 @@ public class ComputerDao implements IDao<Computer> {
   }
 
   @Override
-  public Computer update(Computer object) throws SQLException {
+  public Computer update(Computer computer) throws DaoException {
     try (Connection connection = database.getConnection()) {
       PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY);
-      statement.setString(1, object.getName());
-      statement.setObject(2, object.getIntroduced());
-      statement.setObject(3, object.getDiscontinued());
-      statement.setObject(4, (object.getCompany() != null) ? object.getCompany().getId() : null);
-      statement.setLong(5, object.getId());
+      statement.setString(1, computer.getName());
+      statement.setObject(2, computer.getIntroduced());
+      statement.setObject(3, computer.getDiscontinued());
+      statement.setObject(4, (computer.getCompany() != null) ? computer.getCompany().getId() : null);
+      statement.setLong(5, computer.getId());
       statement.executeUpdate();
-      return object;
+      return computer;
+    } catch (SQLException e) {
+      throw new DaoException();
     }
   }
 
   @Override
-  public boolean delete(Computer object) throws SQLException {
-    return deleteById(object.getId());
+  public boolean delete(Computer computer) throws DaoException {
+    return deleteById(computer.getId());
   }
 
   @Override
-  public boolean deleteById(long id) throws SQLException {
+  public boolean deleteById(long id) throws DaoException {
     try (Connection connection = database.getConnection()) {
       PreparedStatement statement = connection.prepareStatement(DELETE_QUERY);
       statement.setLong(1, id);
       return (statement.executeUpdate() != 0);
+    } catch (SQLException e) {
+      throw new DaoException();
     }
   }
 
   @Override
-  public boolean deleteByIds(List<Long> ids) throws SQLException {
+  public boolean deleteByIds(List<Long> ids) throws DaoException {
     try (Connection connection = database.getConnection()) {
       // Get the amount of ?s
       StringBuilder idStringBuilder = new StringBuilder();
@@ -236,11 +252,13 @@ public class ComputerDao implements IDao<Computer> {
 
       // Execute the query
       return (statement.executeUpdate() != 0);
+    } catch (SQLException e) {
+      throw new DaoException();
     }
   }
 
   @Override
-  public boolean checkExistenceById(long id) throws SQLException {
+  public boolean checkExistenceById(long id) throws DaoException {
     int count = 0;
 
     try (Connection connection = database.getConnection()) {
@@ -251,13 +269,15 @@ public class ComputerDao implements IDao<Computer> {
       while (resultSet.next()) {
         count = resultSet.getInt(FIELD_COUNT);
       }
+    } catch (SQLException e) {
+      throw new DaoException();
     }
 
     return (count != 0);
   }
 
   @Override
-  public int getRowCount() throws SQLException {
+  public int getRowCount() throws DaoException {
     int count = -1;
 
     try (Connection connection = database.getConnection()) {
@@ -267,12 +287,14 @@ public class ComputerDao implements IDao<Computer> {
       while (resultSet.next()) {
         count = resultSet.getInt(FIELD_COUNT);
       }
+    } catch (SQLException e) {
+      throw new DaoException();
     }
 
     return count;
   }
 
-  public int getRowCount(String search) throws SQLException {
+  public int getRowCount(String search) throws DaoException {
     int count = -1;
 
     try (Connection connection = database.getConnection()) {
@@ -285,22 +307,24 @@ public class ComputerDao implements IDao<Computer> {
       while (resultSet.next()) {
         count = resultSet.getInt(FIELD_COUNT);
       }
+    } catch (SQLException e) {
+      throw new DaoException();
     }
 
     return count;
   }
 
   @Override
-  public int getPageCount(int pageSize) throws SQLException {
+  public int getPageCount(int pageSize) throws DaoException {
     return (int) Math.ceil((1.0 * this.getRowCount()) / pageSize);
   }
 
-  public int getPageCount(int pageSize, String search) throws SQLException {
+  public int getPageCount(int pageSize, String search) throws DaoException {
     return (int) Math.ceil((1.0 * this.getRowCount(search)) / pageSize);
   }
 
   private Page<Computer> getPage(Page page, String query, String[] parameters)
-      throws SQLException, InvalidPageSizeException, InvalidPageIdException {
+      throws DaoException, InvalidPageSizeException, InvalidPageIdException {
     if (page != null) {
       // Compute the page count
       int pageCount = getPageCount(page.getPageSize());
@@ -330,6 +354,8 @@ public class ComputerDao implements IDao<Computer> {
           while (resultSet.next()) {
             computers.add(createFromResultSet(resultSet));
           }
+        } catch (SQLException e) {
+          throw new DaoException();
         }
 
         // Return the page
@@ -343,13 +369,13 @@ public class ComputerDao implements IDao<Computer> {
 
   @Override
   public Page<Computer> getPage(Page page)
-      throws InvalidPageIdException, InvalidPageSizeException, SQLException {
+      throws InvalidPageIdException, InvalidPageSizeException, DaoException {
     return this.getPage(page, SELECT_PAGE_QUERY, new String[] {});
   }
 
   public Page<Computer> getByNameOrCompanyName(Page page, String name, String orderBy,
-      String orderDirection) throws SQLException, InvalidPageSizeException, InvalidPageIdException {
-    name = "%" + name + "%";
+      String orderDirection) throws DaoException, InvalidPageSizeException, InvalidPageIdException {
+    name = "%" + name.toUpperCase() + "%";
 
     String orderByMap = ComputerDao.orderColumns.get(orderBy);
     String orderDirectionMap = ComputerDao.orderDirections.get(orderDirection);

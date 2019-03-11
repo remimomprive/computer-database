@@ -1,6 +1,5 @@
 package fr.excilys.rmomprive.mapper;
 
-import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,6 +15,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import fr.excilys.rmomprive.configuration.AppConfiguration;
 import fr.excilys.rmomprive.dto.ComputerDto;
+import fr.excilys.rmomprive.exception.DaoException;
 import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.model.Computer.ComputerBuilder;
@@ -67,7 +67,7 @@ public class ComputerMapper implements IMapper<Computer> {
           computerBuilder.setCompany(company.get());
         }
       }
-    } catch (DateTimeParseException | NumberFormatException | SQLException e) {
+    } catch (DateTimeParseException | NumberFormatException | DaoException e) {
       LOGGER.error(e.getMessage());
     }
 

@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import fr.excilys.rmomprive.exception.DaoException;
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.pagination.Page;
@@ -27,47 +28,47 @@ public class CompanyService implements ICompanyService {
   }
 
   @Override
-  public Optional<Company> getById(long id) throws SQLException {
+  public Optional<Company> getById(long id) throws DaoException {
     return companyDao.getById(id);
   }
 
   @Override
-  public List<Company> getByName(String name) throws SQLException {
+  public List<Company> getByName(String name) throws DaoException {
     return companyDao.getByName(name);
   }
 
   @Override
-  public Collection<Company> getAll() throws SQLException {
+  public Collection<Company> getAll() throws DaoException {
     return companyDao.getAll();
   }
 
   @Override
-  public Optional<Company> add(Company object) {
-    return companyDao.add(object);
+  public Optional<Company> add(Company company) {
+    return companyDao.add(company);
   }
 
   @Override
-  public Collection<Company> addAll(Collection<Company> objects) {
-    return companyDao.addAll(objects);
+  public Collection<Company> addAll(Collection<Company> companies) {
+    return companyDao.addAll(companies);
   }
 
   @Override
-  public Company update(Company object) {
-    return companyDao.update(object);
+  public Company update(Company company) {
+    return companyDao.update(company);
   }
 
   @Override
-  public boolean delete(Company object) throws SQLException {
-    return companyDao.delete(object);
+  public boolean delete(Company company) throws DaoException {
+    return companyDao.delete(company);
   }
 
   @Override
-  public boolean deleteById(long id) throws SQLException {
+  public boolean deleteById(long id) throws DaoException {
     return companyDao.deleteById(id);
   }
 
   @Override
-  public boolean deleteByIds(List<Long> ids) throws SQLException {
+  public boolean deleteByIds(List<Long> ids) throws DaoException {
     return companyDao.deleteByIds(ids);
   }
 

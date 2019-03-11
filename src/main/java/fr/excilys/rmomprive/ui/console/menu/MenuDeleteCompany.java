@@ -1,8 +1,6 @@
 package fr.excilys.rmomprive.ui.console.menu;
 
-import java.sql.SQLException;
-
-import fr.excilys.rmomprive.service.CompanyService;
+import fr.excilys.rmomprive.exception.DaoException;
 import fr.excilys.rmomprive.util.Menus;
 
 public class MenuDeleteCompany extends Menu {
@@ -28,7 +26,7 @@ public class MenuDeleteCompany extends Menu {
       } else {
         getLogger().error("An error happened while trying to delete company {}\n", companyId);
       }
-    } catch (SQLException e) {
+    } catch (DaoException e) {
       e.printStackTrace();
     }
   }

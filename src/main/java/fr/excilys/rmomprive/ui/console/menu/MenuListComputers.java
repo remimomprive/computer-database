@@ -1,9 +1,9 @@
 package fr.excilys.rmomprive.ui.console.menu;
 
-import java.sql.SQLException;
 import java.util.Collection;
+
+import fr.excilys.rmomprive.exception.DaoException;
 import fr.excilys.rmomprive.model.Computer;
-import fr.excilys.rmomprive.service.ComputerService;
 
 public class MenuListComputers extends Menu {
 
@@ -24,7 +24,7 @@ public class MenuListComputers extends Menu {
       if (computers != null) {
         System.out.println(computers);
       }
-    } catch (SQLException e) {
+    } catch (DaoException e) {
       e.printStackTrace();
     }
   }

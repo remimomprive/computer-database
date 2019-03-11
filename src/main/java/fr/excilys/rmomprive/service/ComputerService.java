@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import fr.excilys.rmomprive.exception.DaoException;
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.exception.InvalidPageSizeException;
 import fr.excilys.rmomprive.model.Company;
@@ -35,17 +36,17 @@ public class ComputerService implements IComputerService {
   }
 
   @Override
-  public Optional<Computer> getById(long id) throws SQLException {
+  public Optional<Computer> getById(long id) throws DaoException {
     return computerDao.getById(id);
   }
 
   @Override
-  public List<Computer> getByName(String name) throws SQLException {
+  public List<Computer> getByName(String name) throws DaoException {
     return computerDao.getByName(name);
   }
 
   @Override
-  public Optional<ComputerDetails> getDetailsByComputerId(final int id) throws SQLException {
+  public Optional<ComputerDetails> getDetailsByComputerId(final int id) throws DaoException {
     Optional<Computer> computer = computerDao.getById(id);
 
     if (!computer.isPresent()) {
@@ -62,91 +63,75 @@ public class ComputerService implements IComputerService {
   }
 
   @Override
-  public Collection<Computer> getAll() throws SQLException {
+  public Collection<Computer> getAll() throws DaoException {
     return computerDao.getAll();
   }
 
   @Override
-  public Optional<Computer> add(Computer object) throws SQLException {
-    ComputerValidator.validate(object);
-    return computerDao.add(object);
+  public Optional<Computer> add(Computer computer) throws DaoException {
+    ComputerValidator.validate(computer);
+    return computerDao.add(computer);
   }
 
   @Override
-  public Collection<Computer> addAll(Collection<Computer> objects) {
-    return computerDao.addAll(objects);
+  public Collection<Computer> addAll(Collection<Computer> computers) {
+    return computerDao.addAll(computers);
   }
 
   @Override
-  public Computer update(Computer object) throws SQLException {
-    return computerDao.update(object);
+  public Computer update(Computer computer) throws DaoException {
+    return computerDao.update(computer);
   }
 
   @Override
-  public boolean delete(Computer object) throws SQLException {
-    return computerDao.delete(object);
+  public boolean delete(Computer computer) throws DaoException {
+    return computerDao.delete(computer);
   }
 
   @Override
-  public boolean deleteById(long id) throws SQLException {
+  public boolean deleteById(long id) throws DaoException {
     return computerDao.deleteById(id);
   }
 
   @Override
-  public boolean deleteByIds(List<Long> ids) throws SQLException {
+  public boolean deleteByIds(List<Long> ids) throws DaoException {
     return computerDao.deleteByIds(ids);
   }
 
   @Override
-  public boolean checkExistenceById(long id) throws SQLException {
+  public boolean checkExistenceById(long id) throws DaoException {
     return computerDao.checkExistenceById(id);
   }
 
   @Override
-  public int getRowCount() throws SQLException {
+  public int getRowCount() throws DaoException {
     return computerDao.getRowCount();
   }
 
   @Override
-  public int getRowCount(String search) throws SQLException {
+  public int getRowCount(String search) throws DaoException {
     return computerDao.getRowCount(search);
   }
 
   @Override
-  public int getPageCount(int pageSize) throws SQLException {
+  public int getPageCount(int pageSize) throws DaoException {
     return computerDao.getPageCount(pageSize);
   }
   
   @Override
-  public int getPageCount(int pageSize, String search) throws SQLException {
+  public int getPageCount(int pageSize, String search) throws DaoException {
     return computerDao.getPageCount(pageSize, search);
   }
 
   @Override
   public Page<Computer> getPage(int pageId, int pageSize)
-      throws InvalidPageIdException, InvalidPageSizeException, SQLException {
+      throws InvalidPageIdException, InvalidPageSizeException, DaoException {
     return computerDao.getPage(new Page<Computer>(pageId, pageSize));
   }
   
   @Override
   public Page<Computer> getByNameOrCompanyName(int pageId, int pageSize, String name,
-      String orderBy, String orderDirection) throws SQLException, InvalidPageSizeException, InvalidPageIdException {
+      String orderBy, String orderDirection) throws DaoException, InvalidPageSizeException, InvalidPageIdException {
     return computerDao.getByNameOrCompanyName(new Page<Computer>(pageId, pageSize), name, orderBy, orderDirection);
-  }
-
-  /**
-   * Only used for mock
-   * @return
-   */
-  public Object getComputerDao() {
-    return null;
-  }
-
-  /**
-   * Only used for mock
-   * @return
-   */
-  public Object getCompanyDao() {
-    return null;
   }
 }

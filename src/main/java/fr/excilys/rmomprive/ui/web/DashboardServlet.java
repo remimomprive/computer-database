@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import fr.excilys.rmomprive.dto.IDto;
+import fr.excilys.rmomprive.exception.DaoException;
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.exception.InvalidPageSizeException;
 import fr.excilys.rmomprive.mapper.ComputerMapper;
@@ -54,7 +55,6 @@ public class DashboardServlet extends HttpServlet {
     super.init();
     this.logger = LoggerFactory.getLogger(DashboardServlet.class);
     SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-    System.out.print("SERVLET INIT");
   }
 
   @Override
@@ -114,7 +114,7 @@ public class DashboardServlet extends HttpServlet {
       e.printStackTrace();
     } catch (InvalidPageSizeException e) {
       e.printStackTrace();
-    } catch (SQLException e) {
+    } catch (DaoException e) {
       e.printStackTrace();
     }
 
@@ -144,12 +144,12 @@ public class DashboardServlet extends HttpServlet {
     try {
       computerService.deleteByIds(ids);
       logger.info("Successfully deleted computers {}", idsString);
-    } catch (SQLException e) {
+    } catch (DaoException e) {
       logger.error("An error happened while trying to delete computers {}", idsString);
     }
   }
 
-  public int getPageCount(String search) throws SQLException {
+  public int getPageCount(String search) throws DaoException {
     return computerService.getPageCount(pageSize, search);
   }
 
@@ -157,9 +157,9 @@ public class DashboardServlet extends HttpServlet {
    * Exposes the page count method from the ComputerService class to the jsp.
    * 
    * @return The page count value
-   * @throws SQLException if an error while accessing to the database happened
+   * @throws DaoException if an error while accessing to the database happened
    */
-  public int getPageCount() throws SQLException {
+  public int getPageCount() throws DaoException {
     return computerService.getPageCount(pageSize);
   }
 }

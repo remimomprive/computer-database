@@ -13,6 +13,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import fr.excilys.rmomprive.exception.DaoException;
 import fr.excilys.rmomprive.exception.ImpossibleActionException;
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.model.Company;
@@ -40,6 +41,7 @@ public class CompanyDao implements IDao<Company> {
 
   /**
    * Create a Company object from a ResultSet given by a database result.
+   * 
    * @param resultSet The ResultSet value
    * @return The Company object
    * @throws SQLException if the columnLabel is not valid; if a database access error occurs or this
@@ -53,27 +55,29 @@ public class CompanyDao implements IDao<Company> {
   }
 
   @Override
-  public Optional<Company> getById(long objectId) throws SQLException {
+  public Optional<Company> getById(long id) throws DaoException {
     try (Connection connection = database.getConnection()) {
       PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID_QUERY);
-      statement.setLong(1, objectId);
+      statement.setLong(1, id);
       ResultSet resultSet = statement.executeQuery();
 
       while (resultSet.next()) {
         return Optional.of(createFromResultSet(resultSet));
       }
+    } catch (SQLException e) {
+      throw new DaoException();
     }
 
     return Optional.empty();
   }
 
   @Override
-  public List<Company> getByName(String name) throws SQLException {
+  public List<Company> getByName(String name) throws DaoException {
     List<Company> companies = new ArrayList<>();
-    
+
     try (Connection connection = database.getConnection()) {
       name = "%" + name + "%";
-      
+
       PreparedStatement statement = connection.prepareStatement(SELECT_BY_NAME_QUERY);
       statement.setString(1, name);
       ResultSet resultSet = statement.executeQuery();
@@ -81,13 +85,15 @@ public class CompanyDao implements IDao<Company> {
       while (resultSet.next()) {
         companies.add(createFromResultSet(resultSet));
       }
+    } catch (SQLException e) {
+      throw new DaoException();
     }
 
     return companies;
   }
 
   @Override
-  public Collection<Company> getAll() throws SQLException {
+  public Collection<Company> getAll() throws DaoException {
     List<Company> result = new ArrayList<>();
 
     try (Connection connection = database.getConnection()) {
@@ -97,66 +103,77 @@ public class CompanyDao implements IDao<Company> {
       while (resultSet.next()) {
         result.add(createFromResultSet(resultSet));
       }
+    } catch (SQLException e) {
+      throw new DaoException();
     }
 
     return result;
   }
 
   @Override
-  public Optional<Company> add(Company object) {
+  public Optional<Company> add(Company company) {
     throw new ImpossibleActionException();
   }
 
   @Override
-  public Collection<Company> addAll(Collection<Company> objects) {
+  public Collection<Company> addAll(Collection<Company> companies) {
     throw new ImpossibleActionException();
   }
 
   @Override
-  public Company update(Company object) {
+  public Company update(Company company) {
     throw new ImpossibleActionException();
   }
 
   @Override
-  public boolean delete(Company object) throws SQLException {
-    return deleteById(object.getId());
+  public boolean delete(Company company) throws DaoException {
+    return deleteById(company.getId());
   }
 
   @Override
-  public boolean deleteById(long id) throws SQLException {
+  public boolean deleteById(long id) throws DaoException {
     Connection connection = null;
-    
+
     try {
       connection = database.getConnection();
       connection.setAutoCommit(false);
-      
-      PreparedStatement deleteComputers = connection.prepareStatement(DELETE_COMPUTERS_BY_COMPANY_ID_QUERY);
+
+      PreparedStatement deleteComputers = connection
+          .prepareStatement(DELETE_COMPUTERS_BY_COMPANY_ID_QUERY);
       deleteComputers.setLong(1, id);
       deleteComputers.executeUpdate();
-      
+
       PreparedStatement deleteCompany = connection.prepareStatement(DELETE_COMPANY_BY_ID_QUERY);
       deleteCompany.setLong(1, id);
       deleteCompany.executeUpdate();
-      
+
       connection.commit();
       connection.setAutoCommit(true);
     } catch (SQLException e) {
       if (connection != null) {
-        connection.rollback();
+        try {
+          connection.rollback();
+        } catch (SQLException e1) {
+          throw new DaoException();
+        }
       }
-      
-      throw new SQLException();
+
+      throw new DaoException();
     } finally {
       if (connection != null) {
-        connection.close();
+        try {
+          connection.close();
+        } catch (SQLException e) {
+          throw new DaoException();
+        }
       }
     }
-    
+
     return true;
   }
-  
+
   @Override
-  public boolean deleteByIds(List<Long> ids) throws SQLException {
+  public boolean deleteByIds(List<Long> ids) throws DaoException {
     throw new ImpossibleActionException();
   }
 

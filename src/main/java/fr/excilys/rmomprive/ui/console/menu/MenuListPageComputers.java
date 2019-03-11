@@ -1,12 +1,10 @@
 package fr.excilys.rmomprive.ui.console.menu;
 
-import java.sql.SQLException;
-
+import fr.excilys.rmomprive.exception.DaoException;
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.exception.InvalidPageSizeException;
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.pagination.Page;
-import fr.excilys.rmomprive.service.ComputerService;
 import fr.excilys.rmomprive.util.Menus;
 
 public class MenuListPageComputers extends Menu {
@@ -38,7 +36,7 @@ public class MenuListPageComputers extends Menu {
       }
     } catch (InvalidPageIdException | InvalidPageSizeException e) {
       getLogger().error("The page parameters are not valid\n");
-    } catch (SQLException e) {
+    } catch (DaoException e) {
       e.printStackTrace();
     }
   }

@@ -1,10 +1,9 @@
 package fr.excilys.rmomprive.ui.console.menu;
 
-import java.sql.SQLException;
 import java.util.Optional;
 
+import fr.excilys.rmomprive.exception.DaoException;
 import fr.excilys.rmomprive.model.ComputerDetails;
-import fr.excilys.rmomprive.service.ComputerService;
 import fr.excilys.rmomprive.util.Menus;
 
 public class MenuDisplayComputerDetails extends Menu {
@@ -34,7 +33,7 @@ public class MenuDisplayComputerDetails extends Menu {
       } else {
         getLogger().error("This computer does not exist\n");
       }
-    } catch (SQLException e) {
+    } catch (DaoException e) {
       e.printStackTrace();
     }
   }
