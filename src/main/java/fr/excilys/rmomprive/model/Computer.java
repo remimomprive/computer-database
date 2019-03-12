@@ -18,14 +18,15 @@ public class Computer {
 
   /**
    * Create a Computer object.
-   * @param id The computer id
-   * @param name The computer name
-   * @param introduced The computer introduction date.
+   * 
+   * @param id           The computer id
+   * @param name         The computer name
+   * @param introduced   The computer introduction date.
    * @param discontinued The computer discontinution date.
-   * @param company The computer company.
+   * @param company      The computer company.
    */
-  public Computer(final long id, final String name, final LocalDate introduced, final LocalDate discontinued,
-      final Company company) {
+  public Computer(final long id, final String name, final LocalDate introduced,
+      final LocalDate discontinued, final Company company) {
     this.id = id;
     this.name = name;
     this.introduced = introduced;
@@ -79,6 +80,66 @@ public class Computer {
         + ", discontinued=" + discontinued + ", company=" + company + "]";
   }
 
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((company == null) ? 0 : company.hashCode());
+    result = prime * result + ((discontinued == null) ? 0 : discontinued.hashCode());
+    result = prime * result + (int) (id ^ (id >>> 32));
+    result = prime * result + ((introduced == null) ? 0 : introduced.hashCode());
+    result = prime * result + ((name == null) ? 0 : name.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (!(obj instanceof Computer)) {
+      return false;
+    }
+    Computer other = (Computer) obj;
+    if (company == null) {
+      if (other.company != null) {
+        return false;
+      }
+    } else if (!company.equals(other.company)) {
+      return false;
+    }
+    if (discontinued == null) {
+      if (other.discontinued != null) {
+        return false;
+      }
+    } else if (!discontinued.equals(other.discontinued)) {
+      return false;
+    }
+    if (id != other.id) {
+      return false;
+    }
+    if (introduced == null) {
+      if (other.introduced != null) {
+        return false;
+      }
+    } else if (!introduced.equals(other.introduced)) {
+      return false;
+    }
+    if (name == null) {
+      if (other.name != null) {
+        return false;
+      }
+    } else if (!name.equals(other.name)) {
+      return false;
+    }
+    return true;
+  }
+
+
+
   public static class ComputerBuilder {
     private long id;
     private String name;
@@ -88,6 +149,7 @@ public class Computer {
 
     /**
      * Build a Computer from the ComputerBuilder instance and returns it.
+     * 
      * @return The created Computer object
      */
     public Computer build() {

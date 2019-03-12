@@ -34,7 +34,7 @@
 		<jcl-over-slf4j.version>1.7.26</jcl-over-slf4j.version>
 
 		<!-- Plugins -->
-		<tomcat.version>2.2</tomcat.version>
+		<tomcat.version>2.1</tomcat.version>
 		<maven-failsafe.version>2.22.1</maven-failsafe.version>
 		<maven-surefire.version>2.22.1</maven-surefire.version>
 
