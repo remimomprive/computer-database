@@ -2,7 +2,8 @@ package fr.excilys.rmomprive.ui.console.menu;
 
 import java.util.Collection;
 
-import fr.excilys.rmomprive.exception.DaoException;
+import org.springframework.dao.DataAccessException;
+
 import fr.excilys.rmomprive.model.Computer;
 
 public class MenuListComputers extends Menu {
@@ -24,7 +25,7 @@ public class MenuListComputers extends Menu {
       if (computers != null) {
         System.out.println(computers);
       }
-    } catch (DaoException e) {
+    } catch (DataAccessException e) {
       e.printStackTrace();
     }
   }

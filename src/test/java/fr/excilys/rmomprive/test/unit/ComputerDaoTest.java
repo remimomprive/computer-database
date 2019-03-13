@@ -15,9 +15,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.dao.DataAccessException;
 
 import fr.excilys.rmomprive.configuration.AppConfigurationTest;
-import fr.excilys.rmomprive.exception.DaoException;
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.exception.InvalidPageSizeException;
 import fr.excilys.rmomprive.model.Computer;
@@ -56,7 +56,7 @@ public class ComputerDaoTest {
   }
 
   @Test
-  public void shouldInsertComputer() throws DaoException {
+  public void shouldInsertComputer() throws DataAccessException {
     Computer computer = new Computer.ComputerBuilder().setName("Computer 1")
         .setIntroduced(LocalDate.now()).build();
     Optional<Computer> insertedComputer = computerDao.add(computer);
@@ -66,7 +66,7 @@ public class ComputerDaoTest {
   }
 
   @Test
-  public void shouldUpdateComputerWithAReference() throws DaoException {
+  public void shouldUpdateComputerWithAReference() throws DataAccessException {
     Computer computer = new Computer.ComputerBuilder().setId(2).setName("Updated").build();
     Computer updatedComputer = computerDao.update(computer);
 
@@ -74,7 +74,7 @@ public class ComputerDaoTest {
   }
 
   @Test
-  public void shouldFindComputer() throws DaoException {
+  public void shouldFindComputer() throws DataAccessException {
     Optional<Computer> retrievedComputer = computerDao.getById(1);
     Computer computerToTest = new Computer.ComputerBuilder().setId(1).setName("Inserted 1")
         .setIntroduced(LocalDate.of(2018, 01, 10)).setDiscontinued(null).setCompany(null).build();
@@ -83,7 +83,7 @@ public class ComputerDaoTest {
   }
 
   @Test
-  public void shouldDeleteComputer() throws DaoException, SQLException {
+  public void shouldDeleteComputer() throws DataAccessException, SQLException {
     Computer computer = new Computer.ComputerBuilder().setId(1).setName("Updated").build();
     computerDao.delete(computer);
 
@@ -96,13 +96,13 @@ public class ComputerDaoTest {
   }
 
   @Test
-  public void shouldRetrieveComputerCount() throws DaoException {
+  public void shouldRetrieveComputerCount() throws DataAccessException {
     assertEquals(computerDao.getRowCount(), 3);
   }
 
   @Test
   public void shouldRetrieveComputerPage()
-      throws DaoException, InvalidPageIdException, InvalidPageSizeException {
+      throws DataAccessException, InvalidPageIdException, InvalidPageSizeException {
     Page<Computer> page = new Page<>(2, 2);
     page = computerDao.getPage(page);
 
@@ -112,20 +112,20 @@ public class ComputerDaoTest {
   }
 
   @Test
-  public void shouldRetrieveComputerPageCount() throws DaoException {
+  public void shouldRetrieveComputerPageCount() throws DataAccessException {
     assertEquals(computerDao.getPageCount(5), 1);
   }
 
   @Test(expected = InvalidPageIdException.class)
   public void shouldThrowExceptionWhenRetirevingInvalidPageId()
-      throws InvalidPageIdException, InvalidPageSizeException, DaoException {
+      throws InvalidPageIdException, InvalidPageSizeException, DataAccessException {
     Page<Computer> page = new Page<>(-1, 10);
     computerDao.getPage(page);
   }
 
   @Test(expected = InvalidPageSizeException.class)
   public void shouldThrowExceptionWhenRetirevingInvalidPageSize()
-      throws InvalidPageIdException, InvalidPageSizeException, DaoException {
+      throws InvalidPageIdException, InvalidPageSizeException, DataAccessException {
     Page<Computer> page = new Page<>(1, -10);
     computerDao.getPage(page);
   }

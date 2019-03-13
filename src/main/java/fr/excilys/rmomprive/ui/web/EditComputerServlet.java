@@ -15,10 +15,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import fr.excilys.rmomprive.dto.ComputerDto;
-import fr.excilys.rmomprive.exception.DaoException;
 import fr.excilys.rmomprive.exception.ValidationException;
 import fr.excilys.rmomprive.mapper.ComputerMapper;
 import fr.excilys.rmomprive.model.Company;
@@ -58,7 +58,7 @@ public class EditComputerServlet extends HttpServlet {
       companies = companyService.getAll();
     } catch (NumberFormatException e) {
       e.printStackTrace();
-    } catch (DaoException e) {
+    } catch (DataAccessException e) {
       e.printStackTrace();
     }
 
@@ -100,7 +100,7 @@ public class EditComputerServlet extends HttpServlet {
       try {
         company = companyService.getById(companyId);
         companyName = company.isPresent() ? company.get().getName() : null;
-      } catch (DaoException e) {
+      } catch (DataAccessException e) {
         e.printStackTrace();
       }
     }
@@ -126,7 +126,7 @@ public class EditComputerServlet extends HttpServlet {
       dispatcher.forward(request, response);
       
       LOGGER.error(e.getMessage());
-    } catch (DaoException e) {
+    } catch (DataAccessException e) {
       e.printStackTrace();
     }
   }

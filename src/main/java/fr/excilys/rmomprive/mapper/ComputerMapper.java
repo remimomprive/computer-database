@@ -1,21 +1,16 @@
 package fr.excilys.rmomprive.mapper;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.format.DateTimeParseException;
-import java.util.Date;
-import java.util.Locale;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.dao.DataAccessException;
 
 import fr.excilys.rmomprive.configuration.AppConfiguration;
 import fr.excilys.rmomprive.dto.ComputerDto;
-import fr.excilys.rmomprive.exception.DaoException;
 import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.model.Computer.ComputerBuilder;
@@ -67,7 +62,7 @@ public class ComputerMapper implements IMapper<Computer> {
           computerBuilder.setCompany(company.get());
         }
       }
-    } catch (DateTimeParseException | NumberFormatException | DaoException e) {
+    } catch (DateTimeParseException | NumberFormatException | DataAccessException e) {
       LOGGER.error(e.getMessage());
     }
 

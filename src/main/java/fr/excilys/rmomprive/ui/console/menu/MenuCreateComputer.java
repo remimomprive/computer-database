@@ -2,7 +2,8 @@ package fr.excilys.rmomprive.ui.console.menu;
 
 import java.util.Optional;
 
-import fr.excilys.rmomprive.exception.DaoException;
+import org.springframework.dao.DataAccessException;
+
 import fr.excilys.rmomprive.exception.ValidationException;
 import fr.excilys.rmomprive.model.Computer;
 
@@ -31,7 +32,7 @@ public class MenuCreateComputer extends MenuComputerForm {
       } else { // Else, an error happened
         getLogger().error("Error creating {}\n", computer);
       }
-    } catch (DaoException e) {
+    } catch (DataAccessException e) {
       e.printStackTrace();
     } catch (ValidationException e) {
       e.printStackTrace();

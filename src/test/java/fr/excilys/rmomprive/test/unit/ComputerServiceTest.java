@@ -9,8 +9,8 @@ import java.util.Optional;
 
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.springframework.dao.DataAccessException;
 
-import fr.excilys.rmomprive.exception.DaoException;
 import fr.excilys.rmomprive.exception.ValidationException;
 import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.model.Computer;
@@ -50,7 +50,7 @@ public class ComputerServiceTest {
    * Checks if we can create a valid computer
    */
   @Test
-  public void shouldSuccessWhenAddingComputerWithValidData() throws DaoException, NoSuchFieldException, SecurityException,
+  public void shouldSuccessWhenAddingComputerWithValidData() throws DataAccessException, NoSuchFieldException, SecurityException,
       IllegalArgumentException, IllegalAccessException {
     // Create the expected data
     Company company = new Company(1, "company");
@@ -80,7 +80,7 @@ public class ComputerServiceTest {
    * Checks if ValidationException happens when computer.name is empty
    */
   @Test(expected = ValidationException.class)
-  public void shouldThrowExceptionWhenAddingComputerWithoutName() throws DaoException, NoSuchFieldException, SecurityException,
+  public void shouldThrowExceptionWhenAddingComputerWithoutName() throws DataAccessException, NoSuchFieldException, SecurityException,
       IllegalArgumentException, IllegalAccessException {
     // Create the expected data
     Company company = new Company(1, "company");
@@ -103,7 +103,7 @@ public class ComputerServiceTest {
    * Checks if ValidationException happens when introduction date is after discontinution date
    */
   @Test(expected = ValidationException.class)
-  public void shouldThrowExceptionWhenAddingComputerWithInvalidDatesPrecedence() throws DaoException, NoSuchFieldException, SecurityException,
+  public void shouldThrowExceptionWhenAddingComputerWithInvalidDatesPrecedence() throws DataAccessException, NoSuchFieldException, SecurityException,
       IllegalArgumentException, IllegalAccessException {
     // Create the expected data
     Company company = new Company(1, "company");
@@ -127,7 +127,7 @@ public class ComputerServiceTest {
    * Check if an empty result is given then we try to add a computer with an invalid company
    */
   @Test
-  public void shouldReturnEmptyComputerWhenAddingComputerWithInvalidCompanyId() throws DaoException, NoSuchFieldException, SecurityException,
+  public void shouldReturnEmptyComputerWhenAddingComputerWithInvalidCompanyId() throws DataAccessException, NoSuchFieldException, SecurityException,
       IllegalArgumentException, IllegalAccessException {
     // Create the expected data
     Company company = new Company(1, "company");

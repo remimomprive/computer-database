@@ -1,6 +1,7 @@
 package fr.excilys.rmomprive.ui.console.menu;
 
-import fr.excilys.rmomprive.exception.DaoException;
+import org.springframework.dao.DataAccessException;
+
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.exception.InvalidPageSizeException;
 import fr.excilys.rmomprive.model.Computer;
@@ -36,7 +37,7 @@ public class MenuListPageComputers extends Menu {
       }
     } catch (InvalidPageIdException | InvalidPageSizeException e) {
       getLogger().error("The page parameters are not valid\n");
-    } catch (DaoException e) {
+    } catch (DataAccessException e) {
       e.printStackTrace();
     }
   }

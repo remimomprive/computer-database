@@ -2,7 +2,8 @@ package fr.excilys.rmomprive.ui.console.menu;
 
 import java.util.Collection;
 
-import fr.excilys.rmomprive.exception.DaoException;
+import org.springframework.dao.DataAccessException;
+
 import fr.excilys.rmomprive.model.Company;
 
 public class MenuListCompanies extends Menu {
@@ -21,7 +22,7 @@ public class MenuListCompanies extends Menu {
     try {
       Collection<Company> companies = this.companyService.getAll();
       System.out.println(companies);
-    } catch (DaoException e) {
+    } catch (DataAccessException e) {
       e.printStackTrace();
     }
   }

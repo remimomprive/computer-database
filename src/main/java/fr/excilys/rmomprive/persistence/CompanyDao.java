@@ -1,21 +1,18 @@
 package fr.excilys.rmomprive.persistence;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-import fr.excilys.rmomprive.exception.DaoException;
 import fr.excilys.rmomprive.exception.ImpossibleActionException;
-import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.pagination.Page;
 
@@ -30,84 +27,29 @@ public class CompanyDao implements IDao<Company> {
 
   private static final String FIELD_ID = "id";
   private static final String FIELD_NAME = "name";
-  private static final String FIELD_COUNT = "count";
 
-  private Database database;
+  private JdbcTemplate jdbcTemplate;
 
-  @Autowired
-  public CompanyDao(Database database) {
-    this.database = database;
-  }
-
-  /**
-   * Create a Company object from a ResultSet given by a database result.
-   * 
-   * @param resultSet The ResultSet value
-   * @return The Company object
-   * @throws SQLException if the columnLabel is not valid; if a database access error occurs or this
-   *                      method is called on a closed result set
-   */
-  private Company createFromResultSet(ResultSet resultSet) throws SQLException {
-    int id = resultSet.getInt(FIELD_ID);
-    String name = resultSet.getString(FIELD_NAME);
-
-    return new Company(id, name);
+  public CompanyDao(JdbcTemplate jdbcTemplate) {
+    this.jdbcTemplate = jdbcTemplate;
   }
 
   @Override
-  public Optional<Company> getById(long id) throws DaoException {
-    try (Connection connection = database.getConnection()) {
-      PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID_QUERY);
-      statement.setLong(1, id);
-      ResultSet resultSet = statement.executeQuery();
-
-      while (resultSet.next()) {
-        return Optional.of(createFromResultSet(resultSet));
-      }
-    } catch (SQLException e) {
-      throw new DaoException();
-    }
-
-    return Optional.empty();
+  public Optional<Company> getById(long id) {
+    Company company = (Company) jdbcTemplate.queryForObject(SELECT_BY_ID_QUERY, new Object[] { id },
+        new CompanyDao.CompanyMapper());
+    return Optional.ofNullable(company);
   }
 
   @Override
-  public List<Company> getByName(String name) throws DaoException {
-    List<Company> companies = new ArrayList<>();
-
-    try (Connection connection = database.getConnection()) {
-      name = "%" + name + "%";
-
-      PreparedStatement statement = connection.prepareStatement(SELECT_BY_NAME_QUERY);
-      statement.setString(1, name);
-      ResultSet resultSet = statement.executeQuery();
-
-      while (resultSet.next()) {
-        companies.add(createFromResultSet(resultSet));
-      }
-    } catch (SQLException e) {
-      throw new DaoException();
-    }
-
-    return companies;
+  public List<Company> getByName(String name) throws DataAccessException {
+    return jdbcTemplate.query(SELECT_BY_NAME_QUERY, new CompanyDao.CompanyMapper(),
+        "%" + name + "%");
   }
 
   @Override
-  public Collection<Company> getAll() throws DaoException {
-    List<Company> result = new ArrayList<>();
-
-    try (Connection connection = database.getConnection()) {
-      Statement statement = connection.createStatement();
-      ResultSet resultSet = statement.executeQuery(SELECT_ALL_QUERY);
-
-      while (resultSet.next()) {
-        result.add(createFromResultSet(resultSet));
-      }
-    } catch (SQLException e) {
-      throw new DaoException();
-    }
-
-    return result;
+  public Collection<Company> getAll() throws DataAccessException {
+    return jdbcTemplate.query(SELECT_ALL_QUERY, new CompanyDao.CompanyMapper());
   }
 
   @Override
@@ -126,74 +68,26 @@ public class CompanyDao implements IDao<Company> {
   }
 
   @Override
-  public boolean delete(Company company) throws DaoException {
+  public boolean delete(Company company) throws DataAccessException {
     return deleteById(company.getId());
   }
 
+  @Transactional
   @Override
-  public boolean deleteById(long id) throws DaoException {
-    Connection connection = null;
-
-    try {
-      connection = database.getConnection();
-      connection.setAutoCommit(false);
-
-      PreparedStatement deleteComputers = connection
-          .prepareStatement(DELETE_COMPUTERS_BY_COMPANY_ID_QUERY);
-      deleteComputers.setLong(1, id);
-      deleteComputers.executeUpdate();
-
-      PreparedStatement deleteCompany = connection.prepareStatement(DELETE_COMPANY_BY_ID_QUERY);
-      deleteCompany.setLong(1, id);
-      deleteCompany.executeUpdate();
-
-      connection.commit();
-      connection.setAutoCommit(true);
-    } catch (SQLException e) {
-      if (connection != null) {
-        try {
-          connection.rollback();
-        } catch (SQLException e1) {
-          throw new DaoException();
-        }
-      }
-
-      throw new DaoException();
-    } finally {
-      if (connection != null) {
-        try {
-          connection.close();
-        } catch (SQLException e) {
-          throw new DaoException();
-        }
-      }
-    }
-
+  public boolean deleteById(long id) throws DataAccessException {
+    jdbcTemplate.update(DELETE_COMPUTERS_BY_COMPANY_ID_QUERY, id);
+    jdbcTemplate.update(DELETE_COMPANY_BY_ID_QUERY, id);
     return true;
   }
 
   @Override
-  public boolean deleteByIds(List<Long> ids) throws DaoException {
+  public boolean deleteByIds(List<Long> ids) throws DataAccessException {
     throw new ImpossibleActionException();
   }
 
   @Override
   public boolean checkExistenceById(long id) {
-    int count = 0;
-
-    try (Connection connection = database.getConnection()) {
-      PreparedStatement statement = connection.prepareStatement(CHECK_EXISTENCE_QUERY);
-      statement.setLong(1, id);
-      ResultSet resultSet = statement.executeQuery();
-
-      while (resultSet.next()) {
-        count = resultSet.getInt(FIELD_COUNT);
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-
-    return (count != 0);
+    return (jdbcTemplate.queryForObject(CHECK_EXISTENCE_QUERY, Integer.class, id) > 0);
   }
 
   @Override
@@ -207,7 +101,16 @@ public class CompanyDao implements IDao<Company> {
   }
 
   @Override
-  public Page<Company> getPage(Page<Company> page) throws InvalidPageIdException {
+  public Page<Company> getPage(Page<Company> page) throws DataAccessException {
     throw new ImpossibleActionException();
+  }
+
+  private static class CompanyMapper implements RowMapper<Company> {
+
+    @Override
+    public Company mapRow(ResultSet rs, int rowNum) throws SQLException {
+      return new Company(rs.getLong(FIELD_ID), rs.getString(FIELD_NAME));
+    }
+
   }
 }

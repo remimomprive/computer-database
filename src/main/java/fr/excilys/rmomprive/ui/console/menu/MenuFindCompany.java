@@ -1,7 +1,9 @@
 package fr.excilys.rmomprive.ui.console.menu;
 
 import java.util.List;
-import fr.excilys.rmomprive.exception.DaoException;
+
+import org.springframework.dao.DataAccessException;
+
 import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.util.Menus;
 
@@ -25,7 +27,7 @@ public class MenuFindCompany extends Menu {
     try {
       List<Company> companies = this.companyService.getByName(companyName);
       System.out.println(companies);
-    } catch (DaoException e) {
+    } catch (DataAccessException e) {
       e.printStackTrace();
     }
   }

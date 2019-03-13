@@ -13,10 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import fr.excilys.rmomprive.dto.IDto;
-import fr.excilys.rmomprive.exception.DaoException;
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.exception.InvalidPageSizeException;
 import fr.excilys.rmomprive.mapper.ComputerMapper;
@@ -109,7 +109,7 @@ public class DashboardServlet extends HttpServlet {
       e.printStackTrace();
     } catch (InvalidPageSizeException e) {
       e.printStackTrace();
-    } catch (DaoException e) {
+    } catch (DataAccessException e) {
       e.printStackTrace();
     }
 
@@ -139,12 +139,12 @@ public class DashboardServlet extends HttpServlet {
     try {
       computerService.deleteByIds(ids);
       LOGGER.info("Successfully deleted computers {}", idsString.toString());
-    } catch (DaoException e) {
+    } catch (DataAccessException e) {
       LOGGER.error("An error happened while trying to delete computers {}", idsString.toString());
     }
   }
 
-  public int getPageCount(String search) throws DaoException {
+  public int getPageCount(String search) throws DataAccessException {
     return computerService.getPageCount(pageSize, search);
   }
 
@@ -152,9 +152,9 @@ public class DashboardServlet extends HttpServlet {
    * Exposes the page count method from the ComputerService class to the jsp.
    * 
    * @return The page count value
-   * @throws DaoException if an error while accessing to the database happened
+   * @throws DataAccessException if an error while accessing to the database happened
    */
-  public int getPageCount() throws DaoException {
+  public int getPageCount() throws DataAccessException {
     return computerService.getPageCount(pageSize);
   }
 }

@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
-import fr.excilys.rmomprive.exception.DaoException;
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.pagination.Page;
@@ -27,17 +27,17 @@ public class CompanyService implements ICompanyService {
   }
 
   @Override
-  public Optional<Company> getById(long id) throws DaoException {
+  public Optional<Company> getById(long id) throws DataAccessException {
     return companyDao.getById(id);
   }
 
   @Override
-  public List<Company> getByName(String name) throws DaoException {
+  public List<Company> getByName(String name) throws DataAccessException {
     return companyDao.getByName(name);
   }
 
   @Override
-  public Collection<Company> getAll() throws DaoException {
+  public Collection<Company> getAll() throws DataAccessException {
     return companyDao.getAll();
   }
 
@@ -57,17 +57,17 @@ public class CompanyService implements ICompanyService {
   }
 
   @Override
-  public boolean delete(Company company) throws DaoException {
+  public boolean delete(Company company) throws DataAccessException {
     return companyDao.delete(company);
   }
 
   @Override
-  public boolean deleteById(long id) throws DaoException {
+  public boolean deleteById(long id) throws DataAccessException {
     return companyDao.deleteById(id);
   }
 
   @Override
-  public boolean deleteByIds(List<Long> ids) throws DaoException {
+  public boolean deleteByIds(List<Long> ids) throws DataAccessException {
     return companyDao.deleteByIds(ids);
   }
 

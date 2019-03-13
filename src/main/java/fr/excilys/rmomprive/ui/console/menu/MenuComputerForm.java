@@ -3,7 +3,8 @@ package fr.excilys.rmomprive.ui.console.menu;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import fr.excilys.rmomprive.exception.DaoException;
+import org.springframework.dao.DataAccessException;
+
 import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.model.Computer.ComputerBuilder;
@@ -60,7 +61,7 @@ public abstract class MenuComputerForm extends Menu {
         if (company.isPresent()) {
           computerBuilder.setCompany(company.get());
         }
-      } catch (DaoException e) {
+      } catch (DataAccessException e) {
         e.printStackTrace();
       }
 

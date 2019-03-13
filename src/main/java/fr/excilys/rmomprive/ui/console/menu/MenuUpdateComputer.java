@@ -1,6 +1,7 @@
 package fr.excilys.rmomprive.ui.console.menu;
 
-import fr.excilys.rmomprive.exception.DaoException;
+import org.springframework.dao.DataAccessException;
+
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.util.Menus;
 
@@ -26,7 +27,7 @@ public class MenuUpdateComputer extends MenuComputerForm {
       } else {
         System.out.println("Error updating " + computer);
       }
-    } catch (DaoException e) {
+    } catch (DataAccessException e) {
       e.printStackTrace();
     }
   }

@@ -1,6 +1,7 @@
 package fr.excilys.rmomprive.ui.console.menu;
 
-import fr.excilys.rmomprive.exception.DaoException;
+import org.springframework.dao.DataAccessException;
+
 import fr.excilys.rmomprive.util.Menus;
 
 public class MenuDeleteComputer extends Menu {
@@ -26,7 +27,7 @@ public class MenuDeleteComputer extends Menu {
       } else {
         getLogger().error("An error happened while trying to delete computer {}\n", computerId);
       }
-    } catch (DaoException e) {
+    } catch (DataAccessException e) {
       e.printStackTrace();
     }
   }

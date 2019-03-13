@@ -2,7 +2,8 @@ package fr.excilys.rmomprive.ui.console.menu;
 
 import java.util.Optional;
 
-import fr.excilys.rmomprive.exception.DaoException;
+import org.springframework.dao.DataAccessException;
+
 import fr.excilys.rmomprive.model.ComputerDetails;
 import fr.excilys.rmomprive.util.Menus;
 
@@ -33,7 +34,7 @@ public class MenuDisplayComputerDetails extends Menu {
       } else {
         getLogger().error("This computer does not exist\n");
       }
-    } catch (DaoException e) {
+    } catch (DataAccessException e) {
       e.printStackTrace();
     }
   }
