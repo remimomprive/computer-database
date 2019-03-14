@@ -6,8 +6,8 @@
 		var introduced = introduced_input.value;
 		var discontinued = discontinued_input.value;
 		
-		var introducedDate = new Date(introduced).getDate();
-		var discontinuedDate = new Date(discontinued).getDate();
+		var introducedDate = new Date(introduced).getTime();
+		var discontinuedDate = new Date(discontinued).getTime();
 		
 		$(introduced_input.closest('.form-group')).removeClass('has-error');
 		$(discontinued_input.closest('.form-group')).removeClass('has-error');

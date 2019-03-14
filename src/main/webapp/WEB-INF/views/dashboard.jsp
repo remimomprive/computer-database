@@ -7,12 +7,12 @@
 <meta charset="utf-8">
 <!-- Bootstrap -->
 <link
-	href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css"
+	href="${pageContext.request.contextPath}/static/css/bootstrap.min.css"
 	rel="stylesheet" media="screen">
 <link
-	href="${pageContext.request.contextPath}/resources/css/font-awesome.css"
+	href="${pageContext.request.contextPath}/static/css/font-awesome.css"
 	rel="stylesheet" media="screen">
-<link href="${pageContext.request.contextPath}/resources/css/main.css"
+<link href="${pageContext.request.contextPath}/static/css/main.css"
 	rel="stylesheet" media="screen">
 </head>
 <body>
@@ -172,7 +172,7 @@
 						<tr>
 							<td class="editMode"><input type="checkbox" name="cb"
 								class="cb" value="${computer.id.get()}"></td>
-							<td><a href="editComputer?computerId=${computer.id.get()}"
+							<td><a href="computer/${computer.id.get()}/edit"
 								onclick="">${computer.name}</a></td>
 							<td>${computer.introduced}</td>
 							<td>${computer.discontinued}</td>
@@ -241,10 +241,10 @@
 		</div>
 	</footer>
 	<script
-		src="${pageContext.request.contextPath}/resources/js/jquery.min.js"></script>
+		src="${pageContext.request.contextPath}/static/js/jquery.min.js"></script>
 	<script
-		src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
+		src="${pageContext.request.contextPath}/static/js/bootstrap.min.js"></script>
 	<script
-		src="${pageContext.request.contextPath}/resources/js/dashboard.js"></script>
+		src="${pageContext.request.contextPath}/static/js/dashboard.js"></script>
 </body>
 </html>

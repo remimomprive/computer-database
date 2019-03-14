@@ -165,7 +165,7 @@ public class ComputerDao implements IDao<Computer> {
     jdbcTemplate.update(new PreparedStatementCreator() {
       public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(deleteListQueryWithParams);
-        for (int i = 1; i <= ids.size() - 1; i++) {
+        for (int i = 1; i <= ids.size(); i++) {
           statement.setLong(i, ids.get(i - 1));
         }
         return statement;
