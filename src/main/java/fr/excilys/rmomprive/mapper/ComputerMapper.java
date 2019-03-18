@@ -30,7 +30,7 @@ public class ComputerMapper implements IMapper<Computer> {
 
   @Override
   public ComputerDto mapFromEntity(Computer computer) {
-    return new ComputerDto(Optional.of(computer.getId()), computer.getName(),
+    return new ComputerDto(computer.getId(), computer.getName(),
         Dates.parse(computer.getIntroduced()), Dates.parse(computer.getDiscontinued()),
         computer.getCompany() != null ? computer.getCompany().getId() : null,
         computer.getCompany() != null ? computer.getCompany().getName() : null);
@@ -44,8 +44,8 @@ public class ComputerMapper implements IMapper<Computer> {
     ComputerBuilder computerBuilder = new ComputerBuilder().setName(dto.getName());
 
     try {
-      if (dto.getId().isPresent()) {
-        computerBuilder.setId(dto.getId().get());
+      if (dto.getId() != null) {
+        computerBuilder.setId(dto.getId());
       }
 
       if (!dto.getIntroduced().equals("")) {

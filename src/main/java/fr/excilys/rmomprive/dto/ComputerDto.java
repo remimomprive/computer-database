@@ -2,27 +2,37 @@ package fr.excilys.rmomprive.dto;
 
 import java.util.Optional;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import fr.excilys.rmomprive.model.Computer;
 
 public class ComputerDto implements IDto<Computer> {
-  private Optional<Long> id;
+  private Long id;
+  @NotBlank
   private String name;
+  @DateTimeFormat(pattern = "dd-MMM-yyyy")
   private String introduced;
+  @DateTimeFormat(pattern = "dd-MMM-yyyy")
   private String discontinued;
   private Long companyId;
   private String companyName;
 
   /**
    * Constructs a ComputerDto object.
+   * 
    * @param id           The Computer id
    * @param name         The Computer name
    * @param introduced   The Computer introduction date
    * @param discontinued The Computer discontinution date
-   * @param companyId  The Computer company id
+   * @param companyId    The Computer company id
    * @param companyName  The Computer company name
    */
-  public ComputerDto(Optional<Long> id, String name, String introduced, String discontinued,
-      Long companyId, String companyName) {
+  public ComputerDto(Long id, String name, String introduced, String discontinued, Long companyId,
+      String companyName) {
     this.id = id;
     this.name = name;
     this.introduced = introduced;
@@ -31,11 +41,14 @@ public class ComputerDto implements IDto<Computer> {
     this.companyName = companyName;
   }
 
-  public Optional<Long> getId() {
+  public ComputerDto() {
+  }
+
+  public Long getId() {
     return id;
   }
 
-  public void setId(Optional<Long> id) {
+  public void setId(Long id) {
     this.id = id;
   }
 

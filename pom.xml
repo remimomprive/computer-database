@@ -32,6 +32,10 @@
 		<spring.version>5.1.5.RELEASE</spring.version>
 		<logback.version>1.2.3</logback.version>
 		<jcl-over-slf4j.version>1.7.26</jcl-over-slf4j.version>
+		<javax-validation.version>2.0.1.Final</javax-validation.version>
+		<hibernate-validation.version>6.0.2.Final</hibernate-validation.version>
+		<javax-el-api.version>3.0.0</javax-el-api.version>
+
 
 		<!-- Plugins -->
 		<tomcat.version>2.1</tomcat.version>
@@ -80,6 +84,11 @@
 			<version>${jstl.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>${javax-validation.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
 			<version>${selenium.version}</version>
@@ -126,6 +135,21 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
 			<version>${jcl-over-slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>${hibernate-validation.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator-annotation-processor</artifactId>
+			<version>${hibernate-validation.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.el</groupId>
+			<artifactId>javax.el-api</artifactId>
+			<version>${javax-el-api.version}</version>
 		</dependency>
 	</dependencies>
 

@@ -3,12 +3,16 @@ package fr.excilys.rmomprive.ui.web;
 import java.util.Collection;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
 
 import fr.excilys.rmomprive.dto.ComputerDto;
+import fr.excilys.rmomprive.exception.DaoException;
 import fr.excilys.rmomprive.exception.ValidationException;
 import fr.excilys.rmomprive.mapper.ComputerMapper;
 import fr.excilys.rmomprive.model.Company;
@@ -53,33 +58,21 @@ public class EditComputerController {
   }
 
   @PostMapping
-  public RedirectView post(@PathVariable("id") long computerId,
-      @RequestParam(name = "computerName", defaultValue = "") String computerName,
-      @RequestParam(name = "introduced", required = false) String introduced,
-      @RequestParam(name = "discontinued", required = false) String discontinued,
-      @RequestParam(name = "companyId", defaultValue = "-1") long companyId, Model model) {
-
-    // Retrieve the company name, if a company has been set
-    Optional<Company> company = Optional.empty();
-    String companyName = null;
-    if (companyId != -1) {
-      try {
-        company = companyService.getById(companyId);
-        companyName = company.isPresent() ? company.get().getName() : null;
-      } catch (DataAccessException e) {
-        e.printStackTrace();
+  public RedirectView post(@ModelAttribute("computer") @Valid ComputerDto computerDto,
+      BindingResult result, Model model) {
+    if (computerDto.getCompanyId() != null) {
+      Optional<Company> company = companyService.getById(computerDto.getCompanyId());
+      if (company.isPresent()) {
+        computerDto.setCompanyName(company.get().getName());
       }
     }
+    
+    LOGGER.info(result.getFieldErrors().toString());
 
-    // Create the DTO
-    ComputerDto computerDto = new ComputerDto(Optional.of(computerId), computerName, introduced,
-        discontinued, companyId, companyName);
     // Get the entity thanks to the DTO
     Computer computer = ComputerMapper.getInstance().mapFromDto(computerDto);
 
     try {
-      // Validate the entity
-      ComputerValidator.validate(computer);
       // Try to insert the entity
       Computer updatedComputer = computerService.update(computer);
 
@@ -88,10 +81,10 @@ public class EditComputerController {
     } catch (ValidationException e) {
       // Show an error page
       LOGGER.error(e.getMessage());
-      return new RedirectView("/computer-database/500");
+      throw new ValidationException(e.getType());
     } catch (DataAccessException e) {
-      e.printStackTrace();
+      LOGGER.error(e.getMessage());
+      throw new DaoException();
     }
-    return new RedirectView("/computer-database/500");
   }
 }

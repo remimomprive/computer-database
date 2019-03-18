@@ -171,8 +171,8 @@
 					<c:forEach items="${computers.content}" var="computer">
 						<tr>
 							<td class="editMode"><input type="checkbox" name="cb"
-								class="cb" value="${computer.id.get()}"></td>
-							<td><a href="computer/${computer.id.get()}/edit"
+								class="cb" value="${computer.id}"></td>
+							<td><a href="computer/${computer.id}/edit"
 								onclick="">${computer.name}</a></td>
 							<td>${computer.introduced}</td>
 							<td>${computer.discontinued}</td>

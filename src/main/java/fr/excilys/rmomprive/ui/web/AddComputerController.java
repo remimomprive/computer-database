@@ -3,15 +3,18 @@ package fr.excilys.rmomprive.ui.web;
 import java.util.Collection;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
 
 import fr.excilys.rmomprive.dto.ComputerDto;
@@ -41,32 +44,27 @@ public class AddComputerController {
   @GetMapping
   public String get(Model model) {
     Collection<Company> companies = companyService.getAll();
+
+    model.addAttribute("computer", new ComputerDto());
     model.addAttribute("companies", companies);
 
     return "addComputer";
   }
 
   @PostMapping
-  public RedirectView post(
-      @RequestParam(name = "computerName", defaultValue = "") String computerName,
-      @RequestParam(name = "introduced", defaultValue = "") String introduced,
-      @RequestParam(name = "discontinued", defaultValue = "") String discontinued,
-      @RequestParam(name = "companyId", defaultValue = "-1") long companyId, Model model) {
-    // Retrieve the company name, if a company has been set
-    Optional<Company> company = Optional.empty();
-    String companyName = null;
-    if (companyId != -1) {
-      try {
-        company = companyService.getById(companyId);
-        companyName = company.isPresent() ? company.get().getName() : null;
-      } catch (DataAccessException e) {
-        e.printStackTrace();
+  public RedirectView post(@Valid @ModelAttribute("computer") ComputerDto computerDto,
+      BindingResult result) {
+    if (computerDto.getCompanyId() != null) {
+      Optional<Company> company = companyService.getById(computerDto.getCompanyId());
+      if (company.isPresent()) {
+        computerDto.setCompanyName(company.get().getName());
       }
     }
 
-    // Create the DTO
-    ComputerDto computerDto = new ComputerDto(Optional.empty(), computerName, introduced,
-        discontinued, companyId, companyName);
+    LOGGER.info("ComputerDto validation infos :");
+    LOGGER.info(computerDto.toString());
+    LOGGER.info(String.valueOf(result.hasErrors()));
+
     // Get the entity thanks to the DTO
     Computer computer = ComputerMapper.getInstance().mapFromDto(computerDto);
 
