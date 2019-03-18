@@ -34,11 +34,13 @@ public class AddComputerController {
 
   private ICompanyService companyService;
   private IComputerService computerService;
+  private ComputerMapper computerMapper;
 
-  public AddComputerController(ICompanyService companyService, IComputerService computerService) {
+  public AddComputerController(ICompanyService companyService, IComputerService computerService, ComputerMapper computerMapper) {
     this.LOGGER = LoggerFactory.getLogger(DashboardController.class);
     this.companyService = companyService;
     this.computerService = computerService;
+    this.computerMapper = computerMapper;
   }
 
   @GetMapping
@@ -66,7 +68,7 @@ public class AddComputerController {
     LOGGER.info(String.valueOf(result.hasErrors()));
 
     // Get the entity thanks to the DTO
-    Computer computer = ComputerMapper.getInstance().mapFromDto(computerDto);
+    Computer computer = computerMapper.mapFromDto(computerDto);
 
     try {
       // Validate the entity

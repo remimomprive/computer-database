@@ -7,12 +7,13 @@
 <meta charset="utf-8">
 <!-- Bootstrap -->
 <link
-	href="${pageContext.request.contextPath}/static/css/bootstrap.min.css"
+	href="<c:url value="/static/css/bootstrap.min.css"/>"
 	rel="stylesheet" media="screen">
-<link
-	href="${pageContext.request.contextPath}/static/css/font-awesome.css"
+	<link
+	href="<c:url value="/static/css/font-awesome.css"/>"
 	rel="stylesheet" media="screen">
-<link href="${pageContext.request.contextPath}/static/css/main.css"
+	<link
+	href="<c:url value="/static/css/main.css"/>"
 	rel="stylesheet" media="screen">
 </head>
 <body>

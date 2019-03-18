@@ -25,10 +25,12 @@ import fr.excilys.rmomprive.service.IComputerService;
 public class DashboardController {
   private Logger LOGGER;
   private IComputerService computerService;
-
-  public DashboardController(IComputerService computerService) {
+  private ComputerMapper computerMapper;
+  
+  public DashboardController(IComputerService computerService, ComputerMapper computerMapper) {
     this.LOGGER = LoggerFactory.getLogger(DashboardController.class);
     this.computerService = computerService;
+    this.computerMapper = computerMapper;
   }
 
   @GetMapping
@@ -44,7 +46,7 @@ public class DashboardController {
     try {
       page = computerService
           .getByNameOrCompanyName(pageId, pageSize, search, orderBy, orderDirection)
-          .createDtoPage(ComputerMapper.getInstance());
+          .createDtoPage(this.computerMapper);
       rowCount = computerService.getRowCount(search);
       pageCount = getPageCount(pageSize, search);
     } catch (InvalidPageIdException | InvalidPageSizeException | DataAccessException e) {

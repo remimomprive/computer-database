@@ -36,7 +36,8 @@ public class EditComputerController {
 
   private ICompanyService companyService;
   private IComputerService computerService;
-
+  private ComputerMapper computerMapper;
+  
   public EditComputerController(ICompanyService companyService, IComputerService computerService) {
     this.LOGGER = LoggerFactory.getLogger(EditComputerController.class);
     this.companyService = companyService;
@@ -49,7 +50,7 @@ public class EditComputerController {
     Optional<Computer> computer = computerService.getById(id);
 
     if (computer.isPresent()) {
-      ComputerDto computerDto = ComputerMapper.getInstance().mapFromEntity(computer.get());
+      ComputerDto computerDto = this.computerMapper.mapFromEntity(computer.get());
       model.addAttribute("computer", computerDto);
       model.addAttribute("companies", companies);
     }
@@ -70,7 +71,7 @@ public class EditComputerController {
     LOGGER.info(result.getFieldErrors().toString());
 
     // Get the entity thanks to the DTO
-    Computer computer = ComputerMapper.getInstance().mapFromDto(computerDto);
+    Computer computer = this.computerMapper.mapFromDto(computerDto);
 
     try {
       // Try to insert the entity

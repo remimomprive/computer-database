@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Component;
 
 import fr.excilys.rmomprive.configuration.AppConfiguration;
 import fr.excilys.rmomprive.dto.ComputerDto;
@@ -17,15 +18,14 @@ import fr.excilys.rmomprive.model.Computer.ComputerBuilder;
 import fr.excilys.rmomprive.service.ICompanyService;
 import fr.excilys.rmomprive.util.Dates;
 
+@Component
 public class ComputerMapper implements IMapper<Computer> {
-  private static ComputerMapper instance;
-  private static ICompanyService companyService;
-  private static Logger LOGGER;
-  
-  static {
-    ApplicationContext context = new AnnotationConfigApplicationContext(AppConfiguration.class);
-    ComputerMapper.companyService =  context.getBean(ICompanyService.class);
-    ComputerMapper.LOGGER = LoggerFactory.getLogger(ComputerMapper.class);
+  private ICompanyService companyService;
+  private Logger LOGGER;
+
+  public ComputerMapper(ICompanyService companyService) {
+    this.companyService = companyService;
+    this.LOGGER = LoggerFactory.getLogger(ComputerMapper.class);
   }
 
   @Override
@@ -67,15 +67,5 @@ public class ComputerMapper implements IMapper<Computer> {
     }
 
     return computerBuilder.build();
-  }
-
-  /**
-   * @return The instance of ComputerMapper in memory
-   */
-  public static ComputerMapper getInstance() {
-    if (instance == null) {
-      instance = new ComputerMapper();
-    }
-    return instance;
   }
 }
