@@ -38,10 +38,11 @@ public class EditComputerController {
   private IComputerService computerService;
   private ComputerMapper computerMapper;
   
-  public EditComputerController(ICompanyService companyService, IComputerService computerService) {
+  public EditComputerController(ICompanyService companyService, IComputerService computerService, ComputerMapper computerMapper) {
     this.LOGGER = LoggerFactory.getLogger(EditComputerController.class);
     this.companyService = companyService;
     this.computerService = computerService;
+    this.computerMapper = computerMapper;
   }
 
   @GetMapping
