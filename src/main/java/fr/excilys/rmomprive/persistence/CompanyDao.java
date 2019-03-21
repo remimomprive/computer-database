@@ -1,55 +1,57 @@
 package fr.excilys.rmomprive.persistence;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.Session;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.querydsl.jpa.hibernate.HibernateQuery;
+import com.querydsl.jpa.hibernate.HibernateQueryFactory;
 import fr.excilys.rmomprive.exception.ImpossibleActionException;
 import fr.excilys.rmomprive.model.Company;
+import fr.excilys.rmomprive.model.Computer;
+import fr.excilys.rmomprive.model.QCompany;
+import fr.excilys.rmomprive.model.QComputer;
 import fr.excilys.rmomprive.pagination.Page;
 
 @Component
-public class CompanyDao implements IDao<Company> {
-  private static final String SELECT_BY_ID_QUERY = "SELECT id, name FROM company WHERE ID = ?";
-  private static final String SELECT_BY_NAME_QUERY = "SELECT id, name FROM company WHERE name LIKE ?";
-  private static final String SELECT_ALL_QUERY = "SELECT id, name FROM company";
-  private static final String CHECK_EXISTENCE_QUERY = "SELECT COUNT(id) AS count FROM company WHERE id = ?";
-  private static final String DELETE_COMPANY_BY_ID_QUERY = "DELETE FROM company WHERE company.id = ?";
-  private static final String DELETE_COMPUTERS_BY_COMPANY_ID_QUERY = "DELETE FROM computer WHERE computer.company_id = ?";
+public class CompanyDao extends Dao<Company> implements ICompanyDao {
+private LocalSessionFactoryBean localSessionFactoryBean;
 
-  private static final String FIELD_ID = "id";
-  private static final String FIELD_NAME = "name";
-
-  private JdbcTemplate jdbcTemplate;
-
-  public CompanyDao(JdbcTemplate jdbcTemplate) {
-    this.jdbcTemplate = jdbcTemplate;
+  public CompanyDao(LocalSessionFactoryBean localSessionFactoryBean) {
+    this.localSessionFactoryBean = localSessionFactoryBean;
   }
 
   @Override
   public Optional<Company> getById(long id) {
-    Company company = (Company) jdbcTemplate.queryForObject(SELECT_BY_ID_QUERY, new Object[] { id },
-        new CompanyDao.CompanyMapper());
+    Session session = getSession(localSessionFactoryBean);
+    Company company = getQuery(session).from(QCompany.company).where(QCompany.company.id.eq(id)).fetchOne();
+    session.close();
+    
     return Optional.ofNullable(company);
   }
 
   @Override
   public List<Company> getByName(String name) throws DataAccessException {
-    return jdbcTemplate.query(SELECT_BY_NAME_QUERY, new CompanyDao.CompanyMapper(),
-        "%" + name + "%");
+    Session session = getSession(localSessionFactoryBean);
+    List<Company> result = getQuery(session).from(QCompany.company).where(QCompany.company.name.eq(name)).fetch();
+    session.close();
+    
+    return result;
   }
 
   @Override
-  public Collection<Company> getAll() throws DataAccessException {
-    return jdbcTemplate.query(SELECT_ALL_QUERY, new CompanyDao.CompanyMapper());
+  public List<Company> getAll() throws DataAccessException {
+    Session session = getSession(localSessionFactoryBean);
+    List<Company> result = getQuery(session).from(QCompany.company).fetch();
+    session.close();
+    
+    return result;
   }
 
   @Override
@@ -58,7 +60,7 @@ public class CompanyDao implements IDao<Company> {
   }
 
   @Override
-  public Collection<Company> addAll(Collection<Company> companies) {
+  public List<Company> addAll(List<Company> companies) {
     throw new ImpossibleActionException();
   }
 
@@ -75,8 +77,11 @@ public class CompanyDao implements IDao<Company> {
   @Transactional
   @Override
   public boolean deleteById(long id) throws DataAccessException {
-    jdbcTemplate.update(DELETE_COMPUTERS_BY_COMPANY_ID_QUERY, id);
-    jdbcTemplate.update(DELETE_COMPANY_BY_ID_QUERY, id);
+    Session session = getSession(localSessionFactoryBean);
+    getQueryFactory(session).delete(QComputer.computer).where(QComputer.computer.company.id.eq(id));
+    getQueryFactory(session).delete(QCompany.company).where(QCompany.company.id.eq(id));
+    session.close();
+    
     return true;
   }
 
@@ -87,7 +92,11 @@ public class CompanyDao implements IDao<Company> {
 
   @Override
   public boolean checkExistenceById(long id) {
-    return (jdbcTemplate.queryForObject(CHECK_EXISTENCE_QUERY, Integer.class, id) > 0);
+    Session session = getSession(localSessionFactoryBean);
+    boolean result = (getQuery(session).from(QCompany.company).where(QCompany.company.id.eq(id)).fetchCount() > 0);
+    session.close();
+    
+    return result;
   }
 
   @Override
@@ -103,14 +112,5 @@ public class CompanyDao implements IDao<Company> {
   @Override
   public Page<Company> getPage(Page<Company> page) throws DataAccessException {
     throw new ImpossibleActionException();
-  }
-
-  private static class CompanyMapper implements RowMapper<Company> {
-
-    @Override
-    public Company mapRow(ResultSet rs, int rowNum) throws SQLException {
-      return new Company(rs.getLong(FIELD_ID), rs.getString(FIELD_NAME));
-    }
-
   }
 }

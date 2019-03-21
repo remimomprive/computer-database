@@ -1,9 +1,27 @@
 package fr.excilys.rmomprive.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "company")
 public class Company {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id")
   private long id;
+  
+  @Column(name = "name")
   private String name;
 
+  public Company() {
+    
+  }
+  
   /**
    * Create a Company object with its fields.
    * @param id The company id

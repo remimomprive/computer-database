@@ -97,7 +97,7 @@ public class ComputerDaoTest {
 
   @Test
   public void shouldRetrieveComputerCount() throws DataAccessException {
-    assertEquals(computerDao.getRowCount(), 3);
+    assertEquals(computerDao.getRowCount(""), 3);
   }
 
   @Test
@@ -113,7 +113,7 @@ public class ComputerDaoTest {
 
   @Test
   public void shouldRetrieveComputerPageCount() throws DataAccessException {
-    assertEquals(computerDao.getPageCount(5), 1);
+    assertEquals(computerDao.getPageCount(5, ""), 1);
   }
 
   @Test(expected = InvalidPageIdException.class)

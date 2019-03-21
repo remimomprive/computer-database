@@ -10,3 +10,5 @@ target/
 /bin/
 
 src/main/resources/hikari.properties
+/.apt_generated/
+/.apt_generated_tests/

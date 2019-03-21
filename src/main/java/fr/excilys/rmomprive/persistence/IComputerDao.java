@@ -1,6 +1,5 @@
 package fr.excilys.rmomprive.persistence;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,79 +7,81 @@ import org.springframework.dao.DataAccessException;
 
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.exception.InvalidPageSizeException;
+import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.pagination.Page;
 
-public interface IDao<T> {
+public interface IComputerDao {
   /**
    * @param id The entity id
    * @return The entity we asked for
    */
-  Optional<T> getById(long id) throws DataAccessException;
+  Optional<Computer> getById(long id) throws DataAccessException;
 
   /**
-   * @param name id The entity name.
-   * @return The companies if some match the name, an empty list if not
+   * @param page           The page parameters (size, id)
+   * @param name           The name used for the search (computer name and company name)
+   * @param orderBy        The column defining who to order by
+   * @param orderDirection The order direction for the result
+   * @return A page containing the computers if some match the name, an empty page if not
+   * @throws InvalidPageIdException   if the page id is not valid (<1 or too large)
+   * @throws InvalidPageSizeException (if the page size is not valid (<1)
    */
-  public List<T> getByName(String name) throws DataAccessException;
+  Page<Computer> getByNameOrCompanyName(Page<Computer> page, String name, String orderBy, String orderDirection) throws InvalidPageIdException, InvalidPageSizeException;
 
   /**
    * @return A collection of all the entities in the table
    */
-  Collection<T> getAll() throws DataAccessException;
+  List<Computer> getAll() throws DataAccessException;
 
   /**
-   * @param object The entity we want to persist
+   * @param computer The entity we want to persist
    * @return The persisted entity if it was successfully added, no data if an error persisting the
    *         entity happened
    */
-  Optional<T> add(T object) throws DataAccessException;
+  Optional<Computer> add(Computer computer) throws DataAccessException;
 
   /**
-   * @param objects A Collection of entities to persist
-   * @return The inserted entities
-   */
-  Collection<T> addAll(Collection<T> objects);
-
-  /**
-   * @param object The entity we want to update (thanks to its id and fields)
+   * @param computer The entity we want to update (thanks to its id and fields)
    * @return The updated entity
    */
-  T update(T object) throws DataAccessException;
+  Computer update(Computer computer);
 
   /**
-   * @param object The entity we want to remove
+   * @param computer The entity we want to remove
    * @return true if the entity was successfully deleted, false if not
    */
-  boolean delete(T object) throws DataAccessException;
+  boolean delete(Computer computer);
 
   /**
    * @param id The id of the entity we want to remove
    * @return true if the entity was successfully deleted, false if not
    */
-  boolean deleteById(long id) throws DataAccessException;
+  boolean deleteById(long id);
 
   /**
    * @param ids The ids of the entities we want to remove
    * @return true if the entities were successfully deleted, false if not
    */
-  boolean deleteByIds(List<Long> ids) throws DataAccessException;
+  boolean deleteByIds(List<Long> ids);
 
   /**
    * @param id The entity id
    * @return true if the entity is present in the database, false if not
    */
-  boolean checkExistenceById(long id) throws DataAccessException;
+  boolean checkExistenceById(long id);
 
   /**
+   * @param search The search query
    * @return The number of entities in the database (for a specific type)
    */
-  int getRowCount() throws DataAccessException;
+  int getRowCount(String search);
 
   /**
    * @param pageSize The page size
+   * @param search   The search query
    * @return The number of pages for a specific page size
    */
-  int getPageCount(int pageSize) throws DataAccessException;
+  int getPageCount(int pageSize, String search);
 
   /**
    * @param page The page containing the parameters (size and number)
@@ -88,5 +89,5 @@ public interface IDao<T> {
    * @throws InvalidPageIdException   if the page id is not valid (<1 or too large)
    * @throws InvalidPageSizeException (if the page size is not valid (<1)
    */
-  Page<T> getPage(Page<T> page) throws InvalidPageIdException, InvalidPageSizeException, DataAccessException;
+  Page<Computer> getPage(Page<Computer> page) throws InvalidPageIdException, InvalidPageSizeException;
 }

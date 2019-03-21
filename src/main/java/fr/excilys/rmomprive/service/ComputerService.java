@@ -16,16 +16,18 @@ import fr.excilys.rmomprive.model.ComputerDetails;
 import fr.excilys.rmomprive.pagination.Page;
 import fr.excilys.rmomprive.persistence.CompanyDao;
 import fr.excilys.rmomprive.persistence.ComputerDao;
+import fr.excilys.rmomprive.persistence.ICompanyDao;
+import fr.excilys.rmomprive.persistence.IComputerDao;
 import fr.excilys.rmomprive.validation.ComputerValidator;
 
 @Service
 public class ComputerService implements IComputerService {
 
   @Autowired
-  private ComputerDao computerDao;
+  private IComputerDao computerDao;
   
   @Autowired
-  private CompanyDao companyDao;  
+  private ICompanyDao companyDao;  
 
   /**
    * Public constructor for mockito.
@@ -37,11 +39,6 @@ public class ComputerService implements IComputerService {
   @Override
   public Optional<Computer> getById(long id) throws DataAccessException {
     return computerDao.getById(id);
-  }
-
-  @Override
-  public List<Computer> getByName(String name) throws DataAccessException {
-    return computerDao.getByName(name);
   }
 
   @Override
@@ -62,7 +59,7 @@ public class ComputerService implements IComputerService {
   }
 
   @Override
-  public Collection<Computer> getAll() throws DataAccessException {
+  public List<Computer> getAll() throws DataAccessException {
     return computerDao.getAll();
   }
 
@@ -70,11 +67,6 @@ public class ComputerService implements IComputerService {
   public Optional<Computer> add(Computer computer) throws DataAccessException {
     ComputerValidator.validate(computer);
     return computerDao.add(computer);
-  }
-
-  @Override
-  public Collection<Computer> addAll(Collection<Computer> computers) {
-    return computerDao.addAll(computers);
   }
 
   @Override
@@ -103,18 +95,8 @@ public class ComputerService implements IComputerService {
   }
 
   @Override
-  public int getRowCount() throws DataAccessException {
-    return computerDao.getRowCount();
-  }
-
-  @Override
   public int getRowCount(String search) throws DataAccessException {
     return computerDao.getRowCount(search);
-  }
-
-  @Override
-  public int getPageCount(int pageSize) throws DataAccessException {
-    return computerDao.getPageCount(pageSize);
   }
   
   @Override
@@ -132,5 +114,29 @@ public class ComputerService implements IComputerService {
   public Page<Computer> getByNameOrCompanyName(int pageId, int pageSize, String name,
       String orderBy, String orderDirection) throws DataAccessException, InvalidPageSizeException, InvalidPageIdException {
     return computerDao.getByNameOrCompanyName(new Page<Computer>(pageId, pageSize), name, orderBy, orderDirection);
+  }
+
+  @Override
+  public List<Computer> getByName(String name) throws DataAccessException {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public List<Computer> addAll(List<Computer> objects) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public int getRowCount() throws DataAccessException {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+  @Override
+  public int getPageCount(int pageSize) throws DataAccessException {
+    // TODO Auto-generated method stub
+    return 0;
   }
 }

@@ -1,64 +1,39 @@
 package fr.excilys.rmomprive.persistence;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.hibernate.Session;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Component;
 
-import fr.excilys.rmomprive.exception.ImpossibleActionException;
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.ComparableExpressionBase;
+import com.querydsl.jpa.hibernate.HibernateDeleteClause;
+import com.querydsl.jpa.hibernate.HibernateQuery;
+import com.querydsl.jpa.hibernate.HibernateQueryFactory;
+
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
 import fr.excilys.rmomprive.exception.InvalidPageSizeException;
-import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.model.Computer;
+import fr.excilys.rmomprive.model.QComputer;
 import fr.excilys.rmomprive.pagination.Page;
 
 @Component
-public class ComputerDao implements IDao<Computer> {
-  private static final String SELECT_BY_ID_QUERY = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON company.id = company_id  WHERE computer.id = ?";
-  private static final String SELECT_BY_NAME_QUERY = "SELECT id, name FROM computer WHERE name LIKE ?";
-  private static final String SELECT_BY_NAME_OR_COMPANY_QUERY = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON company.id = company_id WHERE UPPER(computer.name) LIKE ? OR UPPER(company.name) LIKE ? "
-      + "ORDER BY :order_by: :order_direction: LIMIT ? OFFSET ?";
-  private static final String SELECT_ALL_QUERY = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON company.id = company_id";
-  private static final String DELETE_QUERY = "DELETE FROM computer where id = ?";
-  private static final String DELETE_LIST_QUERY = "DELETE FROM computer where id IN (?)";
-  private static final String INSERT_QUERY = "INSERT INTO computer(name, introduced, discontinued, company_id) VALUES(?, ?, ?, ?)";
-  private static final String INSERT_QUERY_WITHOUT_COMPANY = "INSERT INTO computer(name, introduced, discontinued) VALUES(?, ?, ?)";
-  private static final String CHECK_EXISTENCE_QUERY = "SELECT COUNT(id) AS count FROM computer WHERE id = ?";
-  private static final String UPDATE_QUERY = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?";
-  private static final String COUNT_QUERY = "SELECT COUNT(id) AS count FROM computer";
-  private static final String COUNT_QUERY_SEARCH = "SELECT COUNT(computer.id) AS count FROM computer LEFT JOIN company ON company.id = company_id WHERE computer.name LIKE ? OR company.name LIKE ?";
-  private static final String SELECT_PAGE_QUERY = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON company.id = company_id LIMIT ? OFFSET ?";
-
-  private static final String FIELD_ID = "computer.id";
+public class ComputerDao extends Dao<Computer> implements IComputerDao {
   private static final String FIELD_NAME = "computer.name";
   private static final String FIELD_INTRODUCED = "computer.introduced";
   private static final String FIELD_DISCONTINUED = "computer.discontinued";
-  private static final String FIELD_COMPANY_ID = "computer.company_id";
   private static final String FIELD_COMPANY_NAME = "company.name";
 
   public static Map<String, String> orderColumns;
   public static Map<String, String> orderDirections;
-  private static String DEFAULT_ORDER_BY = "computer.name";
-  private static String DEFAULT_ORDER_DIRECTION = "ASC";
 
-  private JdbcTemplate jdbcTemplate;
+  private LocalSessionFactoryBean localSessionFactoryBean;
 
   static {
     orderColumns = new HashMap<>();
@@ -73,133 +48,107 @@ public class ComputerDao implements IDao<Computer> {
     orderDirections.put("desc", "DESC");
   }
 
-  private ComputerDao(JdbcTemplate jdbcTemplate) {
-    this.jdbcTemplate = jdbcTemplate;
+  private ComputerDao(LocalSessionFactoryBean localSessionFactoryBean) {
+    this.localSessionFactoryBean = localSessionFactoryBean;
   }
 
   @Override
-  public Optional<Computer> getById(long id) throws DataAccessException {
-    Computer computer = (Computer) jdbcTemplate.queryForObject(SELECT_BY_ID_QUERY,
-        new Object[] { id }, new ComputerDao.ComputerMapper());
+  public Optional<Computer> getById(long id) {
+    Session session = getSession(localSessionFactoryBean);
+    Computer computer = getQuery(session).from(QComputer.computer).where(QComputer.computer.id.eq(id)).fetchOne();
+    session.close();
+
     return Optional.ofNullable(computer);
   }
 
   @Override
-  public List<Computer> getByName(String name) throws DataAccessException {
-    return jdbcTemplate.query(SELECT_BY_NAME_QUERY, new ComputerDao.ComputerMapper(),
-        "%" + name + "%");
+  public List<Computer> getAll() {
+    Session session = getSession(localSessionFactoryBean);
+    List<Computer> computers = getQuery(session).from(QComputer.computer).fetch();
+    session.close();
+
+    return computers;
   }
 
   @Override
-  public Collection<Computer> getAll() throws DataAccessException {
-    return jdbcTemplate.query(SELECT_ALL_QUERY, new ComputerDao.ComputerMapper());
+  public Optional<Computer> add(Computer computer) {
+    Session session = getSession(localSessionFactoryBean);
+
+    session.persist(computer);
+    session.refresh(computer);
+    session.close();
+
+    return Optional.of(computer);
   }
 
   @Override
-  public Optional<Computer> add(Computer computer) throws DataAccessException {
-    KeyHolder keyHolder = new GeneratedKeyHolder();
-    if (jdbcTemplate.update(getInsertQueryPreparedStatementCreator(computer), keyHolder) > 0) {
-      computer.setId(keyHolder.getKey().longValue());
-    }
-
-    return Optional.ofNullable(computer);
-  }
-
-  private PreparedStatementCreator getInsertQueryPreparedStatementCreator(Computer computer) {
-    return new PreparedStatementCreator() {
-      public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-        PreparedStatement statement = connection
-            .prepareStatement((computer.getCompany() != null) ? ComputerDao.INSERT_QUERY
-                : ComputerDao.INSERT_QUERY_WITHOUT_COMPANY, new String[] { "id" });
-        statement.setString(1, computer.getName());
-        statement.setObject(2, computer.getIntroduced());
-        statement.setObject(3, computer.getDiscontinued());
-
-        if (computer.getCompany() != null) {
-          statement.setLong(4, computer.getCompany().getId());
-        }
-
-        return statement;
-      }
-    };
-  }
-
-  @Override
-  public Collection<Computer> addAll(Collection<Computer> objects) {
-    throw new ImpossibleActionException();
-  }
-
-  @Override
-  public Computer update(Computer computer) throws DataAccessException {
-    jdbcTemplate.update(UPDATE_QUERY, computer.getName(), computer.getIntroduced(),
-        computer.getDiscontinued(),
-        (computer.getCompany() != null) ? computer.getCompany().getId() : null, computer.getId());
+  public Computer update(Computer computer) {
+    Session session = getSession(localSessionFactoryBean);
+    getQueryFactory(session).update(QComputer.computer).where(QComputer.computer.id.eq(computer.getId())).set(QComputer.computer.name, computer.getName())
+        .set(QComputer.computer.introduced, computer.getIntroduced()).set(QComputer.computer.discontinued, computer.getDiscontinued())
+        .set(QComputer.computer.company, computer.getCompany()).execute();
+    session.close();
 
     return computer;
   }
 
   @Override
-  public boolean delete(Computer computer) throws DataAccessException {
+  public boolean delete(Computer computer) {
     return deleteById(computer.getId());
   }
 
   @Override
-  public boolean deleteById(long id) throws DataAccessException {
-    jdbcTemplate.update(DELETE_QUERY, id);
-    return true;
-  }
-
-  @Override
-  public boolean deleteByIds(List<Long> ids) throws DataAccessException {
-    // Get the amount of ?s
-    StringBuilder idStringBuilder = new StringBuilder();
-    for (int i = 0; i < ids.size() - 1; i++) {
-      idStringBuilder.append("?, ");
-    }
-    idStringBuilder.append("?");
-
-    // Create the query string
-    String deleteListQueryWithParams = DELETE_LIST_QUERY.replace("?", idStringBuilder.toString());
-
-    // Execute the query
-    jdbcTemplate.update(new PreparedStatementCreator() {
-      public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement(deleteListQueryWithParams);
-        for (int i = 1; i <= ids.size(); i++) {
-          statement.setLong(i, ids.get(i - 1));
-        }
-        return statement;
-      }
-    });
+  public boolean deleteById(long id) {
+    Session session = getSession(localSessionFactoryBean);
+    getDeleteClause(session, QComputer.computer).where(QComputer.computer.id.eq(id)).execute();
+    session.close();
 
     return true;
   }
 
   @Override
-  public boolean checkExistenceById(long id) throws DataAccessException {
-    return (jdbcTemplate.queryForObject(CHECK_EXISTENCE_QUERY, Integer.class, id) > 0);
+  public boolean deleteByIds(List<Long> ids) {
+    Session session = getSession(localSessionFactoryBean);
+    getQueryFactory(session).delete(QComputer.computer).where(QComputer.computer.id.in(ids)).execute();
+    session.close();
+
+    return true;
   }
 
   @Override
-  public int getRowCount() throws DataAccessException {
-    return jdbcTemplate.queryForObject(COUNT_QUERY, Integer.class);
+  public boolean checkExistenceById(long id) {
+    Session session = getSession(localSessionFactoryBean);
+    boolean result = (getQuery(session).from(QComputer.computer).where(QComputer.computer.id.eq(id)).fetchCount() > 0);
+    session.close();
+
+    return result;
   }
 
-  public int getRowCount(String search) throws DataAccessException {
-    return jdbcTemplate.queryForObject(COUNT_QUERY_SEARCH, Integer.class, "%" + search + "%", "%" + search + "%");
+  public int getRowCount() {
+    Session session = getSession(localSessionFactoryBean);
+    int result = (int) getQuery(session).from(QComputer.computer).fetchCount();
+    session.close();
+
+    return result;
   }
 
-  @Override
-  public int getPageCount(int pageSize) throws DataAccessException {
+  public int getRowCount(String search) {
+    Session session = getSession(localSessionFactoryBean);
+    int result = (int) getQuery(session).from(QComputer.computer).where(QComputer.computer.name.like("%" + search + "%")).fetchCount();
+    session.close();
+
+    return result;
+  }
+
+  public int getPageCount(int pageSize) {
     return (int) Math.ceil((1.0 * this.getRowCount()) / pageSize);
   }
 
-  public int getPageCount(int pageSize, String search) throws DataAccessException {
+  public int getPageCount(int pageSize, String search) {
     return (int) Math.ceil((1.0 * this.getRowCount(search)) / pageSize);
   }
 
-  private Page<Computer> getPage(Page<Computer> page, String query, String[] parameters)
-      throws DataAccessException, InvalidPageSizeException, InvalidPageIdException {
+  private Page<Computer> getPage(Page<Computer> page, String[] parameters) throws InvalidPageSizeException, InvalidPageIdException {
     if (page != null) {
       // Compute the page count
       int pageCount = getPageCount(page.getPageSize());
@@ -214,16 +163,16 @@ public class ComputerDao implements IDao<Computer> {
       } else {
         int offset = (page.getPageId() - 1) * page.getPageSize();
 
-        List<Object> args = new ArrayList<>();
-        args.addAll(Arrays.asList(parameters));
-        args.add(page.getPageSize());
-        args.add(offset);
-        
-        List<Computer> computers = jdbcTemplate.query(query, args.toArray(), new ComputerDao.ComputerMapper());
+        Session session = getSession(localSessionFactoryBean);
+
+        OrderSpecifier<?> orderSpecifier = getOrderSpecifier(parameters[2], parameters[3]);
+        List<Computer> computers = getQuery(session).from(QComputer.computer).where(QComputer.computer.name.like("%" + parameters[0] + "%")).orderBy(orderSpecifier)
+            .limit(page.getPageSize()).offset(offset).fetch();
+
+        session.close();
 
         // Return the page
-        return new Page<Computer>(computers, page.getPageId(), page.getPageSize(),
-            page.getPageId() > 1, page.getPageId() < pageCount);
+        return new Page<Computer>(computers, page.getPageId(), page.getPageSize(), page.getPageId() > 1, page.getPageId() < pageCount);
       }
     }
 
@@ -231,55 +180,46 @@ public class ComputerDao implements IDao<Computer> {
   }
 
   @Override
-  public Page<Computer> getPage(Page<Computer> page)
-      throws InvalidPageIdException, InvalidPageSizeException, DataAccessException {
-    return this.getPage(page, SELECT_PAGE_QUERY, new String[] {});
+  public Page<Computer> getPage(Page<Computer> page) throws InvalidPageIdException, InvalidPageSizeException, DataAccessException {
+    return this.getPage(page, new String[] { "", "" });
   }
 
-  public Page<Computer> getByNameOrCompanyName(Page<Computer> page, String name, String orderBy,
-      String orderDirection)
+  @Override
+  public Page<Computer> getByNameOrCompanyName(Page<Computer> page, String name, String orderBy, String orderDirection)
       throws DataAccessException, InvalidPageSizeException, InvalidPageIdException {
     name = "%" + name.toUpperCase() + "%";
 
     String orderByMap = ComputerDao.orderColumns.get(orderBy);
     String orderDirectionMap = ComputerDao.orderDirections.get(orderDirection);
 
-    String selectByNameOrCompany = SELECT_BY_NAME_OR_COMPANY_QUERY
-        .replace(":order_by:", orderByMap != null ? orderByMap : DEFAULT_ORDER_BY)
-        .replace(":order_direction:",
-            orderDirectionMap != null ? orderDirectionMap : DEFAULT_ORDER_DIRECTION);
-
-    return this.getPage(page, selectByNameOrCompany, new String[] { name, name });
+    return this.getPage(page, new String[] { name, name, orderByMap, orderDirectionMap });
   }
 
-  private static class ComputerMapper implements RowMapper<Computer> {
+  private OrderSpecifier<?> getOrderSpecifier(String orderBy, String orderDirection) {
+    ComparableExpressionBase<?> path;
 
-    @Override
-    public Computer mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-      int id = resultSet.getInt(FIELD_ID);
-      String name = resultSet.getString(FIELD_NAME);
-      Timestamp introducedTimestamp = resultSet.getTimestamp(FIELD_INTRODUCED);
-      Timestamp discontinuedTimestamp;
-
-      discontinuedTimestamp = resultSet.getTimestamp(FIELD_DISCONTINUED);
-
-      int companyId = resultSet.getInt(FIELD_COMPANY_ID);
-      String companyName = resultSet.getString(FIELD_COMPANY_NAME);
-
-      LocalDate introduced = (introducedTimestamp != null)
-          ? introducedTimestamp.toLocalDateTime().toLocalDate()
-          : null;
-      LocalDate discontinued = (discontinuedTimestamp != null)
-          ? discontinuedTimestamp.toLocalDateTime().toLocalDate()
-          : null;
-
-      Company company = null;
-      if (companyName != null) {
-        company = new Company(companyId, companyName);
-      }
-
-      return new Computer(id, name, introduced, discontinued, company);
+    switch (orderBy) {
+    case FIELD_INTRODUCED:
+      path = QComputer.computer.introduced;
+      break;
+    case FIELD_DISCONTINUED:
+      path = QComputer.computer.discontinued;
+      break;
+    case FIELD_COMPANY_NAME:
+      path = QComputer.computer.company.name;
+      break;
+    case FIELD_NAME:
+    default:
+      path = QComputer.computer.name;
+      break;
     }
 
+    switch (orderDirection) {
+    case "DESC":
+      return path.desc();
+    default:
+    case "ASC":
+      return path.asc();
+    }
   }
 }

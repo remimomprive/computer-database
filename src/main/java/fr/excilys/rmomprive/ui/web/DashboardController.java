@@ -18,6 +18,7 @@ import fr.excilys.rmomprive.exception.InvalidPageSizeException;
 import fr.excilys.rmomprive.mapper.ComputerMapper;
 import fr.excilys.rmomprive.model.Computer;
 import fr.excilys.rmomprive.pagination.Page;
+import fr.excilys.rmomprive.service.ICompanyService;
 import fr.excilys.rmomprive.service.IComputerService;
 
 @Controller
@@ -27,7 +28,7 @@ public class DashboardController {
   private IComputerService computerService;
   private ComputerMapper computerMapper;
   
-  public DashboardController(IComputerService computerService, ComputerMapper computerMapper) {
+  public DashboardController(IComputerService computerService, ICompanyService companyService, ComputerMapper computerMapper) {
     this.LOGGER = LoggerFactory.getLogger(DashboardController.class);
     this.computerService = computerService;
     this.computerMapper = computerMapper;

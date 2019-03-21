@@ -9,15 +9,17 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import fr.excilys.rmomprive.exception.InvalidPageIdException;
+import fr.excilys.rmomprive.exception.InvalidPageSizeException;
 import fr.excilys.rmomprive.model.Company;
 import fr.excilys.rmomprive.pagination.Page;
 import fr.excilys.rmomprive.persistence.CompanyDao;
+import fr.excilys.rmomprive.persistence.ICompanyDao;
 
 @Service
 public class CompanyService implements ICompanyService {
 
   @Autowired
-  private CompanyDao companyDao;
+  private ICompanyDao companyDao;
 
   /**
    * Private constructor for singleton.
@@ -37,7 +39,7 @@ public class CompanyService implements ICompanyService {
   }
 
   @Override
-  public Collection<Company> getAll() throws DataAccessException {
+  public List<Company> getAll() throws DataAccessException {
     return companyDao.getAll();
   }
 
@@ -47,7 +49,7 @@ public class CompanyService implements ICompanyService {
   }
 
   @Override
-  public Collection<Company> addAll(Collection<Company> companies) {
+  public List<Company> addAll(List<Company> companies) {
     return companyDao.addAll(companies);
   }
 
@@ -87,7 +89,7 @@ public class CompanyService implements ICompanyService {
   }
 
   @Override
-  public Page<Company> getPage(int pageId, int pageSize) throws InvalidPageIdException {
+  public Page<Company> getPage(int pageId, int pageSize) throws InvalidPageIdException, DataAccessException, InvalidPageSizeException {
     return companyDao.getPage(new Page<Company>(pageId, pageSize));
   }
 }
