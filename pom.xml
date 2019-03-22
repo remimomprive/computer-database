@@ -13,7 +13,8 @@
 		<module>validation</module>
 		<module>binding</module>
 		<module>webapp</module>
-	</modules>
+    <module>console</module>
+  </modules>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

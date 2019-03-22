@@ -1,4 +1,4 @@
-package com.excilys.rmomprive.computerdatabase.webapp.configuration;
+package com.excilys.rmomprive.computerdatabase.console.configuration;
 
 import javax.sql.DataSource;
 

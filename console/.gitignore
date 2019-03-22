@@ -1,0 +1,14 @@
+# Eclipse
+.classpath
+.project
+.settings/
+.checkstyle
+
+# Maven
+log/
+target/
+/bin/
+
+src/main/resources/
+/.apt_generated/
+/.apt_generated_tests/
