@@ -12,17 +12,13 @@ import org.springframework.stereotype.Component;
 import com.excilys.rmomprive.computerdatabase.core.Company;
 import com.excilys.rmomprive.computerdatabase.core.Computer;
 import com.excilys.rmomprive.computerdatabase.core.Computer.ComputerBuilder;
-import com.excilys.rmomprive.computerdatabase.service.ICompanyService;
-import com.excilys.rmomprive.computerdatabase.service.ICompanyService;
 import com.excilys.rmomprive.computerdatabase.persistence.Page;
 
 @Component
 public class ComputerMapper implements IMapper<Computer> {
-  private ICompanyService companyService;
   private Logger LOGGER;
 
-  public ComputerMapper(ICompanyService companyService) {
-    this.companyService = companyService;
+  public ComputerMapper() {
     this.LOGGER = LoggerFactory.getLogger(ComputerMapper.class);
   }
 
@@ -54,12 +50,6 @@ public class ComputerMapper implements IMapper<Computer> {
         computerBuilder.setDiscontinued(Dates.parse(dto.getDiscontinued()));
       }
 
-      if (dto.getCompanyId() != null) {
-        Optional<Company> company = companyService.getById(dto.getCompanyId());
-        if (company.isPresent()) {
-          computerBuilder.setCompany(company.get());
-        }
-      }
     } catch (DateTimeParseException | NumberFormatException e) {
       LOGGER.error(e.getMessage());
     }
