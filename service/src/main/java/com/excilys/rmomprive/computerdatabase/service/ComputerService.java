@@ -1,5 +1,6 @@
 package com.excilys.rmomprive.computerdatabase.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.excilys.rmomprive.computerdatabase.core.ComputerDetails;
 import com.excilys.rmomprive.computerdatabase.core.Computer;
+import com.excilys.rmomprive.computerdatabase.binding.ComputerDto;
+import com.excilys.rmomprive.computerdatabase.binding.ComputerMapper;
 import com.excilys.rmomprive.computerdatabase.core.Company;
 import com.excilys.rmomprive.computerdatabase.persistence.Page;
 import com.excilys.rmomprive.computerdatabase.persistence.ICompanyDao;
@@ -20,59 +23,57 @@ import com.excilys.rmomprive.computerdatabase.validation.ComputerValidator;
 @Service
 public class ComputerService implements IComputerService {
 
-  @Autowired
   private IComputerDao computerDao;
+  private ComputerMapper computerMapper;
 
-  @Autowired
-  private ICompanyDao companyDao;
-
-  /**
-   * Public constructor for mockito.
-   */
-  public ComputerService() {
-
+  public ComputerService(IComputerDao computerDao, ComputerMapper computerMapper) {
+    this.computerDao = computerDao;
+    this.computerMapper = computerMapper;
   }
 
   @Override
-  public Optional<Computer> getById(long id) {
-    return computerDao.getById(id);
-  }
-
-  @Override
-  public Optional<ComputerDetails> getDetailsByComputerId(final int id) {
+  public Optional<ComputerDto> getById(long id) {
     Optional<Computer> computer = computerDao.getById(id);
-
-    if (!computer.isPresent()) {
-      return Optional.empty();
+    if (computer.isPresent()) {
+      return Optional.of(computerMapper.mapFromEntity(computer.get()));
     } else {
-      Optional<Company> company = companyDao.getById(computer.get().getCompany().getId());
-
-      if (company.isPresent()) {
-        return Optional.of(new ComputerDetails(computer.get(), company.get()));
-      } else {
-        return Optional.of(new ComputerDetails(computer.get(), null));
-      }
+      return Optional.empty();
     }
   }
 
   @Override
-  public List<Computer> getAll() {
-    return computerDao.getAll();
+  public List<ComputerDto> getAll() {
+    List<ComputerDto> output = new ArrayList<>();
+    computerDao.getAll().forEach(computer -> output.add(computerMapper.mapFromEntity(computer)));
+    return output;
   }
 
   @Override
-  public Optional<Computer> add(Computer computer) {
+  public Optional<ComputerDto> add(ComputerDto computerDto) {
+    Computer computer = computerMapper.mapFromDto(computerDto);
     ComputerValidator.validate(computer);
-    return computerDao.add(computer);
+    Optional<Computer> addedComputer = computerDao.add(computer);
+    
+    if (addedComputer.isPresent()) {
+      return Optional.of(computerMapper.mapFromEntity(addedComputer.get()));
+    } else {
+      return Optional.empty();
+    }
   }
 
   @Override
-  public Computer update(Computer computer) {
-    return computerDao.update(computer);
+  public ComputerDto update(ComputerDto computerDto) {
+    Computer computer = computerMapper.mapFromDto(computerDto);
+    ComputerValidator.validate(computer);
+    
+    return computerMapper.mapFromEntity(computerDao.update(computer));
   }
 
   @Override
-  public boolean delete(Computer computer) {
+  public boolean delete(ComputerDto computerDto) {
+    Computer computer = computerMapper.mapFromDto(computerDto);
+    ComputerValidator.validate(computer);
+    
     return computerDao.delete(computer);
   }
 
@@ -112,14 +113,13 @@ public class ComputerService implements IComputerService {
   }
 
   @Override
-  public Page<Computer> getPage(int pageId, int pageSize)
-      throws InvalidPageIdException, InvalidPageSizeException {
-    return computerDao.getPage(new Page<Computer>(pageId, pageSize));
+  public Page<ComputerDto> getPage(int pageId, int pageSize) throws InvalidPageIdException, InvalidPageSizeException {
+    return computerMapper.createDtoPage(computerDao.getPage(new Page<Computer>(pageId, pageSize)));
   }
 
   @Override
-  public Page<Computer> getByNameOrCompanyName(int pageId, int pageSize, String name,
-      String orderBy, String orderDirection) throws InvalidPageSizeException, InvalidPageIdException {
-    return computerDao.getByNameOrCompanyName(new Page<Computer>(pageId, pageSize), name, orderBy, orderDirection);
+  public Page<ComputerDto> getByNameOrCompanyName(int pageId, int pageSize, String name, String orderBy, String orderDirection)
+      throws InvalidPageSizeException, InvalidPageIdException {
+    return computerMapper.createDtoPage(computerDao.getByNameOrCompanyName(new Page<Computer>(pageId, pageSize), name, orderBy, orderDirection));
   }
 }

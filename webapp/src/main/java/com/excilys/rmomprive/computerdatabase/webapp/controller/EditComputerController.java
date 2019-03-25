@@ -34,23 +34,20 @@ public class EditComputerController {
 
   private ICompanyService companyService;
   private IComputerService computerService;
-  private ComputerMapper computerMapper;
 
-  public EditComputerController(ICompanyService companyService, IComputerService computerService, ComputerMapper computerMapper) {
+  public EditComputerController(ICompanyService companyService, IComputerService computerService) {
     this.LOGGER = LoggerFactory.getLogger(EditComputerController.class);
     this.companyService = companyService;
     this.computerService = computerService;
-    this.computerMapper = computerMapper;
   }
 
   @GetMapping
   public String get(@PathVariable("id") long id, Model model) {
     Collection<Company> companies = companyService.getAll();
-    Optional<Computer> computer = computerService.getById(id);
+    Optional<ComputerDto> computerDto = computerService.getById(id);
 
-    if (computer.isPresent()) {
-      ComputerDto computerDto = this.computerMapper.mapFromEntity(computer.get());
-      model.addAttribute("computer", computerDto);
+    if (computerDto.isPresent()) {
+      model.addAttribute("computer", computerDto.get());
       model.addAttribute("companies", companies);
     }
 
@@ -58,8 +55,7 @@ public class EditComputerController {
   }
 
   @PostMapping
-  public RedirectView post(@ModelAttribute("computer") @Valid ComputerDto computerDto,
-      BindingResult result, Model model) {
+  public RedirectView post(@ModelAttribute("computer") @Valid ComputerDto computerDto, BindingResult result, Model model) {
     if (computerDto.getCompanyId() != null) {
       Optional<Company> company = companyService.getById(computerDto.getCompanyId());
       if (company.isPresent()) {
@@ -69,12 +65,9 @@ public class EditComputerController {
 
     LOGGER.info(result.getFieldErrors().toString());
 
-    // Get the entity thanks to the DTO
-    Computer computer = this.computerMapper.mapFromDto(computerDto);
-
     try {
       // Try to insert the entity
-      Computer updatedComputer = computerService.update(computer);
+      ComputerDto updatedComputer = computerService.update(computerDto);
 
       // Write data to the page
       return new RedirectView("/computer-database/dashboard");

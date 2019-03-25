@@ -52,8 +52,7 @@ public class AddComputerController {
   }
 
   @PostMapping
-  public RedirectView post(@Valid @ModelAttribute("computer") ComputerDto computerDto,
-      BindingResult result) {
+  public RedirectView post(@Valid @ModelAttribute("computer") ComputerDto computerDto, BindingResult result) {
     if (computerDto.getCompanyId() != null) {
       Optional<Company> company = companyService.getById(computerDto.getCompanyId());
       if (company.isPresent()) {
@@ -65,14 +64,9 @@ public class AddComputerController {
     LOGGER.info(computerDto.toString());
     LOGGER.info(String.valueOf(result.hasErrors()));
 
-    // Get the entity thanks to the DTO
-    Computer computer = computerMapper.mapFromDto(computerDto);
-
     try {
-      // Validate the entity
-      ComputerValidator.validate(computer);
       // Try to insert the entity
-      computerService.add(computer);
+      computerService.add(computerDto);
 
       // Write data to the page
       return new RedirectView("/computer-database/dashboard");

@@ -1,22 +1,11 @@
 package com.excilys.rmomprive.computerdatabase.service;
 
-import java.util.Optional;
-
-import com.excilys.rmomprive.computerdatabase.core.Computer;
-import com.excilys.rmomprive.computerdatabase.core.ComputerDetails;
+import com.excilys.rmomprive.computerdatabase.binding.ComputerDto;
 import com.excilys.rmomprive.computerdatabase.persistence.InvalidPageIdException;
 import com.excilys.rmomprive.computerdatabase.persistence.InvalidPageSizeException;
 import com.excilys.rmomprive.computerdatabase.persistence.Page;
 
-public interface IComputerService extends IService<Computer> {
-  /**
-   * Get the details for the specified computer.
-   *
-   * @param id The computer id
-   * @return The computer details of a specific computer
-   */
-  Optional<ComputerDetails> getDetailsByComputerId(final int id);
-
+public interface IComputerService extends IService<ComputerDto> {
   /**
    * Get the number of rows for the specificied search query.
    *
@@ -46,6 +35,6 @@ public interface IComputerService extends IService<Computer> {
    * @throws InvalidPageSizeException The the page size is not valid
    * @throws InvalidPageIdException   If the page id is not valid
    */
-  Page<Computer> getByNameOrCompanyName(int pageId, int pageSize, String name, String orderBy,
+  Page<ComputerDto> getByNameOrCompanyName(int pageId, int pageSize, String name, String orderBy,
       String orderDirection) throws InvalidPageSizeException, InvalidPageIdException;
 }

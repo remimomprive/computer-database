@@ -30,12 +30,10 @@ import com.excilys.rmomprive.computerdatabase.persistence.InvalidPageIdException
 public class DashboardController {
   private Logger LOGGER;
   private IComputerService computerService;
-  private ComputerMapper computerMapper;
 
-  public DashboardController(IComputerService computerService, ICompanyService companyService, ComputerMapper computerMapper) {
+  public DashboardController(IComputerService computerService, ICompanyService companyService) {
     this.LOGGER = LoggerFactory.getLogger(DashboardController.class);
     this.computerService = computerService;
-    this.computerMapper = computerMapper;
   }
 
   @GetMapping
@@ -51,9 +49,7 @@ public class DashboardController {
     try {
       rowCount = computerService.getRowCount(search);
       pageCount = getPageCount(pageSize, search);
-      Page<Computer> computerPage = computerService.getByNameOrCompanyName(pageId, pageSize, search, orderBy, orderDirection);
-
-      page = computerMapper.createDtoPage(computerPage);
+      page = computerService.getByNameOrCompanyName(pageId, pageSize, search, orderBy, orderDirection);
     } catch (InvalidPageIdException | InvalidPageSizeException | DataAccessException e) {
       LOGGER.error(e.getClass().toString());
     }
@@ -71,8 +67,7 @@ public class DashboardController {
   }
 
   @PostMapping
-  public void post(@RequestParam(name = "selection", defaultValue = "") String selection,
-      Model model) {
+  public void post(@RequestParam(name = "selection", defaultValue = "") String selection, Model model) {
     String[] idsString = selection.split(",");
     List<Long> ids = new ArrayList<>();
     for (String id : idsString) {
