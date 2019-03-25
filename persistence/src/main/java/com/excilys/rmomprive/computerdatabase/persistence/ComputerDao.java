@@ -70,8 +70,7 @@ public class ComputerDao extends Dao<Computer> implements IComputerDao {
   public Optional<Computer> add(Computer computer) {
     Session session = getSession(localSessionFactoryBean);
 
-    session.persist(computer);
-    session.refresh(computer);
+    session.save(computer);
     session.close();
 
     return Optional.of(computer);
