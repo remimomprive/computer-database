@@ -18,8 +18,14 @@
 				<a class="navbar-brand" href="${pageContext.request.contextPath}/dashboard"> Application - Computer Database </a>
 			</div>
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="?locale=fr&page_id=${pageId}&page_size=${pageSize}&search=${search}&order_by=${orderBy}&order_direction=${orderDirection}">fr</a></li>
-				<li><a href="?locale=en&page_id=${pageId}&page_size=${pageSize}&search=${search}&order_by=${orderBy}&order_direction=${orderDirection}">en</a></li>
+				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">${user} <span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li><a href="/computer-database/logout"><spring:message code="logout.message" /></a></li>
+					</ul></li>
+				<li><a
+					href="?locale=fr&page_id=${pageId}&page_size=${pageSize}&search=${search}&order_by=${orderBy}&order_direction=${orderDirection}">fr</a></li>
+				<li><a
+					href="?locale=en&page_id=${pageId}&page_size=${pageSize}&search=${search}&order_by=${orderBy}&order_direction=${orderDirection}">en</a></li>
 			</ul>
 		</div>
 	</header>
@@ -38,8 +44,9 @@
 					</form>
 				</div>
 				<div class="pull-right">
-					<a class="btn btn-success" id="addComputer" href="${pageContext.request.contextPath}/addComputer"><spring:message code="add_computer.button"/></a> <a
-						class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();"><spring:message code="edit.button"/></a>
+					<a class="btn btn-success" id="addComputer" href="${pageContext.request.contextPath}/addComputer"><spring:message
+							code="add_computer.button" /></a> <a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();"><spring:message
+							code="edit.button" /></a>
 				</div>
 			</div>
 		</div>
@@ -62,7 +69,7 @@
 							</a>
 						</span></th>
 
-						<th><spring:message code="computer.name"/> <c:choose>
+						<th><spring:message code="computer.name" /> <c:choose>
 								<c:when test="${orderBy == 'name'}">
 									<c:choose>
 										<c:when test="${orderDirection == 'asc'}">
@@ -76,11 +83,9 @@
 								<c:otherwise>
 									<a href="?page_id=1&search=${search}&order_by=name&order_direction=desc"><i class="fa fa-sort-down"></i></a>
 								</c:otherwise>
-							</c:choose>
+							</c:choose></th>
 
-						</th>
-
-						<th><spring:message code="computer.introduced"/> <c:choose>
+						<th><spring:message code="computer.introduced" /> <c:choose>
 								<c:when test="${orderBy == 'introduced'}">
 									<c:choose>
 										<c:when test="${orderDirection == 'asc'}">
@@ -94,11 +99,9 @@
 								<c:otherwise>
 									<a href="?page_id=1&search=${search}&order_by=introduced&order_direction=desc"><i class="fa fa-sort-down"></i></a>
 								</c:otherwise>
-							</c:choose>
+							</c:choose></th>
 
-						</th>
-
-						<th><spring:message code="computer.discontinued"/> <c:choose>
+						<th><spring:message code="computer.discontinued" /> <c:choose>
 								<c:when test="${orderBy == 'discontinued'}">
 									<c:choose>
 										<c:when test="${orderDirection == 'asc'}">
@@ -112,10 +115,9 @@
 								<c:otherwise>
 									<a href="?page_id=1&search=${search}&order_by=discontinued&order_direction=desc"><i class="fa fa-sort-down"></i></a>
 								</c:otherwise>
-							</c:choose>
-						</th>
+							</c:choose></th>
 
-						<th><spring:message code="computer.company"/> <c:choose>
+						<th><spring:message code="computer.company" /> <c:choose>
 								<c:when test="${orderBy == 'company_name'}">
 									<c:choose>
 										<c:when test="${orderDirection == 'asc'}">
@@ -129,8 +131,7 @@
 								<c:otherwise>
 									<a href="?page_id=1&search=${search}&order_by=company_name&order_direction=desc"><i class="fa fa-sort-down"></i></a>
 								</c:otherwise>
-							</c:choose>
-						</th>
+							</c:choose></th>
 
 					</tr>
 				</thead>

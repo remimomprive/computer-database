@@ -1,5 +1,6 @@
 package com.excilys.rmomprive.computerdatabase.webapp.controller;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,7 @@ import com.excilys.rmomprive.computerdatabase.persistence.InvalidPageSizeExcepti
 import com.excilys.rmomprive.computerdatabase.persistence.InvalidPageIdException;
 
 @Controller
-@RequestMapping("/dashboard")
+@RequestMapping({"/", "/dashboard"})
 public class DashboardController {
   private Logger LOGGER;
   private IComputerService computerService;
@@ -41,7 +42,7 @@ public class DashboardController {
       @RequestParam(name = "page_id", defaultValue = "1") int pageId,
       @RequestParam(name = "order_by", defaultValue = "name") String orderBy,
       @RequestParam(name = "order_direction", defaultValue = "asc") String orderDirection,
-      @RequestParam(name = "search", defaultValue = "") String search, Model model) {
+      @RequestParam(name = "search", defaultValue = "") String search, Principal principal, Model model) {
     Page<ComputerDto> page = null;
     int rowCount = 0;
     int pageCount = 0;
@@ -62,6 +63,7 @@ public class DashboardController {
     model.addAttribute("search", search);
     model.addAttribute("orderBy", orderBy);
     model.addAttribute("orderDirection", orderDirection);
+    model.addAttribute("user", principal.getName());
 
     return "dashboard";
   }
