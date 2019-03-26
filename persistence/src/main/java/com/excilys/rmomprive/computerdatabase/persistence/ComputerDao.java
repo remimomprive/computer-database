@@ -9,13 +9,8 @@ import org.hibernate.Session;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Component;
 
-import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.ComparableExpressionBase;
-import com.querydsl.jpa.hibernate.HibernateDeleteClause;
-import com.querydsl.jpa.hibernate.HibernateQuery;
-import com.querydsl.jpa.hibernate.HibernateQueryFactory;
-
 import com.excilys.rmomprive.computerdatabase.core.Computer;
 import com.excilys.rmomprive.computerdatabase.core.QComputer;
 

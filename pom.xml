@@ -36,7 +36,7 @@
 		<logback.version>1.2.3</logback.version>
 		<jcl-over-slf4j.version>1.7.26</jcl-over-slf4j.version>
 		<javax-validation.version>2.0.1.Final</javax-validation.version>
-		<hibernate-validation.version>6.0.2.Final</hibernate-validation.version>
+		<hibernate-validator.version>6.0.2.Final</hibernate-validator.version>
 		<javax-el-api.version>3.0.0</javax-el-api.version>
 		<querydsl.version>4.2.1</querydsl.version>
 		<javax-persistence.version>2.2</javax-persistence.version>
@@ -97,6 +97,11 @@
 				<version>${javax-validation.version}</version>
 			</dependency>
 			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-validator</artifactId>
+				<version>${hibernate-validator.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>org.seleniumhq.selenium</groupId>
 				<artifactId>selenium-java</artifactId>
 				<version>${selenium.version}</version>
@@ -145,11 +150,6 @@
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.security</groupId>
-				<artifactId>spring-security-core</artifactId>
-				<version>${spring-security.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-web</artifactId>
 				<version>${spring-security.version}</version>
 			</dependency>
@@ -157,7 +157,6 @@
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-config</artifactId>
 				<version>${spring-security.version}</version>
-				<scope>runtime</scope>
 			</dependency>
 
 			<dependency>

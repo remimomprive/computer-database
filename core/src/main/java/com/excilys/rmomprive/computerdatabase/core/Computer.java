@@ -48,8 +48,7 @@ public class Computer {
    * @param discontinued The computer discontinution date.
    * @param company      The computer company.
    */
-  public Computer(final long id, final String name, final LocalDate introduced,
-      final LocalDate discontinued, final Company company) {
+  public Computer(final long id, final String name, final LocalDate introduced, final LocalDate discontinued, final Company company) {
     this.id = id;
     this.name = name;
     this.introduced = introduced;
@@ -99,8 +98,7 @@ public class Computer {
 
   @Override
   public String toString() {
-    return "Computer [id=" + id + ", name=" + name + ", introduced=" + introduced
-        + ", discontinued=" + discontinued + ", company=" + company + "]";
+    return "Computer [id=" + id + ", name=" + name + ", introduced=" + introduced + ", discontinued=" + discontinued + ", company=" + company + "]";
   }
 
   @Override
@@ -160,8 +158,6 @@ public class Computer {
     }
     return true;
   }
-
-
 
   public static class ComputerBuilder {
     private long id;
