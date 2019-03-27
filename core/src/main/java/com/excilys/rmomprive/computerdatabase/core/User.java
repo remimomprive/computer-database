@@ -20,12 +20,15 @@ public class User {
  
     @Column(name = "password")
     private String password;
+    
+    @Column(name = "role")
+    private String role;
 
     public Long getId() {
       return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
       this.id = id;
     }
 
@@ -43,5 +46,13 @@ public class User {
 
     public void setPassword(String password) {
       this.password = password;
+    }
+    
+    public String getRole() {
+      return role;
+    }
+    
+    public void setRole(String role) {
+      this.role = role;
     }
 }

@@ -43,6 +43,7 @@ public class RegisterController {
         User userToPersist = new User();
         userToPersist.setUsername(username);
         userToPersist.setPassword(passwordEncoder.encode(password));
+        userToPersist.setRole("ROLE_USER");
         
         userDetailsService.add(userToPersist);
         return "redirect:/computer-database/login";
