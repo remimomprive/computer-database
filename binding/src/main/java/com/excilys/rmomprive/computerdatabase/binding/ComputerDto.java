@@ -2,17 +2,14 @@ package com.excilys.rmomprive.computerdatabase.binding;
 
 import java.util.Optional;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
+import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.excilys.rmomprive.computerdatabase.core.Computer;
 
 public class ComputerDto implements IDto<Computer> {
   private Long id;
-  @NotBlank
+  @Length(min = 1)
   private String name;
   @DateTimeFormat(pattern = "dd-MMM-yyyy")
   private String introduced;

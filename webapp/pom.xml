@@ -54,8 +54,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>xml-apis</groupId>
-			<artifactId>xml-apis</artifactId>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
 		</dependency>
 
 		<dependency>
