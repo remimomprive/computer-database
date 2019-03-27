@@ -69,7 +69,7 @@ public class DashboardController {
   }
 
   @PostMapping
-  public void post(@RequestParam(name = "selection", defaultValue = "") String selection, Model model) {
+  public String post(@RequestParam(name = "selection", defaultValue = "") String selection, Model model) {
     String[] idsString = selection.split(",");
     List<Long> ids = new ArrayList<>();
     for (String id : idsString) {
@@ -83,6 +83,8 @@ public class DashboardController {
     } catch (DataAccessException e) {
       LOGGER.error("An error happened while trying to delete computers {} : {}", ids, e.getMessage());
     }
+    
+    return "redirect:/";
   }
 
   public int getPageCount(int pageSize, String search) throws DataAccessException {
