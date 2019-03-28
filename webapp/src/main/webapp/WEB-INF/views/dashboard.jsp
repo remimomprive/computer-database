@@ -47,13 +47,14 @@
 							id="searchsubmit" value="<spring:message code="search.name.button"/>" class="btn btn-primary" />
 					</form>
 				</div>
+				
+				<sec:authorize access="hasRole('ROLE_ADMIN') and isAuthenticated()">
 				<div class="pull-right">
 					<a class="btn btn-success" id="addComputer" href="${pageContext.request.contextPath}/addComputer"><spring:message
 							code="add_computer.button" /></a>
-					<sec:authorize access="hasRole('ROLE_ADMIN') and isAuthenticated()">
-						<a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();"><spring:message code="edit.button" /></a>
-					</sec:authorize>
+					<a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();"><spring:message code="edit.button" /></a>
 				</div>
+				</sec:authorize>
 			</div>
 		</div>
 
@@ -150,7 +151,14 @@
 							<sec:authorize access="hasRole('ROLE_ADMIN') and isAuthenticated()">
 								<td class="editMode"><input type="checkbox" name="cb" class="cb" value="${computer.id}"></td>
 							</sec:authorize>
-							<td><a href="computer/${computer.id}/edit" onclick="">${computer.name}</a></td>
+							
+							<sec:authorize access="hasRole('ROLE_ADMIN') and isAuthenticated()">
+								<td><a href="computer/${computer.id}/edit" onclick="">${computer.name}</a></td>
+							</sec:authorize>
+							<sec:authorize access="!hasRole('ROLE_ADMIN') and isAuthenticated()">
+								<td>${computer.name}</td>
+							</sec:authorize>
+							
 							<td>${computer.introduced}</td>
 							<td>${computer.discontinued}</td>
 							<td>${computer.companyName}</td>
