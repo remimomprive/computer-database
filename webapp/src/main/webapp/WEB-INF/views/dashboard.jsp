@@ -1,5 +1,9 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+
+<sec:authentication var="user" property="principal" />
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,7 +22,7 @@
 				<a class="navbar-brand" href="${pageContext.request.contextPath}/dashboard"> Application - Computer Database </a>
 			</div>
 			<ul class="nav navbar-nav navbar-right">
-				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">${user} <span class="caret"></span></a>
+				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">${user.username} <span class="caret"></span></a>
 					<ul class="dropdown-menu">
 						<li><a href="/computer-database/logout"><spring:message code="logout.message" /></a></li>
 					</ul></li>
@@ -45,8 +49,10 @@
 				</div>
 				<div class="pull-right">
 					<a class="btn btn-success" id="addComputer" href="${pageContext.request.contextPath}/addComputer"><spring:message
-							code="add_computer.button" /></a> <a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();"><spring:message
-							code="edit.button" /></a>
+							code="add_computer.button" /></a>
+					<sec:authorize access="hasRole('ROLE_ADMIN') and isAuthenticated()">
+						<a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();"><spring:message code="edit.button" /></a>
+					</sec:authorize>
 				</div>
 			</div>
 		</div>
@@ -63,11 +69,13 @@
 						<!-- Variable declarations for passing labels as parameters -->
 						<!-- Table header for Computer Name -->
 
-						<th class="editMode" style="width: 60px; height: 22px;"><input type="checkbox" id="selectall" /> <span
-							style="vertical-align: top;"> - <a href="#" id="deleteSelected" onclick="$.fn.deleteSelected();"> <i
-									class="fa fa-trash-o fa-lg"></i>
-							</a>
-						</span></th>
+						<sec:authorize access="hasRole('ROLE_ADMIN') and isAuthenticated()">
+							<th class="editMode" style="width: 60px; height: 22px;"><input type="checkbox" id="selectall" /> <span
+								style="vertical-align: top;"> - <a href="#" id="deleteSelected" onclick="$.fn.deleteSelected();"> <i
+										class="fa fa-trash-o fa-lg"></i>
+								</a>
+							</span></th>
+						</sec:authorize>
 
 						<th><spring:message code="computer.name" /> <c:choose>
 								<c:when test="${orderBy == 'name'}">
@@ -139,7 +147,9 @@
 				<tbody id="results">
 					<c:forEach items="${computers.content}" var="computer">
 						<tr>
-							<td class="editMode"><input type="checkbox" name="cb" class="cb" value="${computer.id}"></td>
+							<sec:authorize access="hasRole('ROLE_ADMIN') and isAuthenticated()">
+								<td class="editMode"><input type="checkbox" name="cb" class="cb" value="${computer.id}"></td>
+							</sec:authorize>
 							<td><a href="computer/${computer.id}/edit" onclick="">${computer.name}</a></td>
 							<td>${computer.introduced}</td>
 							<td>${computer.discontinued}</td>

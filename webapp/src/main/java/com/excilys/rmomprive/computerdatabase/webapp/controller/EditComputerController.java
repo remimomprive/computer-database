@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -41,6 +42,7 @@ public class EditComputerController {
     this.computerService = computerService;
   }
 
+  @Secured("ROLE_ADMIN")
   @GetMapping
   public String get(@PathVariable("id") long id, Model model) {
     Collection<Company> companies = companyService.getAll();
@@ -54,6 +56,7 @@ public class EditComputerController {
     return "editComputer";
   }
 
+  @Secured("ROLE_ADMIN")
   @PostMapping
   public RedirectView post(@ModelAttribute("computer") @Valid ComputerDto computerDto, BindingResult result, Model model) {
     if (computerDto.getCompanyId() != null) {

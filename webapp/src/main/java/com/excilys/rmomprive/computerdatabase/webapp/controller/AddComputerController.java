@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,15 +33,14 @@ public class AddComputerController {
 
   private ICompanyService companyService;
   private IComputerService computerService;
-  private ComputerMapper computerMapper;
 
-  public AddComputerController(ICompanyService companyService, IComputerService computerService, ComputerMapper computerMapper) {
+  public AddComputerController(ICompanyService companyService, IComputerService computerService) {
     this.LOGGER = LoggerFactory.getLogger(DashboardController.class);
     this.companyService = companyService;
     this.computerService = computerService;
-    this.computerMapper = computerMapper;
   }
 
+  @Secured("ROLE_ADMIN")
   @GetMapping
   public String get(Model model) {
     Collection<Company> companies = companyService.getAll();
@@ -51,6 +51,7 @@ public class AddComputerController {
     return "addComputer";
   }
 
+  @Secured("ROLE_ADMIN")
   @PostMapping
   public RedirectView post(@Valid @ModelAttribute("computer") ComputerDto computerDto, BindingResult result) {
     if (computerDto.getCompanyId() != null) {

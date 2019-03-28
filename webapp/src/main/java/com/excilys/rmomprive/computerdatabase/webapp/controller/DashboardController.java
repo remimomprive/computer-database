@@ -1,12 +1,12 @@
 package com.excilys.rmomprive.computerdatabase.webapp.controller;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,11 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.excilys.rmomprive.computerdatabase.binding.ComputerDto;
-import com.excilys.rmomprive.computerdatabase.binding.ComputerMapper;
-import com.excilys.rmomprive.computerdatabase.validation.ComputerValidator;
-import com.excilys.rmomprive.computerdatabase.validation.ValidationException;
-import com.excilys.rmomprive.computerdatabase.core.Company;
-import com.excilys.rmomprive.computerdatabase.core.Computer;
 import com.excilys.rmomprive.computerdatabase.service.ICompanyService;
 import com.excilys.rmomprive.computerdatabase.service.IComputerService;
 import com.excilys.rmomprive.computerdatabase.persistence.Page;
@@ -37,12 +32,13 @@ public class DashboardController {
     this.computerService = computerService;
   }
 
+  @Secured({"ROLE_USER", "ROLE_ADMIN"})
   @GetMapping
   public String get(@RequestParam(name = "page_size", defaultValue = "10") int pageSize,
       @RequestParam(name = "page_id", defaultValue = "1") int pageId,
       @RequestParam(name = "order_by", defaultValue = "name") String orderBy,
       @RequestParam(name = "order_direction", defaultValue = "asc") String orderDirection,
-      @RequestParam(name = "search", defaultValue = "") String search, Principal principal, Model model) {
+      @RequestParam(name = "search", defaultValue = "") String search, Model model) {
     Page<ComputerDto> page = null;
     int rowCount = 0;
     int pageCount = 0;
@@ -63,11 +59,11 @@ public class DashboardController {
     model.addAttribute("search", search);
     model.addAttribute("orderBy", orderBy);
     model.addAttribute("orderDirection", orderDirection);
-    model.addAttribute("user", principal.getName());
 
     return "dashboard";
   }
 
+  @Secured("ROLE_ADMIN")
   @PostMapping
   public String post(@RequestParam(name = "selection", defaultValue = "") String selection, Model model) {
     String[] idsString = selection.split(",");
