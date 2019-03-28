@@ -60,6 +60,7 @@ public class EditComputerController {
       Optional<Company> company = companyService.getById(computerDto.getCompanyId());
       if (company.isPresent()) {
         computerDto.setCompanyName(company.get().getName());
+        LOGGER.error(String.valueOf(company));
       }
     }
 

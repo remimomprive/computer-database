@@ -49,6 +49,11 @@ public class ComputerMapper implements IMapper<Computer> {
       if (!dto.getDiscontinued().equals("")) {
         computerBuilder.setDiscontinued(Dates.parse(dto.getDiscontinued()));
       }
+      
+      if (dto.getCompanyName() != null && dto.getCompanyId() != null) {
+        Company company = new Company(Long.valueOf(dto.getCompanyId()), dto.getCompanyName());
+        computerBuilder.setCompany(company);
+      }
 
     } catch (DateTimeParseException | NumberFormatException e) {
       LOGGER.error(e.getMessage());
