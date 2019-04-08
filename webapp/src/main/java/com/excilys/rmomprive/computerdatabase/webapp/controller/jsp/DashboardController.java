@@ -1,4 +1,4 @@
-package com.excilys.rmomprive.computerdatabase.webapp.controller;
+package com.excilys.rmomprive.computerdatabase.webapp.controller.jsp;
 
 import java.util.ArrayList;
 import java.util.List;
