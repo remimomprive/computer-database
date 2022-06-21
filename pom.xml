@@ -24,7 +24,7 @@
 
 		<!-- Depencencies -->
 		<junit.version>4.11</junit.version>
-		<mysql.connector.version>8.0.15</mysql.connector.version>
+		<mysql.connector.version>8.0.28</mysql.connector.version>
 		<slf4j.version>1.8.0-beta2</slf4j.version>
 		<mockito.version>2.24.0</mockito.version>
 		<servlet.version>3.1.0</servlet.version>
