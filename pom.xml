@@ -31,7 +31,7 @@
 		<jstl.version>1.2</jstl.version>
 		<selenium.version>2.52.0</selenium.version>
 		<hikari-cp.version>3.3.1</hikari-cp.version>
-		<spring.version>5.1.5.RELEASE</spring.version>
+		<spring.version>5.2.20.RELEASE</spring.version>
 		<spring-security.version>5.1.4.RELEASE</spring-security.version>
 		<logback.version>1.2.3</logback.version>
 		<jcl-over-slf4j.version>1.7.26</jcl-over-slf4j.version>
